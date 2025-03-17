@@ -1,0 +1,19 @@
+customerId,name,age,city,phone,email
+C001,Alice,28,New York,1234567890,alice@example.com
+C002,Bob,34,Los Angeles,9876543210,bob@example.com
+C003,Charlie,22,San Francisco,4567890123,charlie@example.com
+C004,David,40,Boston,7890123456,david@example.com
+C006,Frank,29,Miami,3456789012,frank@example.com
+C007,Grace,31,Dallas,4567890123,grace@example.com
+C008,Hannah,37,Seattle,5678901234,hannah@example.com
+C009,Isaac,45,Denver,6789012345,isaac@example.com
+C011,Kate,30,Portland,8901234567,kate@example.com
+C012,Liam,23,Atlanta,9012345678,liam@example.com
+C013,Mia,27,Orlando,1234567890,mia@example.com
+C014,Noah,35,San Diego,2345678901,noah@example.com
+C015,Olivia,32,Chicago,3456789012,olivia@example.com
+C016,Paul,41,Miami,4567890123,paul@example.com
+C017,Quinn,29,Boston,5678901234,quinn@example.com
+C018,Rachel,38,New York,6789012345,rachel@example.com
+C019,Sam,33,Los Angeles,7890123456,sam@example.com
+C020,Tina,28,San Francisco,8901234567,tina@example.com
