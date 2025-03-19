@@ -1,12 +1,18 @@
 import ballerina/test;
 
+type Customer record {
+    int id;
+    string name?;
+    int age?;
+};
+
 @test:Config {}
 function testJoinData() returns error? {
-    record {}[] dataset1 = [
+    Customer[] dataset1 = [
         {"id": 1, "name": "Alice"},
         {"id": 2, "name": "Bob"}
     ];
-    record {}[] dataset2 = [
+    Customer[] dataset2 = [
         {"id": 1, "age": 25},
         {"id": 2, "age": 30}
     ];
