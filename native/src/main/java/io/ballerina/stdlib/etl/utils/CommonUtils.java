@@ -3,6 +3,10 @@ package io.ballerina.stdlib.etl.utils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BString;
 
+/**
+ * Represents the util functions of ETL operations.
+ */
+
 public class CommonUtils {
 
     public static boolean contains(BArray array, BString key) {

@@ -4,6 +4,10 @@ import io.ballerina.runtime.api.creators.ErrorCreator;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BError;
 
+/**
+ * Represents the errors of ETL module.
+ */
+
 public class ErrorUtils {
 
     private ErrorUtils() {
@@ -18,5 +22,4 @@ public class ErrorUtils {
     public static BError createError(String errorMsg) {
         return ErrorCreator.createError(StringUtils.fromString(errorMsg));
     }
-
 }

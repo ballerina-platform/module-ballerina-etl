@@ -10,22 +10,14 @@ import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
+/**
+ * This class hold Java external functions for ETL - data enrichment APIs.
+ *
+ * * @since 1.0.0
+ */
+
 @SuppressWarnings("unchecked")
 public class EtlEnrichment {
-
-    public static Object mergeData(BArray datasets, BTypedesc returnType) {
-
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray result = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
-
-        for (int i = 0; i < datasets.size(); i++) {
-            BArray dataset = (BArray) datasets.get(i);
-            for (int j = 0; j < dataset.size(); j++) {
-                result.append(dataset.get(j));
-            }
-        }
-        return result;
-    }
 
     public static Object joinData(BArray dataset1, BArray dataset2, BString primaryKey, BTypedesc returnType) {
         Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
@@ -53,6 +45,20 @@ public class EtlEnrichment {
                     }
                     result.append(newRecord);
                 }
+            }
+        }
+        return result;
+    }
+
+    public static Object mergeData(BArray datasets, BTypedesc returnType) {
+
+        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
+        BArray result = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
+
+        for (int i = 0; i < datasets.size(); i++) {
+            BArray dataset = (BArray) datasets.get(i);
+            for (int j = 0; j < dataset.size(); j++) {
+                result.append(dataset.get(j));
             }
         }
         return result;

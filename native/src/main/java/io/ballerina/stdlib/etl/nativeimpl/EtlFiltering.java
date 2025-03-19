@@ -16,9 +16,14 @@ import java.util.Collections;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.evaluateCondition;
 
+/**
+ * This class hold Java external functions for ETL - data filtering APIs.
+ *
+ * * @since 1.0.0
+ */
 @SuppressWarnings("unchecked")
 public class EtlFiltering {
-    
+
     public static Object filterDataByRatio(BArray dataset, float ratio, BTypedesc returnType) {
         Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
         BArray result = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));

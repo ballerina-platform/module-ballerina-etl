@@ -1,8 +1,10 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
+import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.creators.TypeCreator;
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.types.Type;
+import io.ballerina.runtime.api.utils.JsonUtils;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
@@ -21,6 +23,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 
+/**
+ * This class hold Java external functions for ETL - data security APIs.
+ *
+ * * @since 1.0.0
+ */
 @SuppressWarnings("unchecked")
 public class EtlSecurity {
 
@@ -114,5 +121,15 @@ public class EtlSecurity {
         }
         return result;
     }
-    
+
+    public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter, BString modelName,
+            BTypedesc returnType) {
+        Object[] args = new Object[] { dataset, maskCharacter, modelName, returnType };
+        Object result = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
+                args);
+        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
+        BArray resultArray = (BArray) JsonUtils.convertJSON(result, TypeCreator.createArrayType(describingType));
+        return resultArray;
+    }
+
 }
