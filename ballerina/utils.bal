@@ -1,5 +1,6 @@
 import ballerinax/openai.chat;
-public function standardizeDataFunc(record {}[] dataset, string fieldName, string standardValue, string modelName) returns json|Error {
+
+function standardizeDataFunc(record {}[] dataset, string fieldName, string standardValue, string modelName) returns json|Error {
     if !dataset[0].hasKey(fieldName) {
         return error(string `Field ${fieldName} not found in the dataset`);
     }
@@ -55,7 +56,7 @@ public function standardizeDataFunc(record {}[] dataset, string fieldName, strin
     }
 }
 
-public function groupApproximateDuplicatesFunc(record {}[] dataset, string modelName = "gpt-4o") returns json|Error {
+function groupApproximateDuplicatesFunc(record {}[] dataset, string modelName = "gpt-4o") returns json|Error {
     do {
         chat:CreateChatCompletionRequest request = {
             model: modelName,
@@ -64,7 +65,7 @@ public function groupApproximateDuplicatesFunc(record {}[] dataset, string model
                     "role": "user",
                     "content": string ` Identify approximate duplicates in the dataset and group them.
                                         - Input Dataset : ${dataset.toString()}  
-                                         Respond only with an array of arrays of JSON objects without any formatting where the first array contains all the unique records and the rest of the arrays contain the duplicate groups.
+                                         Respond only with an array of arrays of JSON objects without any formatting where the first array contains all the unique records which does not have any duplicates, and the rest of the arrays contain the duplicate groups.
                                          Do not include any additional text, explanations, or variations.
                                          
                                          Example
@@ -95,7 +96,7 @@ public function groupApproximateDuplicatesFunc(record {}[] dataset, string model
     }
 }
 
-public function extractFromUnstructuredDataFunc(string dataset, string[] fieldNames, string modelName ) returns json|Error {
+function extractFromUnstructuredDataFunc(string dataset, string[] fieldNames, string modelName) returns json|Error {
     do {
 
         chat:CreateChatCompletionRequest request = {
@@ -137,7 +138,7 @@ public function extractFromUnstructuredDataFunc(string dataset, string[] fieldNa
     }
 }
 
-public function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter, string modelName) returns json|Error {
+function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter, string modelName) returns json|Error {
     do {
         chat:CreateChatCompletionRequest request = {
             model: modelName,
@@ -185,3 +186,51 @@ public function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCh
     }
 
 }
+
+function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories, string modelName = "gpt-4o") returns json|Error {
+    if !dataset[0].hasKey(fieldName) {
+        return error(string `Field ${fieldName} not found in the dataset`);
+    }
+    else {
+        chat:CreateChatCompletionRequest request = {
+            model: modelName,
+            messages: [
+                {
+                    "role": "user",
+                    "content": string `Classify the given dataset into one of the specified categories based on the provided field name.  
+                                            - Input Dataset: ${dataset.toString()}  
+                                            - Categories: ${categories.toString()}  
+                                            - Field: ${fieldName}  
+                                            If a record does not belong to any category, place it in a separate dataset at the end.  
+                                            Respond only with an array of arrays of JSON objects without any formatting.  
+                                            Do not include any additional text, explanations, or variations. 
+
+                                            Example
+
+                                            - Input Dataset :
+                                            [{"order_id":"1","customer_name":"John Doe","comments":"The product quality is excellent and I am very happy!"},
+                                            {"order_id":"2","customer_name":"Jane Smith","comments":"It is good. But the delivery was slow."},
+                                            {"order_id":"3","customer_name":"Mike Johnson","comments":"Terrible experience. I will never order again."},
+                                            {"order_id":"4","customer_name":"Anna Lee","comments":"The customer service was great. But the product was damaged."},
+                                            {"order_id":"5","customer_name":"David Brown","comments":"Simply the best! I highly recommend."},
+                                            {"order_id":"6","customer_name":"Emily Clark","comments":":);"},
+                                            {"order_id":"7","customer_name":"Mark White","comments":"Worst experience ever. Totally disappointed."},
+                                            {"order_id":"8","customer_name":"Sophia Green","comments":"Not bad. But could be improved."}]
+
+                                            - Category Names : ["Excellent", "Normal", "Worst"]
+
+                                            - Output Dataset :
+                                            [[{"order_id":"1","customer_name":"John Doe","comments":"The product quality is excellent and I am very happy!"},{"order_id":"5","customer_name":"David Brown","comments":"Simply the best! I highly recommend."}],
+                                            [{"order_id":"2","customer_name":"Jane Smith","comments":"It is good. But the delivery was slow."},{"order_id":"4","customer_name":"Anna Lee","comments":"The customer service was great. But the product was damaged."},{"order_id":"8","customer_name":"Sophia Green","comments":"Not bad. But could be improved."}],
+                                            [{"order_id":"3","customer_name":"Mike Johnson","comments":"Terrible experience. I will never order again."},{"order_id":"7","customer_name":"Mark White","comments":"Worst experience ever. Totally disappointed."}],
+                                            [{"order_id":"6","customer_name":"Emily Clark","comments":":);"}]]  `
+                }
+            ]
+        };
+
+        chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
+        string content = check result.choices[0].message?.content.ensureType();
+        return check content.fromJsonString();
+    }
+}
+
