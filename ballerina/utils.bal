@@ -1,7 +1,5 @@
-import ballerina/data.jsondata;
 import ballerinax/openai.chat;
-
-public function standardizeDataFunc(record {}[] dataset, string fieldName, string standardValue, string modelName) returns record {}[]|Error {
+public function standardizeDataFunc(record {}[] dataset, string fieldName, string standardValue, string modelName) returns json|Error {
     if !dataset[0].hasKey(fieldName) {
         return error(string `Field ${fieldName} not found in the dataset`);
     }
@@ -53,11 +51,11 @@ public function standardizeDataFunc(record {}[] dataset, string fieldName, strin
 
         chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
         string content = check result.choices[0].message?.content.ensureType();
-        return check jsondata:parseAsType(check content.fromJsonString());
+        return check content.fromJsonString();
     }
 }
 
-public function groupApproximateDuplicatesFunc(record {}[] dataset, string modelName = "gpt-4o") returns record {}[][]|Error {
+public function groupApproximateDuplicatesFunc(record {}[] dataset, string modelName = "gpt-4o") returns json|Error {
     do {
         chat:CreateChatCompletionRequest request = {
             model: modelName,
@@ -90,14 +88,14 @@ public function groupApproximateDuplicatesFunc(record {}[] dataset, string model
 
         chat:CreateChatCompletionResponse response = check chatClient->/chat/completions.post(request);
         string content = check response.choices[0].message?.content.ensureType();
-        return check jsondata:parseAsType(check content.fromJsonString());
+        return check content.fromJsonString();
 
     } on fail error e {
         return e;
     }
 }
 
-public function extractFromUnstructuredDataFunc(string dataset, string[] fieldNames, string modelName = "gpt-4o") returns record {}|Error {
+public function extractFromUnstructuredDataFunc(string dataset, string[] fieldNames, string modelName ) returns json|Error {
     do {
 
         chat:CreateChatCompletionRequest request = {
@@ -132,14 +130,14 @@ public function extractFromUnstructuredDataFunc(string dataset, string[] fieldNa
 
         chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
         string content = check result.choices[0].message?.content.ensureType();
-        return check jsondata:parseAsType(check content.fromJsonString());
+        return check content.fromJsonString();
 
     } on fail error e {
         return e;
     }
 }
 
-public function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter = "X", string modelName = "gpt-4o") returns record {}[]|Error {
+public function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter, string modelName) returns json|Error {
     do {
         chat:CreateChatCompletionRequest request = {
             model: modelName,
@@ -180,7 +178,7 @@ public function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCh
 
         chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
         string content = check result.choices[0].message?.content.ensureType();
-        return check jsondata:parseAsType(check content.fromJsonString());
+        return check content.fromJsonString();
 
     } on fail error e {
         return e;
