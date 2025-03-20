@@ -1,12 +1,7 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
-import io.ballerina.runtime.api.creators.TypeCreator;
-import io.ballerina.runtime.api.creators.ValueCreator;
-import io.ballerina.runtime.api.types.Type;
-import io.ballerina.runtime.api.utils.JsonUtils;
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -18,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+
+import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 
 /**
  * This class hold Java external functions for ETL - data cleaning APIs.
@@ -31,123 +29,114 @@ public class EtlCleaning {
     public static Object groupApproximateDuplicates(Environment env, BArray dataset, BString modelName,
             BTypedesc returnType) {
         Object[] args = new Object[] { dataset, modelName, returnType };
-        Object result = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc", null,
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc", null,
                 args);
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray resultArray = (BArray) JsonUtils.convertJSON(result, TypeCreator.createArrayType(describingType));
-        return resultArray;
+        return convertJSONToBArray(clientResponse, returnType);
     }
 
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> record = (BMap<BString, Object>) dataset.get(i);
-            for (BString key : record.getKeys()) {
-                if (record.get(key) == null) {
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            for (BString key : data.getKeys()) {
+                if (data.get(key) == null) {
                     continue;
                 }
-                String newData = record.get(key).toString();
-                String outputString = newData.replaceAll("\s+", " ").trim();
-                record.put(key, StringUtils.fromString(outputString));
+                String fieldValue = data.get(key).toString();
+                String newFieldValue = fieldValue.replaceAll("\s+", " ").trim();
+                data.put(key, StringUtils.fromString(newFieldValue));
             }
         }
         return dataset;
     }
 
     public static Object removeDuplicates(BArray dataset, BTypedesc returnType) {
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray list = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
-        HashSet<String> recordSet = new HashSet<>();
-
+        BArray uniqueDataset = initializeBArray(returnType);
+        HashSet<String> seenRecords = new HashSet<>();
         for (int i = 0; i < dataset.size(); i++) {
             Object record = dataset.get(i);
-            if (recordSet.add(record.toString())) {
-                list.append(record);
+            if (seenRecords.add(record.toString())) {
+                uniqueDataset.append(record);
             }
         }
-        return list;
+        return uniqueDataset;
     }
 
     public static Object removeField(BArray dataset, BString fieldName, BTypedesc returnType) {
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> record = (BMap<BString, Object>) dataset.get(i);
-            if (!record.containsKey(fieldName)) {
-                return ErrorUtils.createError("The dataset does not contain the field - " + fieldName);
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (!data.containsKey(fieldName)) {
+                return ErrorUtils.createFieldNotFoundError(fieldName);
             }
-            record.remove(fieldName);
+            data.remove(fieldName);
         }
         return dataset;
     }
 
     public static Object removeNull(BArray dataset, BTypedesc returnType) {
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray list = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
+
+        BArray cleanedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> record = (BMap<BString, Object>) dataset.get(i);
-            boolean isNull = false;
-            for (BString key : record.getKeys()) {
-                if (record.get(key) == null || record.get(key).toString().trim().isEmpty()) {
-                    isNull = true;
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            boolean hasNullOrEmptyField = false;
+            for (BString key : data.getKeys()) {
+                if (data.get(key) == null || data.get(key).toString().trim().isEmpty()) {
+                    hasNullOrEmptyField = true;
                     break;
                 }
             }
-            if (!isNull) {
-                list.append(record);
+            if (!hasNullOrEmptyField) {
+                cleanedDataset.append(data);
             }
         }
-        return list;
+        return cleanedDataset;
     }
 
     public static Object replaceText(BArray dataset, BString fieldName, BRegexpValue searchValue, BString replaceValue,
             BTypedesc returnType) {
-
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> record = (BMap<BString, Object>) dataset.get(i);
-            if (!record.containsKey(fieldName)) {
-                return ErrorUtils.createError("The dataset does not contain the field - " + fieldName);
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (!data.containsKey(fieldName)) {
+                return ErrorUtils.createFieldNotFoundError(fieldName);
             }
-            if (record.get(fieldName) == null) {
+            if (data.get(fieldName) == null) {
                 continue;
             }
-            String newData = record.get(fieldName).toString();
-            String outputString = newData.replaceAll(searchValue.toString(), replaceValue.toString());
-            record.put(fieldName, StringUtils.fromString(outputString));
+            String fieldValue = data.get(fieldName).toString();
+            String newFieldValue = fieldValue.replaceAll(searchValue.toString(), replaceValue.toString());
+            data.put(fieldName, StringUtils.fromString(newFieldValue));
         }
         return dataset;
     }
 
     public static Object sortData(BArray dataset, BString fieldName, boolean isAscending, BTypedesc returnType) {
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray list = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
-        List<BMap<BString, Object>> recordList = new ArrayList<>();
+        BArray sortedDataset = initializeBArray(returnType);
+        List<BMap<BString, Object>> dataToSort = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> record = (BMap<BString, Object>) dataset.get(i);
-            if (!record.containsKey(fieldName)) {
-                return ErrorUtils.createError("The dataset does not contain the field - " + fieldName);
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (!data.containsKey(fieldName)) {
+                return ErrorUtils.createFieldNotFoundError(fieldName);
             }
-            if (record.get(fieldName) == null) {
+            if (data.get(fieldName) == null) {
                 return ErrorUtils.createError("Null value found in the dataset for the field" + fieldName);
             }
-            recordList.add(record);
+            dataToSort.add(data);
         }
-        recordList.sort(Comparator.comparing(map -> map.get(fieldName).toString()));
+        dataToSort.sort(Comparator.comparing(map -> map.get(fieldName).toString()));
         if (!isAscending) {
-            recordList.reversed();
+            dataToSort.reversed();
         }
-        for (BMap<BString, Object> record : recordList) {
-            list.append(record);
+        for (BMap<BString, Object> record : dataToSort) {
+            sortedDataset.append(record);
         }
-        return list;
+        return sortedDataset;
     }
 
     public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BString standardValue,
             BString modelName, BTypedesc returnType) {
         Object[] args = new Object[] { dataset, fieldName, standardValue, modelName, returnType };
-        Object result = env.getRuntime().callFunction(env.getCurrentModule(), "standardizeDataFunc", null,
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "standardizeDataFunc", null,
                 args);
-
-        Type describingType = TypeUtils.getReferredType(returnType.getDescribingType());
-        BArray resultArray = (BArray) JsonUtils.convertJSON(result, TypeCreator.createArrayType(describingType));
-        return resultArray;
+        return convertJSONToBArray(clientResponse, returnType);
     }
 
 }
