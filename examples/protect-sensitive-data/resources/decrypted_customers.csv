@@ -1,0 +1,11 @@
+customerId,name,city,phone,age,ssn,email
+C01,John,Austin,(555) 555-7873,18,123-45-6789,john@example.com
+C02,Nick,New York,(555) 555-8823,25,987-65-4321,nick@example.com
+C03,Paul,Sydney,(555) 555-9032,35,456-78-9012,paul@example.com
+C04,Jo,Austin,(555) 555-9120,45,321-54-9876,jo@example.com
+C05,Larry,Chicago,(555) 555-3022,23,159-73-2648,larry@example.com
+C06,James,Portland,(555) 555-3299,23,753-19-8524,james@example.com
+C07,Smith,Denver,(555) 555-2313,17,369-87-2145,smith@example.com
+C08,Rob,Boston,(555) 555-3124,90,258-96-3147,rob@example.com
+C09,Kate,Dallas,(555) 555-3214,40,741-25-8963,kate@example.com
+C10,Tim,Miami,(555) 555-3123,50,852-14-3697,tim@example.com
