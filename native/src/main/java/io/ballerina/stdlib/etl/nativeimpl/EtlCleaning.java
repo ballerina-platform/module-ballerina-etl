@@ -20,6 +20,7 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -47,7 +48,8 @@ public class EtlCleaning {
     public static Object groupApproximateDuplicates(Environment env, BArray dataset, BString modelName,
             BTypedesc returnType) {
         Object[] args = new Object[] { dataset, modelName, returnType };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc", null,
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc",
+                null,
                 args);
         return convertJSONToBArray(clientResponse, returnType);
     }
@@ -59,9 +61,10 @@ public class EtlCleaning {
                 if (data.get(key) == null) {
                     continue;
                 }
-                String fieldValue = data.get(key).toString();
-                String newFieldValue = fieldValue.replaceAll("\s+", " ").trim();
-                data.put(key, StringUtils.fromString(newFieldValue));
+                if (TypeUtils.getType(data.get(key)).getName().equals("string")) {
+                    String newFieldValue = data.get(key).toString().replaceAll("\s+", " ").trim();
+                    data.put(key, StringUtils.fromString(newFieldValue));
+                }
             }
         }
         return dataset;
