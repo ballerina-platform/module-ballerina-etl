@@ -19,6 +19,7 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -40,30 +41,32 @@ public class EtlCategorization {
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
 
         BArray categorizedData = initializeNestedBArray(returnType, rangeArray.size() + 1);
-
+        boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
-            }
-            if (data.get(fieldName) == null) {
-                continue;
-            }
-            float fieldValue = Float.parseFloat(data.get(fieldName).toString());
-            boolean isMatched = false;
-            for (int j = 0; j < rangeArray.size(); j++) {
-                BArray range = (BArray) rangeArray.get(j);
-                float lowerBound = Float.parseFloat(range.get(0).toString());
-                float upperBound = Float.parseFloat(range.get(1).toString());
-                if (fieldValue >= lowerBound && fieldValue <= upperBound) {
-                    ((BArray) categorizedData.get(j)).append(data);
-                    isMatched = true;
-                    break;
+            if (data.containsKey(fieldName)) {
+                float fieldValue = Float.parseFloat(data.get(fieldName).toString());
+                boolean isMatched = false;
+                for (int j = 0; j < rangeArray.size(); j++) {
+                    BArray range = (BArray) rangeArray.get(j);
+                    float lowerBound = Float.parseFloat(range.get(0).toString());
+                    float upperBound = Float.parseFloat(range.get(1).toString());
+                    if (fieldValue >= lowerBound && fieldValue <= upperBound) {
+                        ((BArray) categorizedData.get(j)).append(data);
+                        isMatched = true;
+                        break;
+                    }
                 }
-            }
-            if (!isMatched) {
+                if (!isMatched) {
+                    ((BArray) categorizedData.get(rangeArray.size())).append(data);
+                }
+                isFieldExist = true;
+            } else {
                 ((BArray) categorizedData.get(rangeArray.size())).append(data);
             }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
 
         return categorizedData;
@@ -72,28 +75,30 @@ public class EtlCategorization {
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
 
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size() + 1);
-
+        boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
-            }
-            if (data.get(fieldName) == null) {
-                continue;
-            }
-            String fieldValue = data.get(fieldName).toString();
-            boolean isMatched = false;
-            for (int j = 0; j < regexArray.size(); j++) {
-                BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
-                if (fieldValue.matches(regexPattern.toString())) {
-                    ((BArray) categorizedData.get(j)).append(data);
-                    isMatched = true;
-                    break;
+            if (data.containsKey(fieldName)) {
+                String fieldValue = data.get(fieldName).toString();
+                boolean isMatched = false;
+                for (int j = 0; j < regexArray.size(); j++) {
+                    BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
+                    if (fieldValue.matches(regexPattern.toString())) {
+                        ((BArray) categorizedData.get(j)).append(data);
+                        isMatched = true;
+                        break;
+                    }
                 }
-            }
-            if (!isMatched) {
+                if (!isMatched) {
+                    ((BArray) categorizedData.get(regexArray.size())).append(data);
+                }
+                isFieldExist = true;
+            } else {
                 ((BArray) categorizedData.get(regexArray.size())).append(data);
             }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
 
         return categorizedData;
@@ -101,9 +106,22 @@ public class EtlCategorization {
 
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
             BString modelName, BTypedesc returnType) {
+        boolean isFieldExist = false;
+        for (int i = 0; i < dataset.size(); i++) {
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (data.containsKey(fieldName)) {
+                isFieldExist = true;
+            }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
+        }
         Object[] args = new Object[] { dataset, fieldName, categories, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "categorizeSemanticFunc", null,
                 args);
+        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
+            return ErrorUtils.createClientConnectionError();
+        }
         return convertJSONToBArray(clientResponse, returnType);
     }
 

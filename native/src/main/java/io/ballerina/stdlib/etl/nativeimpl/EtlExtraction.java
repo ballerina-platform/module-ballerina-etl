@@ -19,9 +19,11 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
+import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
 
@@ -40,6 +42,9 @@ public class EtlExtraction {
         Object[] args = new Object[] { dataset, fieldNames, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "extractFromUnstructuredDataFunc",
                 null, args);
+        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
+            return ErrorUtils.createClientConnectionError();
+        }
         return convertJSONToRecord(clientResponse, returnType);
 
     }

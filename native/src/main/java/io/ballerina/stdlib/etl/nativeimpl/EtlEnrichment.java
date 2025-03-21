@@ -39,28 +39,38 @@ public class EtlEnrichment {
     public static Object joinData(BArray dataset1, BArray dataset2, BString primaryKey, BTypedesc returnType) {
 
         BArray joinedDataset = initializeBArray(returnType);
-
+        boolean isFieldExistForDataset1 = false;
         for (int i = 0; i < dataset1.size(); i++) {
             BMap<BString, Object> data1 = (BMap<BString, Object>) dataset1.get(i);
-            if (!data1.containsKey(primaryKey)) {
-                return ErrorUtils.createError("First dataset does not contain the primary key - " + primaryKey);
-            }
-            for (int j = 0; j < dataset2.size(); j++) {
-                BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
-                if (!data2.containsKey(primaryKey)) {
-                    return ErrorUtils.createError("Second dataset does not contain the primary key - " + primaryKey);
+            if (data1.containsKey(primaryKey)) {
+                isFieldExistForDataset1 = true;
+                boolean isFieldExistForDataset2 = false;
+                for (int j = 0; j < dataset2.size(); j++) {
+                    BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
+                    if (data2.containsKey(primaryKey)) {
+                        isFieldExistForDataset2 = true;
+                        if (data1.get(primaryKey).equals(data2.get(primaryKey))) {
+                            BMap<BString, Object> newData = initializeBMap(returnType);
+                            for (BString key : data1.getKeys()) {
+                                newData.put(key, data1.get(key));
+                            }
+                            for (BString key : data2.getKeys()) {
+                                newData.put(key, data2.get(key));
+                            }
+                            joinedDataset.append(newData);
+                        }
+                    }  
                 }
-                if (data1.get(primaryKey).equals(data2.get(primaryKey))) {
-                    BMap<BString, Object> newData = initializeBMap(returnType);
-                    for (BString key : data1.getKeys()) {
-                        newData.put(key, data1.get(key));
-                    }
-                    for (BString key : data2.getKeys()) {
-                        newData.put(key, data2.get(key));
-                    }
-                    joinedDataset.append(newData);
+                if (!isFieldExistForDataset2) {
+                    return ErrorUtils.createError("Primary key field does not exist in dataset2");
                 }
             }
+        }
+        if (!isFieldExistForDataset1) {
+            return ErrorUtils.createError("Primary key field does not exist in dataset1");
+        }
+        if (joinedDataset.size() == 0) {
+            return ErrorUtils.createError("No matching records found");
         }
         return joinedDataset;
     }
@@ -68,13 +78,14 @@ public class EtlEnrichment {
     public static Object mergeData(BArray datasets, BTypedesc returnType) {
 
         BArray mergedDataset = initializeBArray(returnType);
-
+    
         for (int i = 0; i < datasets.size(); i++) {
             BArray dataset = (BArray) datasets.get(i);
             for (int j = 0; j < dataset.size(); j++) {
                 mergedDataset.append(dataset.get(j));
             }
         }
+
         return mergedDataset;
     }
 }

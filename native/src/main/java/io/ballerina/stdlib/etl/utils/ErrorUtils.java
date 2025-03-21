@@ -43,6 +43,11 @@ public class ErrorUtils {
     }
 
     public static BError createFieldNotFoundError(BString fieldName) {
-        return ErrorCreator.createError(StringUtils.fromString("The dataset does not contain the field - " + fieldName));
+        return ErrorCreator
+                .createError(StringUtils.fromString("The dataset does not contain the field - " + fieldName));
+    }
+
+    public static BError createClientConnectionError() {
+        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connection error"));
     }
 }

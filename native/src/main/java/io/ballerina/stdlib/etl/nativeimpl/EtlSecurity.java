@@ -20,6 +20,7 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -134,10 +135,13 @@ public class EtlSecurity {
 
     public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter, BString modelName,
             BTypedesc returnType) {
-            Object[] args = new Object[] { dataset, maskCharacter, modelName, returnType };
-            Object result = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
-                    args);
-            return convertJSONToBArray(result, returnType);
+        Object[] args = new Object[] { dataset, maskCharacter, modelName, returnType };
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
+                args);
+        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
+            return ErrorUtils.createClientConnectionError();
+        }
+        return convertJSONToBArray(clientResponse, returnType);
     }
 
 }

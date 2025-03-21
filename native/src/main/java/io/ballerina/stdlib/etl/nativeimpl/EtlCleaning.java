@@ -51,6 +51,9 @@ public class EtlCleaning {
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc",
                 null,
                 args);
+        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
+            return ErrorUtils.createClientConnectionError();
+        }
         return convertJSONToBArray(clientResponse, returnType);
     }
 
@@ -83,12 +86,16 @@ public class EtlCleaning {
     }
 
     public static Object removeField(BArray dataset, BString fieldName, BTypedesc returnType) {
+        boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
+            if (data.containsKey(fieldName)) {
+                data.remove(fieldName);
+                isFieldExist = true;
             }
-            data.remove(fieldName);
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         return dataset;
     }
@@ -114,17 +121,19 @@ public class EtlCleaning {
 
     public static Object replaceText(BArray dataset, BString fieldName, BRegexpValue searchValue, BString replaceValue,
             BTypedesc returnType) {
+        boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
+            if (data.containsKey(fieldName)) {
+                String fieldValue = data.get(fieldName).toString();
+                String newFieldValue = fieldValue.replaceAll(searchValue.toString(), replaceValue.toString());
+                data.put(fieldName, StringUtils.fromString(newFieldValue));
+                isFieldExist = true;
             }
-            if (data.get(fieldName) == null) {
-                continue;
-            }
-            String fieldValue = data.get(fieldName).toString();
-            String newFieldValue = fieldValue.replaceAll(searchValue.toString(), replaceValue.toString());
-            data.put(fieldName, StringUtils.fromString(newFieldValue));
+
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         return dataset;
     }
@@ -132,13 +141,12 @@ public class EtlCleaning {
     public static Object sortData(BArray dataset, BString fieldName, boolean isAscending, BTypedesc returnType) {
         BArray sortedDataset = initializeBArray(returnType);
         List<BMap<BString, Object>> dataToSort = new ArrayList<>();
+        List<BMap<BString, Object>> nullData = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
-            }
-            if (data.get(fieldName) == null) {
-                return ErrorUtils.createError("Null value found in the dataset for the field" + fieldName);
+            if (data.get(fieldName) == null || !data.containsKey(fieldName)) {
+                nullData.add(data);
+                continue;
             }
             dataToSort.add(data);
         }
@@ -146,6 +154,10 @@ public class EtlCleaning {
         if (!isAscending) {
             dataToSort.reversed();
         }
+        if (dataToSort.isEmpty()) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
+        }
+        dataToSort.addAll(nullData);
         for (BMap<BString, Object> record : dataToSort) {
             sortedDataset.append(record);
         }
@@ -154,9 +166,22 @@ public class EtlCleaning {
 
     public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BString standardValue,
             BString modelName, BTypedesc returnType) {
+        boolean isFieldExist = false;
+        for (int i = 0; i < dataset.size(); i++) {
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (data.containsKey(fieldName)) {
+                isFieldExist = true;
+            }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
+        }
         Object[] args = new Object[] { dataset, fieldName, standardValue, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "standardizeDataFunc", null,
                 args);
+        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
+            return ErrorUtils.createClientConnectionError();
+        }
         return convertJSONToBArray(clientResponse, returnType);
     }
 

@@ -62,42 +62,48 @@ public class EtlFiltering {
 
     public static Object filterDataByRegex(BArray dataset, BString fieldName, BRegexpValue regexPattern,
             BTypedesc returnType) {
+        boolean isFieldExist = false;
         BArray filteredDataset = initializeNestedBArray(returnType, 2);
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createError("The dataset does not contain the field - " + fieldName);
-            }
-            if (data.get(fieldName) == null) {
-                continue;
-            }
-            String fieldvalue = data.get(fieldName).toString();
-            if (fieldvalue.matches(regexPattern.toString())) {
-                ((BArray) filteredDataset.get(0)).append(data);
+            if (data.containsKey(fieldName)) {
+                String fieldvalue = data.get(fieldName).toString();
+                if (fieldvalue.matches(regexPattern.toString())) {
+                    ((BArray) filteredDataset.get(0)).append(data);
+                } else {
+                    ((BArray) filteredDataset.get(1)).append(data);
+                }
+                isFieldExist = true;
             } else {
                 ((BArray) filteredDataset.get(1)).append(data);
             }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         return filteredDataset;
     }
 
     public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, float value,
             BTypedesc returnType) {
+        boolean isFieldExist = false;
         BArray filteredDataset = initializeNestedBArray(returnType, 2);
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
-                return ErrorUtils.createFieldNotFoundError(fieldName);
-            }
-            if (data.get(fieldName) == null) {
-                continue;
-            }
-            float fieldValue = Float.parseFloat(data.get(fieldName).toString());
-            if (evaluateCondition(fieldValue, value, operation.toString())) {
-                ((BArray) filteredDataset.get(0)).append(data);
+            if (data.containsKey(fieldName)) {
+                float fieldValue = Float.parseFloat(data.get(fieldName).toString());
+                if (evaluateCondition(fieldValue, value, operation.toString())) {
+                    ((BArray) filteredDataset.get(0)).append(data);
+                } else {
+                    ((BArray) filteredDataset.get(1)).append(data);
+                }
+                isFieldExist = true;
             } else {
                 ((BArray) filteredDataset.get(1)).append(data);
             }
+        }
+        if (!isFieldExist) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         return filteredDataset;
     }
