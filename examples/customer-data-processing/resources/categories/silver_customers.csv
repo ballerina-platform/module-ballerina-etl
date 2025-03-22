@@ -1,0 +1,15 @@
+id,name,city,contactNumber,email,preferredCategory,membershipTier,annualSpending,preferredContactMethod,maritalStatus,occupation
+C002,XXX,Kandy,XXXXXXXXXXXXXX,XXXXXXXXXXXXXXX,Clothing,Silver,1600,SMS,Single,Teacher
+C006,XXXXX,Matara,XXXXXXXXXXXXXX,XXXXXXXXXXXXXX,Groceries,Silver,2000,SMS,Single,Teacher
+C008,XXXXX,Ratnapura,XXXXXXXXXXXXXX,XXXXXXXXXXXXXX,Clothing,Silver,2200,SMS,Single,Teacher
+C010,XXXX,Kandy,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Electronics,Silver,2400,SMS,Single,Teacher
+C012,XXX,Jaffna,XXXXXXXXXXXXXX,XXXXXXXXXX,Groceries,Silver,2600,SMS,Single,Teacher
+C016,XXXX,Ratnapura,XXXXXXXXXXXXXX,XXXXXXXXXXXXXX,Electronics,Silver,3000,SMS,Single,Teacher
+C018,XXXXXX,Kandy,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Groceries,Silver,3200,SMS,Single,Teacher
+C018,XXXXXX,Kandy,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Groceries,Silver,3200,SMS,Single,Teacher
+C022,XXXX,Matara,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Electronics,Silver,3600,SMS,Single,Teacher
+C022,XXXX,Matara,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Electronics,Silver,3600,SMS,Single,Teacher
+C024,XXXX,Ratnapura,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Groceries,Silver,3800,SMS,Single,Teacher
+C026,XXX,Kandy,XXXXXXXXXXXXXX,XXXXXXXXXX,Clothing,Silver,4000,SMS,Single,Teacher
+C028,XXXX,Jaffna,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Electronics,Silver,4200,SMS,Single,Teacher
+C030,XXXXX,Matara,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Groceries,Silver,4400,SMS,Single,Teacher

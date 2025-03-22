@@ -1,0 +1,9 @@
+id,name,city,contactNumber,email,preferredCategory,membershipTier,annualSpending,preferredContactMethod,maritalStatus,occupation
+C001,XXXXX,Colombo,XXXXXXXXXXXXXX,XXXXXXXXXXXXXXXXX,Electronics,Gold,1500,Email,Married,Engineer
+C005,XXX,Kurunegala,XXXXXXXXXXXXXX,XXXXXXXXXXXXXXX,Clothing,Gold,1900,Email,Married,Engineer
+C009,XXX,Colombo,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Groceries,Gold,2300,Email,Married,Engineer
+C011,XXXXX,Galle,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Clothing,Gold,2500,Email,Married,Engineer
+C017,XXXXX,Colombo,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Clothing,Gold,3100,Email,Married,Engineer
+C019,XXXXX,Galle,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Electronics,Gold,3300,Email,Married,Engineer
+C021,XXX,Kurunegala,XXXXXXXXXXXXXX,XXXXXXXXXXXXX,Groceries,Gold,3500,Email,Married,Engineer
+C025,XXXXX,Colombo,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Electronics,Gold,3900,Email,Married,Engineer
