@@ -149,7 +149,7 @@ function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter
 
 }
 
-function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories, string modelName = "gpt-4o") returns json|Error {
+function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories, string modelName) returns json|Error {
 
     string prompt = string `Classify the given dataset into one of the specified categories based on the provided field name.  
                                             - Input Dataset: ${dataset.toString()}  
