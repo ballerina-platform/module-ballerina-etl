@@ -157,16 +157,16 @@ function testStandardizeData() returns error? {
     Person2[] dataset = [
         {"name": "Alice", "city": "New York"},
         {"name": "John", "city": "new york"},
-        {"name": "Charlie", "city": "Los Angeles"}
+        {"name": "Charlie", "city": "los-angeles"}
     ];
     string fieldName = "city";
-    string searchValue = "New York";
+    string[] searchValues = ["New York", "Los Angeles"];
     Person2[] expected = [
         {"name": "Alice", "city": "New York"},
         {"name": "John", "city": "New York"},
         {"name": "Charlie", "city": "Los Angeles"}
     ];
 
-    Person2[] result = check standardizeData(dataset, fieldName, searchValue);
+    Person2[] result = check standardizeData(dataset, fieldName, searchValues);
     test:assertEquals(result, expected);
 }

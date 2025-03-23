@@ -173,7 +173,7 @@ public function sortData(record {}[] dataset, string fieldName, boolean isAscend
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Standardizes a dataset by replacing approximate matches in a string field with a specified search value.
+# Standardizes string values in a dataset based on approximate matches.
 # ```ballerina
 # type Customer record {
 #     string name;
@@ -185,15 +185,15 @@ public function sortData(record {}[] dataset, string fieldName, boolean isAscend
 #     { "name": "John", "city": "new york" },
 #     { "name": "Charlie", "city": "Los Angeles" }
 # ];
-# Customer[] standardizedData = check etl:standardizeData(dataset, "city", "New York");
+# Customer[] standardizedData = check etl:standardizeData(dataset, "city", ["New York", "Los Angeles"]);
 # ```
 #
 # + dataset - Array of records containing string values to be standardized.
-# + fieldName - Name of the string field to check for approximate matches.
-# + standardValue - The exact value to replace approximate matches.
+# + fieldName - The name of the field to standardize.
+# + standardValues - An array of standard values to replace approximate matches.
 # + modelName - Name of the Open AI model
 # + returnType - The type of the return value (Ballerina record).
 # + return - An updated dataset with standardized string values or an error if the operation fails or an `etl:Error`.
-public function standardizeData(record {}[] dataset, string fieldName, string standardValue, string modelName = "gpt-4o", typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function standardizeData(record {}[] dataset, string fieldName, string[] standardValues, string modelName = "gpt-4o", typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;

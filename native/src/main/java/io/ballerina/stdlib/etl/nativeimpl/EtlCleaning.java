@@ -164,7 +164,7 @@ public class EtlCleaning {
         return sortedDataset;
     }
 
-    public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BString standardValue,
+    public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BArray standardValues,
             BString modelName, BTypedesc returnType) {
         boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
@@ -176,7 +176,7 @@ public class EtlCleaning {
         if (!isFieldExist) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        Object[] args = new Object[] { dataset, fieldName, standardValue, modelName, returnType };
+        Object[] args = new Object[] { dataset, fieldName, standardValues, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "standardizeDataFunc", null,
                 args);
         if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {

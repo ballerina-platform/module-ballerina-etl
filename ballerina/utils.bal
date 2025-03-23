@@ -16,12 +16,12 @@
 
 import ballerinax/openai.chat;
 
-function standardizeDataFunc(record {}[] dataset, string fieldName, string standardValue, string modelName) returns json|Error {
+function standardizeDataFunc(record {}[] dataset, string fieldName, string[] standardValues, string modelName) returns json|Error {
 
-    string prompt = string ` Identify and replace any approximate matches of the given search value in the dataset with the standard value.  
+    string prompt = string ` Identify and replace any approximate matches of the given search values in the dataset with the standard values.  
                                         - Input Dataset: ${dataset.toString()}  
                                         - Field Name: ${fieldName}  
-                                        - Search Value: ${standardValue}  
+                                        - Search Value: ${standardValues.toString()}  
                                         Return only the standardized dataset as an array of json without any formatting .  
                                         Do not include any additional text, explanations, or variations.
                                         
