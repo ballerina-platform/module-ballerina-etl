@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project demonstrates the use of the `ballerina/etl` module in Ballerina to process user feedback data. It extracts, transforms, categorizes, and loads feedbacks into CSV files for further analysis.
+This example demonstrates the use of the `ballerina/etl` module in Ballerina to process user feedback data. It extracts, transforms, categorizes, and loads feedbacks into CSV files for further analysis.
 
 ## Implementation
 
