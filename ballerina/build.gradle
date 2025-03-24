@@ -49,6 +49,8 @@ ballerina {
     module = packageName
     testCoverageParam = "--code-coverage --coverage-format=xml"
     langVersion = ballerinaLangVersion
+    platform = "java21"
+    isConnector = true
 }
 
 task updateTomlFiles {
@@ -99,8 +101,8 @@ copyStdlibs.dependsOn unpackStdLibs
 updateTomlFiles.dependsOn copyStdlibs
 commitTomlFiles.dependsOn updateTomlFiles
 
-
 build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
+test.dependsOn ":${packageName}-native:build"
 publishToMavenLocal.dependsOn build
 publish.dependsOn build

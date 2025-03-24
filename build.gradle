@@ -17,6 +17,7 @@
 
 plugins {
     id 'net.researchgate.release'
+    id 'java'
 }
 
 allprojects {
@@ -86,7 +87,7 @@ release {
     }
 }
 
-task build {
+build {
     dependsOn(':etl-ballerina:build')
-    mustRunAfter(':etl-native:build')
+    dependsOn(':etl-native:build')
 }
