@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project demonstrates the use of the `ballerina/etl` module in Ballerina to automate product catalog data processing. It extracts, transforms, encrypts, categorizes, and loads product data into a MySQL database.
+This example demonstrates the use of the `ballerina/etl` module in Ballerina to automate product catalog data processing. It extracts, transforms, encrypts, categorizes, and loads product data into a MySQL database.
 
 ## Implementation
 
