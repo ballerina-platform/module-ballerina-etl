@@ -40,15 +40,12 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 public class EtlFiltering {
 
     public static Object filterDataByRatio(BArray dataset, float ratio, BTypedesc returnType) {
-
         BArray filteredDataset = initializeNestedBArray(returnType, 2);
         ArrayList<Object> suffledDataset = new ArrayList<>();
-
         for (int i = 0; i < dataset.size(); i++) {
             suffledDataset.add(dataset.get(i));
         }
         Collections.shuffle(suffledDataset);
-
         int splitIndex = (int) (suffledDataset.size() * ratio);
         for (int i = 0; i < suffledDataset.size(); i++) {
             if (i < splitIndex) {

@@ -45,7 +45,6 @@ public class CommonUtils {
     }
 
     public static boolean evaluateCondition(float fieldValue, float comparisonValue, String operation) {
-
         switch (operation) {
             case ">":
                 return (fieldValue > comparisonValue);

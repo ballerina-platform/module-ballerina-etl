@@ -60,7 +60,6 @@ public class EtlCleaning {
             default:
                 return convertJSONToBArray(clientResponse, returnType);
         }
-
     }
 
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
@@ -136,7 +135,6 @@ public class EtlCleaning {
                 data.put(fieldName, StringUtils.fromString(newFieldValue));
                 isFieldExist = true;
             }
-
         }
         if (!isFieldExist) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
@@ -195,5 +193,4 @@ public class EtlCleaning {
                 return convertJSONToBArray(clientResponse, returnType);
         }
     }
-
 }

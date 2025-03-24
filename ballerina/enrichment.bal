@@ -55,4 +55,3 @@ public function joinData(record {}[] dataset1, record {}[] dataset2, string prim
 public function mergeData(record {}[][] datasets, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlEnrichment"
 } external;
-

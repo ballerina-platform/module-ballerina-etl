@@ -93,7 +93,6 @@ public class EtlSecurity {
     public static Object decryptData(BArray dataset, BArray fieldNames, BString key, BTypedesc returnType) {
         BArray decryptedDataset = initializeBArray(returnType);
         byte[] decryptKey = Base64.getDecoder().decode(key.getValue());
-
         Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -150,5 +149,4 @@ public class EtlSecurity {
                 return convertJSONToBArray(clientResponse, returnType);
         }
     }
-
 }

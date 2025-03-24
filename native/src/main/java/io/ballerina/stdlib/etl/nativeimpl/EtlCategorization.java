@@ -67,12 +67,10 @@ public class EtlCategorization {
         if (!isFieldExist) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-
         return categorizedData;
     }
 
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
-
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size() + 1);
         boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {
@@ -99,7 +97,6 @@ public class EtlCategorization {
         if (!isFieldExist) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-
         return categorizedData;
     }
 
@@ -128,5 +125,4 @@ public class EtlCategorization {
                 return convertJSONToBArray(clientResponse, returnType);
         }
     }
-
 }

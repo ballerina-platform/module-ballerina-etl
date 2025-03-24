@@ -38,7 +38,6 @@ function testGroupApproximateDuplicatess() returns error? {
         {"name": "Charlie", "city": "Los Angeles"},
         {"name": "charlie", "city": "los angeles - usa"}
     ];
-
     Person2[] uniqueRecords = [
         {"name": "Bob", "city": "Boston"},
         {"name": "John", "city": "Chicago"}
@@ -47,7 +46,6 @@ function testGroupApproximateDuplicatess() returns error? {
         [{"name": "Alice", "city": "New York"}, {"name": "Alice", "city": "new york"}],
         [{"name": "Charlie", "city": "Los Angeles"}, {"name": "charlie", "city": "los angeles - usa"}]
     ];
-
     Person2[][] result = check groupApproximateDuplicates(dataset);
     test:assertEquals(result[0], uniqueRecords);
     test:assertEquals(result.slice(1), duplicateGroups);
@@ -64,7 +62,6 @@ function testHandleWhiteSpaces() returns error? {
         {"name": "Alice", "city": "New York"},
         {"name": "Bob", "city": "Los Angeles"}
     ];
-
     Person1[] result = check handleWhiteSpaces(dataset);
     test:assertEquals(result, expected);
 }
@@ -97,7 +94,6 @@ function testRemoveField() returns error? {
         {"name": "Bob", "city": "Los Angeles"},
         {"name": "Charlie", "city": "Chicago"}
     ];
-
     Person1[] result = check removeField(dataset, fieldName);
     test:assertEquals(result, expected);
 }
@@ -147,7 +143,6 @@ function testSort() returns error? {
         {"name": "Alice", "age": 25},
         {"name": "Bob", "age": 30}
     ];
-
     Person1[] result = check sortData(dataset, fieldName, isAscending);
     test:assertEquals(result, expected);
 }
@@ -166,7 +161,6 @@ function testStandardizeData() returns error? {
         {"name": "John", "city": "New York"},
         {"name": "Charlie", "city": "Los Angeles"}
     ];
-
     Person2[] result = check standardizeData(dataset, fieldName, searchValues);
     test:assertEquals(result, expected);
 }

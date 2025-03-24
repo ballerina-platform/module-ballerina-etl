@@ -37,7 +37,6 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 public class EtlEnrichment {
 
     public static Object joinData(BArray dataset1, BArray dataset2, BString primaryKey, BTypedesc returnType) {
-
         BArray joinedDataset = initializeBArray(returnType);
         boolean isFieldExistForDataset1 = false;
         for (int i = 0; i < dataset1.size(); i++) {
@@ -76,16 +75,13 @@ public class EtlEnrichment {
     }
 
     public static Object mergeData(BArray datasets, BTypedesc returnType) {
-
         BArray mergedDataset = initializeBArray(returnType);
-    
         for (int i = 0; i < datasets.size(); i++) {
             BArray dataset = (BArray) datasets.get(i);
             for (int j = 0; j < dataset.size(); j++) {
                 mergedDataset.append(dataset.get(j));
             }
         }
-
         return mergedDataset;
     }
 }
