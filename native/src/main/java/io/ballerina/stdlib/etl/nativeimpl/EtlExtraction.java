@@ -26,6 +26,8 @@ import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
  * This class hold Java external functions for ETL - unstructured data
@@ -43,9 +45,9 @@ public class EtlExtraction {
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "extractFromUnstructuredDataFunc",
                 null, args);
         switch (TypeUtils.getType(clientResponse).getName()) {
-            case "ClientConnectorError":
+            case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
-            case "IdleTimeoutError":
+            case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
             default:
                 return convertJSONToRecord(clientResponse, returnType);

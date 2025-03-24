@@ -29,6 +29,8 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
  * This class hold Java external functions for ETL - data categorization APIs.
@@ -117,9 +119,9 @@ public class EtlCategorization {
                 args);
         switch
         (TypeUtils.getType(clientResponse).getName()) {
-            case "ClientConnectorError":
+            case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
-            case "IdleTimeoutError":
+            case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);

@@ -39,6 +39,8 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
  * This class hold Java external functions for ETL - data security APIs.
@@ -137,13 +139,10 @@ public class EtlSecurity {
         Object[] args = new Object[] { dataset, maskCharacter, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
                 args);
-        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
-            return ErrorUtils.createClientConnectionError();
-        }
         switch (TypeUtils.getType(clientResponse).getName()) {
-            case "ClientConnectorError":
+            case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
-            case "IdleTimeoutError":
+            case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);

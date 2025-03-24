@@ -35,6 +35,8 @@ import java.util.List;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
  * This class hold Java external functions for ETL - data cleaning APIs.
@@ -53,9 +55,9 @@ public class EtlCleaning {
                 args);
         switch
         (TypeUtils.getType(clientResponse).getName()) {
-            case "ClientConnectorError":
+            case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
-            case "IdleTimeoutError":
+            case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);
@@ -185,9 +187,9 @@ public class EtlCleaning {
                 args);
         switch
         (TypeUtils.getType(clientResponse).getName()) {
-            case "ClientConnectorError":
+            case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
-            case "IdleTimeoutError":
+            case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);
