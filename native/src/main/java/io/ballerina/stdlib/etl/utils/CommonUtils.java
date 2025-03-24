@@ -78,10 +78,9 @@ public class CommonUtils {
 
     public static BMap<BString, Object> initializeBMap(BTypedesc type) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
-        BMap<BString, Object> result = ValueCreator.createRecordValue(
+        return ValueCreator.createRecordValue(
                 TypeCreator.createRecordType(describingType.getName(), describingType.getPackage(),
                         describingType.getFlags(), false, 0));
-        return result;
 
     }
 

@@ -28,7 +28,6 @@ dependencies {
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstylePluginVersion}"
     
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
-
 }
 
 checkstyle {

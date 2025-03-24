@@ -39,7 +39,6 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 public class EtlCategorization {
 
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
-
         BArray categorizedData = initializeNestedBArray(returnType, rangeArray.size() + 1);
         boolean isFieldExist = false;
         for (int i = 0; i < dataset.size(); i++) {

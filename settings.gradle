@@ -34,8 +34,6 @@ plugins {
 
 rootProject.name = 'ballerina.etl'
 
-
-
 include(':checkstyle')
 include ':etl-ballerina'
 include ':etl-examples'
@@ -45,7 +43,6 @@ project(':checkstyle').projectDir = file("build-config${File.separator}checkstyl
 project(':etl-ballerina').projectDir = file("ballerina")
 project(':etl-examples').projectDir = file("examples")
 project(':etl-native').projectDir = file("native")
-
 
 gradleEnterprise {
    buildScan {

@@ -38,7 +38,7 @@ public class ErrorUtils {
      * @param errorMsg the error message
      * @return an error which will be propagated to ballerina user
      */
-    public static BError createError(String errorMsg) {
+    public static BError createError(String message) {
         return ErrorCreator.createError(StringUtils.fromString(errorMsg));
     }
 
