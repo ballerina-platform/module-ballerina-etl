@@ -42,10 +42,14 @@ public class EtlExtraction {
         Object[] args = new Object[] { dataset, fieldNames, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "extractFromUnstructuredDataFunc",
                 null, args);
-        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
-            return ErrorUtils.createClientConnectionError();
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case "ClientConnectorError":
+                return ErrorUtils.createClientConnectionError();
+            case "IdleTimeoutError":
+                return ErrorUtils.createIdleTimeoutError();
+            default:
+                return convertJSONToRecord(clientResponse, returnType);
         }
-        return convertJSONToRecord(clientResponse, returnType);
 
     }
 }

@@ -141,7 +141,14 @@ public class EtlSecurity {
         if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
             return ErrorUtils.createClientConnectionError();
         }
-        return convertJSONToBArray(clientResponse, returnType);
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case "ClientConnectorError":
+                return ErrorUtils.createClientConnectionError();
+            case "IdleTimeoutError":
+                return ErrorUtils.createIdleTimeoutError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
+        }
     }
 
 }

@@ -46,15 +46,21 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 public class EtlCleaning {
 
     public static Object groupApproximateDuplicates(Environment env, BArray dataset, BString modelName,
-            BTypedesc returnType) {
+            BTypedesc returnType) {        
         Object[] args = new Object[] { dataset, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "groupApproximateDuplicatesFunc",
                 null,
                 args);
-        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
-            return ErrorUtils.createClientConnectionError();
+        switch
+        (TypeUtils.getType(clientResponse).getName()) {
+            case "ClientConnectorError":
+                return ErrorUtils.createClientConnectionError();
+            case "IdleTimeoutError":
+                return ErrorUtils.createIdleTimeoutError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
         }
-        return convertJSONToBArray(clientResponse, returnType);
+
     }
 
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
@@ -179,10 +185,15 @@ public class EtlCleaning {
         Object[] args = new Object[] { dataset, fieldName, standardValues, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "standardizeDataFunc", null,
                 args);
-        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
-            return ErrorUtils.createClientConnectionError();
+        switch
+        (TypeUtils.getType(clientResponse).getName()) {
+            case "ClientConnectorError":
+                return ErrorUtils.createClientConnectionError();
+            case "IdleTimeoutError":
+                return ErrorUtils.createIdleTimeoutError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
         }
-        return convertJSONToBArray(clientResponse, returnType);
     }
 
 }

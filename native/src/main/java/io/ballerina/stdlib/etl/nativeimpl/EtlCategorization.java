@@ -119,10 +119,15 @@ public class EtlCategorization {
         Object[] args = new Object[] { dataset, fieldName, categories, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "categorizeSemanticFunc", null,
                 args);
-        if (TypeUtils.getType(clientResponse).getName().equals("ClientConnectorError")) {
-            return ErrorUtils.createClientConnectionError();
+        switch
+        (TypeUtils.getType(clientResponse).getName()) {
+            case "ClientConnectorError":
+                return ErrorUtils.createClientConnectionError();
+            case "IdleTimeoutError":
+                return ErrorUtils.createIdleTimeoutError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
         }
-        return convertJSONToBArray(clientResponse, returnType);
     }
 
 }

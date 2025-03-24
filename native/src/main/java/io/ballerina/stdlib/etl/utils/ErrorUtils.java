@@ -50,4 +50,8 @@ public class ErrorUtils {
     public static BError createClientConnectionError() {
         return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connection error"));
     }
+
+    public static BError createIdleTimeoutError() {
+        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to idle timeout. Size of the dataset may be too large"));
+    }
 }
