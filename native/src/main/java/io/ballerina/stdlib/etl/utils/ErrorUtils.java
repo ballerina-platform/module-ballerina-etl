@@ -39,7 +39,7 @@ public class ErrorUtils {
      * @return an error which will be propagated to ballerina user
      */
     public static BError createError(String message) {
-        return ErrorCreator.createError(StringUtils.fromString(errorMsg));
+        return ErrorCreator.createError(StringUtils.fromString(message));
     }
 
     public static BError createFieldNotFoundError(BString fieldName) {
