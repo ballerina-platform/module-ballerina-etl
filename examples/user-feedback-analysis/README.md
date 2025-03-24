@@ -1,4 +1,4 @@
-# Customer Feedback Analysis
+# User Feedback Analysis
 
 ## Overview
 
@@ -49,5 +49,5 @@ $ bal run
 
 Upon successful execution, the processed and categorized feedbacks will be stored in the following CSV files:
 
--`positive_feedbacks.csv`: Contains positive feedback.
--`negative_feedbacks.csv`: Contains negative feedback.
+- `positive_feedbacks.csv`: Contains positive feedback.
+- `negative_feedbacks.csv`: Contains negative feedback.
