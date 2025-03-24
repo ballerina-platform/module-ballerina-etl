@@ -6,7 +6,6 @@ version = "1.0.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["etl"]
-
 repository = "https://github.com/ballerina-platform/module-ballerina-etl"
 
 [build-options]
