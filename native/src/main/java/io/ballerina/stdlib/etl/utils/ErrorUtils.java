@@ -31,15 +31,13 @@ public class ErrorUtils {
 
     private ErrorUtils() {
     }
+    
+    public static BError createPrimaryKeyNotFoundError(int datasetIndex) {
+        return ErrorCreator.createError(StringUtils.fromString("Primary key not found in the dataset" + datasetIndex));
+    }
 
-    /**
-     * Creates an error message.
-     *
-     * @param errorMsg the error message
-     * @return an error which will be propagated to ballerina user
-     */
-    public static BError createError(String message) {
-        return ErrorCreator.createError(StringUtils.fromString(message));
+    public static BError createNoMatchesFoundError() {
+        return ErrorCreator.createError(StringUtils.fromString("No matching records found"));
     }
 
     public static BError createFieldNotFoundError(BString fieldName) {
@@ -52,6 +50,15 @@ public class ErrorUtils {
     }
 
     public static BError createIdleTimeoutError() {
-        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to idle timeout. Size of the dataset may be too large"));
+        return ErrorCreator.createError(
+                StringUtils.fromString("Operation failed due to idle timeout. Size of the dataset may be too large"));
+    }
+
+    public static BError createEncryptingError(String message) {
+        return ErrorCreator.createError(StringUtils.fromString("Error occurred while encrypting data: " + message));
+    }
+
+    public static BError createDecryptingError(String message) {
+        return ErrorCreator.createError(StringUtils.fromString("Error occurred while decrypting data: " + message));
     }
 }

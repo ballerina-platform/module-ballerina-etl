@@ -61,15 +61,15 @@ public class EtlEnrichment {
                     }  
                 }
                 if (!isFieldExistForDataset2) {
-                    return ErrorUtils.createError("Primary key field does not exist in dataset2");
+                    return ErrorUtils.createPrimaryKeyNotFoundError(2);
                 }
             }
         }
         if (!isFieldExistForDataset1) {
-            return ErrorUtils.createError("Primary key field does not exist in dataset1");
+            return ErrorUtils.createPrimaryKeyNotFoundError(1);
         }
         if (joinedDataset.size() == 0) {
-            return ErrorUtils.createError("No matching records found");
+            return ErrorUtils.createNoMatchesFoundError();
         }
         return joinedDataset;
     }

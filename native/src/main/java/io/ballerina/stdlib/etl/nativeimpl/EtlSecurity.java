@@ -56,7 +56,7 @@ public class EtlSecurity {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey, "AES"));
         } catch (Exception e) {
-            return ErrorUtils.createError(e.getMessage());
+            return ErrorUtils.createEncryptingError(e.getMessage());
         }
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
@@ -75,9 +75,9 @@ public class EtlSecurity {
                     try {
                         encryptedBytes = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
                     } catch (IllegalBlockSizeException e) {
-                        return ErrorUtils.createError(e.getMessage());
+                        return ErrorUtils.createEncryptingError(e.getMessage());
                     } catch (BadPaddingException e) {
-                        return ErrorUtils.createError(e.getMessage());
+                        return ErrorUtils.createEncryptingError(e.getMessage());
                     }
                     String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedBytes);
                     encryptedData.put(keyField, StringUtils.fromString(encryptedBase64));
@@ -98,7 +98,7 @@ public class EtlSecurity {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey, "AES"));
         } catch (Exception e) {
-            return ErrorUtils.createError(e.getMessage());
+            return ErrorUtils.createDecryptingError(e.getMessage());
         }
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
@@ -117,9 +117,9 @@ public class EtlSecurity {
                     try {
                         decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(value));
                     } catch (IllegalBlockSizeException e) {
-                        return ErrorUtils.createError(e.getMessage());
+                        return ErrorUtils.createDecryptingError(e.getMessage());
                     } catch (BadPaddingException e) {
-                        return ErrorUtils.createError(e.getMessage());
+                        return ErrorUtils.createDecryptingError(e.getMessage());
                     }
                     String decryptedValue = new String(decryptedBytes, StandardCharsets.UTF_8);
                     decryptedData.put(keyField, StringUtils.fromString(decryptedValue));
