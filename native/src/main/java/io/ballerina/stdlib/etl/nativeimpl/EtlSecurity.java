@@ -39,7 +39,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
@@ -140,7 +140,7 @@ public class EtlSecurity {
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTION_ERROR:
+            case CLIENT_CONNECTOR_ERROR:
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();

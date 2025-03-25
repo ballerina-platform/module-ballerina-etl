@@ -36,7 +36,7 @@ import java.util.List;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.GROUP_APPROXIMATE_DUPLICATES;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.REGEX_MULTIPLE_WHITESPACE;
@@ -60,7 +60,7 @@ public class EtlCleaning {
                 null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTION_ERROR:
+            case CLIENT_CONNECTOR_ERROR:
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
@@ -187,7 +187,7 @@ public class EtlCleaning {
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTION_ERROR:
+            case CLIENT_CONNECTOR_ERROR:
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();

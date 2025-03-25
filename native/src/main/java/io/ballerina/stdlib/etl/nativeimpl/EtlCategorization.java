@@ -31,7 +31,7 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 import static io.ballerina.stdlib.etl.utils.Constants.CATEGORIZE_SEMANTIC;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
@@ -71,6 +71,7 @@ public class EtlCategorization {
         }
         return isFieldExist ? categorizedData : ErrorUtils.createFieldNotFoundError(fieldName);
     }
+    
 
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size() + 1);
@@ -98,7 +99,7 @@ public class EtlCategorization {
             isFieldExist = true;
         }
         return isFieldExist ? categorizedData : ErrorUtils.createFieldNotFoundError(fieldName);
-
+        
     }
 
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
@@ -116,8 +117,9 @@ public class EtlCategorization {
         Object[] args = new Object[] { dataset, fieldName, categories, modelName, returnType };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
                 args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTION_ERROR:
+        switch
+        (TypeUtils.getType(clientResponse).getName()) {
+            case CLIENT_CONNECTOR_ERROR:
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();

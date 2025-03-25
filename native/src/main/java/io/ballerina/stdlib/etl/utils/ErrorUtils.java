@@ -46,7 +46,7 @@ public class ErrorUtils {
     }
 
     public static BError createClientConnectionError() {
-        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connection error"));
+        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connector error"));
     }
 
     public static BError createIdleTimeoutError() {
