@@ -19,6 +19,7 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.values.BArray;
+import io.ballerina.runtime.api.values.BIterator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
 import io.ballerina.runtime.api.values.BString;
@@ -59,10 +60,11 @@ public class EtlFiltering {
 
     public static Object filterDataByRegex(BArray dataset, BString fieldName, BRegexpValue regexPattern,
             BTypedesc returnType) {
-        boolean isFieldExist = false;
         BArray filteredDataset = initializeNestedBArray(returnType, 2);
-        for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+        boolean isFieldExist = false;
+        BIterator<?> iterator = dataset.getIterator();
+        while (iterator.hasNext()) {
+            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
             if (data.containsKey(fieldName)) {
                 String fieldvalue = data.get(fieldName).toString();
                 if (fieldvalue.matches(regexPattern.toString())) {
@@ -75,18 +77,16 @@ public class EtlFiltering {
                 ((BArray) filteredDataset.get(1)).append(data);
             }
         }
-        if (!isFieldExist) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
-        }
-        return filteredDataset;
+        return isFieldExist ? filteredDataset : ErrorUtils.createFieldNotFoundError(fieldName);
     }
 
     public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, float value,
             BTypedesc returnType) {
-        boolean isFieldExist = false;
         BArray filteredDataset = initializeNestedBArray(returnType, 2);
-        for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+        boolean isFieldExist = false;
+        BIterator<?> iterator = dataset.getIterator();
+        while (iterator.hasNext()) {
+            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
             if (data.containsKey(fieldName)) {
                 float fieldValue = Float.parseFloat(data.get(fieldName).toString());
                 if (evaluateCondition(fieldValue, value, operation.toString())) {
@@ -99,9 +99,6 @@ public class EtlFiltering {
                 ((BArray) filteredDataset.get(1)).append(data);
             }
         }
-        if (!isFieldExist) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
-        }
-        return filteredDataset;
+        return isFieldExist ? filteredDataset : ErrorUtils.createFieldNotFoundError(fieldName);
     }
 }

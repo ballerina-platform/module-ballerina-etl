@@ -21,6 +21,7 @@ package io.ballerina.stdlib.etl.nativeimpl;
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
+import io.ballerina.runtime.api.values.BIterator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
 import io.ballerina.runtime.api.values.BString;
@@ -29,6 +30,7 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
+import static io.ballerina.stdlib.etl.utils.Constants.CATEGORIZE_SEMANTIC;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
@@ -43,63 +45,60 @@ public class EtlCategorization {
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
         BArray categorizedData = initializeNestedBArray(returnType, rangeArray.size() + 1);
         boolean isFieldExist = false;
-        for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (data.containsKey(fieldName)) {
-                float fieldValue = Float.parseFloat(data.get(fieldName).toString());
-                boolean isMatched = false;
-                for (int j = 0; j < rangeArray.size(); j++) {
-                    BArray range = (BArray) rangeArray.get(j);
-                    float lowerBound = Float.parseFloat(range.get(0).toString());
-                    float upperBound = Float.parseFloat(range.get(1).toString());
-                    if (fieldValue >= lowerBound && fieldValue <= upperBound) {
-                        ((BArray) categorizedData.get(j)).append(data);
-                        isMatched = true;
-                        break;
-                    }
+        BIterator<?> iterator = dataset.getIterator();
+        while (iterator.hasNext()) {
+            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
+            if (!data.containsKey(fieldName)) {
+                ((BArray) categorizedData.get(rangeArray.size())).append(data);
+                continue;
+            }
+            float fieldValue = Float.parseFloat(String.valueOf(data.get(fieldName)));
+            boolean isMatched = false;
+            for (int j = 0; j < rangeArray.size(); j++) {
+                BArray range = (BArray) rangeArray.get(j);
+                float lowerBound = Float.parseFloat(String.valueOf(range.get(0)));
+                float upperBound = Float.parseFloat(String.valueOf(range.get(1)));
+                if (fieldValue >= lowerBound && fieldValue <= upperBound) {
+                    ((BArray) categorizedData.get(j)).append(data);
+                    isMatched = true;
+                    break;
                 }
-                if (!isMatched) {
-                    ((BArray) categorizedData.get(rangeArray.size())).append(data);
-                }
-                isFieldExist = true;
-            } else {
+            }
+            if (!isMatched) {
                 ((BArray) categorizedData.get(rangeArray.size())).append(data);
             }
+            isFieldExist = true;
         }
-        if (!isFieldExist) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
-        }
-        return categorizedData;
+        return isFieldExist ? categorizedData : ErrorUtils.createFieldNotFoundError(fieldName);
     }
 
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size() + 1);
         boolean isFieldExist = false;
-        for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (data.containsKey(fieldName)) {
-                String fieldValue = data.get(fieldName).toString();
-                boolean isMatched = false;
-                for (int j = 0; j < regexArray.size(); j++) {
-                    BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
-                    if (fieldValue.matches(regexPattern.toString())) {
-                        ((BArray) categorizedData.get(j)).append(data);
-                        isMatched = true;
-                        break;
-                    }
+        BIterator<?> iterator = dataset.getIterator();
+        while (iterator.hasNext()) {
+            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
+            if (!data.containsKey(fieldName)) {
+                ((BArray) categorizedData.get(regexArray.size())).append(data);
+                continue;
+            }
+            String fieldValue = String.valueOf(data.get(fieldName));
+            boolean isMatched = false;
+            for (int j = 0; j < regexArray.size(); j++) {
+                BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
+                if (fieldValue.matches(regexPattern.toString())) {
+                    ((BArray) categorizedData.get(j)).append(data);
+                    isMatched = true;
+                    break;
                 }
-                if (!isMatched) {
-                    ((BArray) categorizedData.get(regexArray.size())).append(data);
-                }
-                isFieldExist = true;
-            } else {
+            }
+            if (!isMatched) {
                 ((BArray) categorizedData.get(regexArray.size())).append(data);
             }
+            isFieldExist = true;
         }
-        if (!isFieldExist) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
-        }
-        return categorizedData;
+        return isFieldExist ? categorizedData : ErrorUtils.createFieldNotFoundError(fieldName);
+
     }
 
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
@@ -115,10 +114,9 @@ public class EtlCategorization {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         Object[] args = new Object[] { dataset, fieldName, categories, modelName, returnType };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "categorizeSemanticFunc", null,
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
                 args);
-        switch
-        (TypeUtils.getType(clientResponse).getName()) {
+        switch (TypeUtils.getType(clientResponse).getName()) {
             case CLIENT_CONNECTION_ERROR:
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:

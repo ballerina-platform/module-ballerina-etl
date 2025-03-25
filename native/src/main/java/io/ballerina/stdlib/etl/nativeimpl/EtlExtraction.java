@@ -27,6 +27,7 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTION_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.EXTRACT_FROM_UNSTRUCTURED_DATA;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 /**
@@ -40,9 +41,8 @@ public class EtlExtraction {
 
     public static Object extractFromUnstructuredData(Environment env, BString dataset, BArray fieldNames,
             BString modelName, BTypedesc returnType) {
-
         Object[] args = new Object[] { dataset, fieldNames, modelName, returnType };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "extractFromUnstructuredDataFunc",
+        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
                 null, args);
         switch (TypeUtils.getType(clientResponse).getName()) {
             case CLIENT_CONNECTION_ERROR:
