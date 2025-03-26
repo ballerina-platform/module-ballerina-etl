@@ -75,10 +75,10 @@ All functions in this package support dependent types. Here is an example of how
 ```ballerina 
 import ballerina/etl;
 
-type Customer record {
+type Customer record {|
     string name;
     string city;
-};
+|};
 
 Customer[] dataset = [
     { "name": "Alice", "city": "New York" },
