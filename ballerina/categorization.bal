@@ -45,7 +45,7 @@ public function categorizeNumeric(record {}[] dataset, string fieldName, float[]
 
 # Categorizes a dataset based on a string field using a set of regular expressions.
 # ```ballerina
-# import ballerina/regexp;
+# import ballerina/lang.regexp;
 # type Customer record {
 #     string name;
 #     string city;
