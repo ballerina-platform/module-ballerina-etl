@@ -25,6 +25,7 @@ import io.ballerina.runtime.api.types.Type;
 import io.ballerina.runtime.api.utils.JsonUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
+import io.ballerina.runtime.api.values.BIterator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
@@ -36,8 +37,9 @@ import io.ballerina.runtime.api.values.BTypedesc;
 public class CommonUtils {
 
     public static boolean contains(BArray array, BString key) {
-        for (int i = 0; i < array.size(); i++) {
-            if (array.get(i).equals(key)) {
+        BIterator<?> iterator = array.getIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(key)) {
                 return true;
             }
         }
