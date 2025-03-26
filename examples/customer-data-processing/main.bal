@@ -18,16 +18,16 @@ import ballerina/etl;
 import ballerina/io;
 import ballerina/log;
 
-type CustomerDetails record {
+type CustomerDetails record {|
     string id;
     string? name;
     int? age?;
     string? city;
     string? contactNumber;
     string? email;
-};
+|};
 
-type CustomerPreferences record {
+type CustomerPreferences record {|
     string id;
     string? preferredCategory;
     string? membershipTier;
@@ -35,9 +35,9 @@ type CustomerPreferences record {
     string? preferredContactMethod;
     string? maritalStatus;
     string? occupation;
-};
+|};
 
-type CustomerData record {
+type CustomerData record {|
     string id;
     string name;
     string city;
@@ -49,7 +49,7 @@ type CustomerData record {
     string preferredContactMethod;
     string maritalStatus;
     string occupation;
-};
+|};
 
 public function main() returns error? {
 

@@ -36,7 +36,8 @@ final mysql:Client dbClient = check new (
     host = HOST, user = USER, password = PASSWORD, port = PORT, database = DATABASE
 );
 
-type Product record {
+type Product record {|
+    string code?;
     string productId;
     string name;
     float price;
@@ -44,11 +45,11 @@ type Product record {
     string category;
     string brand;
     string supplier;
-};
+|};
 
-type ProductCatalog record {
+type ProductCatalog record {|
     Product[] products;
-};
+|};
 
 // Use below function to generate a new key and update the SYMMETRIC_KEY in the Config.toml file
 function generateKey() returns error? {

@@ -18,11 +18,11 @@ import ballerina/etl;
 import ballerina/io;
 import ballerina/log;
 
-type UserFeedback record {
+type UserFeedback record {|
     string userId;
     string brandName;
     string comment;
-};
+|};
 
 public function main() returns error? {
 
