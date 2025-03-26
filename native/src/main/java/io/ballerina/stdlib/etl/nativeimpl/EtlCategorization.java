@@ -71,7 +71,6 @@ public class EtlCategorization {
         }
         return isFieldExist ? categorizedData : ErrorUtils.createFieldNotFoundError(fieldName);
     }
-    
 
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size() + 1);

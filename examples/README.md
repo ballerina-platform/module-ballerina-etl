@@ -34,5 +34,5 @@ Execute the following commands to build and run an example from the source:
 * To run an example:
 
     ```bash
-    bal run
+    $ bal run
     ```
