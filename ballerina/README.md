@@ -13,7 +13,7 @@ The functions in this package are categorized into the following ETL process sta
 ## Features
 
 ### Unstructured Data Extraction
-- `extractFromUnstructuredData`: Extracts relevant details from a string array and maps them to the specified fields using OpenAI's GPT model.
+- `extractFromUnstructuredData`: Extracts relevant details from a string and maps them to the specified fields using OpenAI's GPT model.
 
 ### Data Cleaning
 - `standardizeData`: Standardizes string values in a dataset based on approximate matches.
