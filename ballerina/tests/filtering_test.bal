@@ -17,12 +17,12 @@
 import ballerina/lang.regexp;
 import ballerina/test;
 
-type Employee record {
+type Employee record {|
     int id;
     string name?;
     string city?;
     int age?;
-};
+|};
 
 @test:Config {}
 function testFilterDataByRatio() returns error? {

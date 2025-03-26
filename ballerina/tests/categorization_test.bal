@@ -17,16 +17,16 @@
 import ballerina/lang.regexp;
 import ballerina/test;
 
-type Order record {
+type Order record {|
     int orderId;
     string customerName;
     float totalAmount;
-};
+|};
 
-type Review record {
+type Review record {|
     int id;
     string comment;
-};
+|};
 
 @test:Config {}
 function testCategorizeNumeric() returns error? {

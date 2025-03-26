@@ -16,11 +16,11 @@
 
 import ballerina/test;
 
-type ReviewSummary record {
+type ReviewSummary record {|
     string[] goodPoints;
     string[] badPoints;
     string[] improvements;
-};
+|};
 
 @test:Config {}
 public function testExtractFromUnstructuredData() returns error? {

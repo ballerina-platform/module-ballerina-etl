@@ -16,11 +16,11 @@
 
 import ballerina/test;
 
-type Customer record {
+type Customer record {|
     int id;
     string name?;
     int age?;
-};
+|};
 
 @test:Config {}
 function testJoinData() returns error? {

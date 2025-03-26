@@ -16,17 +16,17 @@
 
 import ballerina/test;
 
-type User1 record {
+type User1 record {|
     int id;
     string name;
     string|int age;
-};
+|};
 
-type User2 record {
+type User2 record {|
     int id;
     string name;
     string email;
-};
+|};
 
 @test:Config {}
 function testDecryptData() returns error? {

@@ -16,17 +16,17 @@
 
 import ballerina/test;
 
-type Person1 record {
+type Person1 record {|
     string? name?;
     string? phone?;
     string? city?;
     int? age?;
-};
+|};
 
-type Person2 record {
+type Person2 record {|
     string name;
     string city;
-};
+|};
 
 @test:Config {}
 function testGroupApproximateDuplicatess() returns error? {
