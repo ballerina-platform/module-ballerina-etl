@@ -29,6 +29,9 @@ import ballerina/jballerina.java;
 # ];
 # string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
 # Customer[] decryptedData = check etl:decryptData(encryptedDataset, ["name"], keyBase64);
+#
+# => [{ "name": "Alice", "age": 23 },
+#     { "name": "Bob", "age": 35 }]
 # ```
 #
 # + dataset - The dataset containing records with Base64-encoded encrypted fields.
@@ -53,6 +56,9 @@ public function decryptData(record {}[] dataset, string[] fieldNames, string key
 # ];
 # string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
 # Customer[] encryptedData = check etl:encryptData(dataset, ["name"], keyBase64);
+#
+# =>[{"id": 1, "name": "kHKa63v98rbDm+FB2DJ3ig==", "age": 25 },
+#    {"id": 2, "name": "S0x+hpmvSOIT7UE8hOGZkA==", "age": 30 }]
 # ```
 #
 # + dataset - The dataset containing records where specific fields need encryption.
@@ -80,6 +86,9 @@ public function encryptData(record {}[] dataset, string[] fieldNames, string key
 #     { "id": 2, "name": "Jane Smith", "email": "jane@example.com" }
 # ];
 # Customer[] maskedData = check etl:maskSensitiveData(dataset);
+#
+# => [{ "id": 1, "name": "XXX XXX", "email": "XXXXXXXXXXXXXXX" },
+#     { "id": 2, "name": "XXXX XXXX", "email": "XXXXXXXXXXXXXXX" }]
 # ```
 #
 # + dataset - The dataset containing records where sensitive fields should be masked.

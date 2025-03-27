@@ -32,6 +32,10 @@ import ballerina/lang.regexp;
 #     {"orderId": 5, "customerName": "David", "totalAmount": 30.2}
 # ];
 # Order[][] categorized = check etl:categorizeNumeric(dataset, "totalAmount", [[0.0, 10.0], [10.0, 20.0]]);
+#
+# =>[[{"orderId": 1, "customerName": "Alice", "totalAmount": 5.3}],
+#    [{"orderId": 2, "customerName": "Bob", "totalAmount": 10.5}, {"orderId": 3, "customerName": "John", "totalAmount": 15.0}],
+#    [{"orderId": 4, "customerName": "Charlie", "totalAmount": 25.0}, {"orderId": 5, "customerName": "David", "totalAmount": 30.2}]]
 # ```
 #
 # + dataset - Array of records containing numeric values.
@@ -58,6 +62,11 @@ public function categorizeNumeric(record {}[] dataset, string fieldName, float[]
 # ];
 # regexp:RegExp[] regexArray = [re `A.*$`, re `^B.*$`, re `^C.*$`];
 # Customer[][] categorized = check etl:categorizeRegex(dataset, "city", regexArray);
+#
+# =>[[{ "name": "Alice", "city": "New York" }],
+#    [{ "name": "Bob", "city": "Colombo" }],
+#    [{ "name": "Charlie", "city": "Los Angeles" }],
+#    [{ "name": "John", "city": "Boston" }]]
 # ```
 #
 # + dataset - Array of records containing string values.
@@ -78,8 +87,13 @@ public function categorizeRegex(record {}[] dataset, string fieldName, regexp:Re
 # Review[] dataset = [
 #     {"id": 1, "comment": "Great service!"},
 #     {"id": 2, "comment": "Terrible experience"}
+#     {"id": 3, "comment": "blh blh blh"}
 # ];
 # Review[][] categorized = check etl:categorizeSemantic(dataset, "comment", ["Positive", "Negative"]);
+#
+# =>[[{"id": 1, "comment": "Great service!"}],
+#    [{"id": 2, "comment": "Terrible experience"}],
+#    [{"id": 3, "comment": "blh blh blh"}]]
 # ```
 #
 # + dataset - Array of records containing textual data.

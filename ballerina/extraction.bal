@@ -20,7 +20,11 @@ import ballerina/jballerina.java;
 # ```ballerina
 # string reviews = "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming. However, the battery drains quickly, and the charging speed could be improved. The UI is intuitive, but some features feel outdated and need a refresh.";
 # string[] fields = ["goodPoints", "badPoints", "improvements"];
-# record {string[] goodPoints; string[] badPoints; string[] improvments} extractedDetails = check etl:extractFromUnstructuredData(reviews, fields);
+# Review extractedDetails = check etl:extractFromUnstructuredData(reviews, fields);
+#
+# => {"goodPoints": "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming.",
+#     "badPoints": "However, the battery drains quickly, and the charging speed could be improved.",
+#     "improvements": "The UI is intuitive, but some features feel outdated and need a refresh."}
 # ```
 #
 # + dataset - Array of unstructured string data (e.g., reviews or comments).

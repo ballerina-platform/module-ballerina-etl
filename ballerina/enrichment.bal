@@ -21,10 +21,13 @@ import ballerina/jballerina.java;
 # type Customer record {int id; string name; int age;};
 # type Customer1 record {int id; string name;};
 # type Customer2 record {int id; int age;};
-# 
+#
 # Customer1[] dataset1 = [{id: 1, name: "Alice"}, {id: 2, name: "Bob"}];
 # Customer2[] dataset2 = [{id: 1, age: 25}, {id: 2, age: 30}];
 # Customer[] mergedData = check etl:joinData(dataset1, dataset2, "id");
+#
+# => [{id: 1, name: "Alice", age: 25},
+#     {id: 2, name: "Bob", age: 30}]
 # ```
 #
 # + dataset1 - First dataset containing base records.
@@ -47,6 +50,11 @@ public function joinData(record {}[] dataset1, record {}[] dataset2, string prim
 #     [{id: 3, name: "Charlie"}, {id: 4, name: "David"}]
 # ];
 # Customer[] mergedData = check etl:mergeData(dataSets);
+#
+# => [{id: 1, name: "Alice"},
+#     {id: 2, name: "Bob"},
+#     {id: 3, name: "Charlie"},
+#     {id: 4, name: "David"}]
 # ```
 #
 # + datasets - An array of datasets, where each dataset is an array of records.

@@ -30,6 +30,9 @@ import ballerina/lang.regexp;
 #     { "id": 4, "name": "David" }
 # ];
 # Customer[][] filteredDataset = check etl:filterDataByRatio(dataset, 0.75);
+#
+# => [[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}, {"id": 3, "name": "Charlie"}],
+#     [{"id": 4, "name": "David"}]]
 # ```
 #
 # + dataset - Array of records to be split.
@@ -54,6 +57,9 @@ public function filterDataByRatio(record {}[] dataset, float ratio, typedesc<rec
 # string fieldName = "city";
 # regexp:RegExp regexPattern = re `^New.*$`;
 # Customer[][] filteredDataset = check etl:filterDataByRegex(dataset, "city", regexPattern);
+#
+# => [[{"id": 1, "city": "New York"}],
+#     [{"id": 2, "city": "Los Angeles"}, {"id": 3, "city": "San Francisco"}]]
 # ```
 #
 # + dataset - Array of records to be filtered.
@@ -80,6 +86,9 @@ public function filterDataByRegex(record {}[] dataset, string fieldName, regexp:
 #     { "id": 4, "name": "David", "age": 28 }
 # ];
 # Customer[][] filteredDataset = check etl:filterDataByRelativeExp(dataset, "age", etl:GREATER_THAN, 25);
+#
+# => [[{"id": 2, "name": "Bob", "age": 30}, {"id": 4, "name": "David", "age": 28}],
+#     [{"id": 1, "name": "Alice", "age": 25}, {"id": 3, "name": "Charlie", "age": 22}]]
 # ```
 #
 # + dataset - Array of records containing numeric fields for comparison.

@@ -30,18 +30,21 @@ import ballerina/lang.regexp;
 #     { "name": "Charlie", "city": "Los Angeles" }
 # ];
 # Customer[][] result = check etl:groupApproximateDuplicates(dataset);
+#
+# => [[{ "name": "Bob", "city": "New York" }, { "name": "Charlie", "city": "Los Angeles" }],
+#     [{ "name": "Alice", "city": "New York" }, { "name": "Alice", "city": "new york" }]]
 # ```
 #
 # + dataset - Array of records that may contain approximate duplicates.
 # + modelName - Name of the Open AI model
 # + returnType - The type of the return value (Ballerina record).
-# + return - A nested array of records where the first array contains all the unique records which
-# does not have any duplicates, and the rest of the arrays contain the duplicate groups or an `etl:Error`.
+# + return - A nested array of records where the first array contains all unique records that do not have any duplicates,
+# and the remaining arrays contain duplicate groups or an `etl:Error`.
 public function groupApproximateDuplicates(record {}[] dataset, string modelName = "gpt-4o", typedesc<record {}[]> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Cleans up whitespace in all fields of a dataset.
+# Cleans up extra whitespace in all string fields of a dataset.
 # ```ballerina
 # type Customer record {
 #     string name;
@@ -52,6 +55,9 @@ public function groupApproximateDuplicates(record {}[] dataset, string modelName
 #     { "name": "   Bob", "city": "Los  Angeles  " }
 # ];
 # Customer[] cleanedData = check etl:handleWhiteSpaces(dataset);
+#
+# => [{ "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "Los Angeles" }]
 # ```
 #
 # + dataset - Array of records with possible extra spaces.
@@ -73,6 +79,9 @@ public function handleWhiteSpaces(record {}[] dataset, typedesc<record {}> retur
 #     { "name": "Alice", "city": "New York" }
 # ];
 # Customer[] uniqueData = check etl:removeDuplicates(dataset);
+#
+# => [{ "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "Los Angeles" }]
 # ```
 #
 # + dataset - Array of records that may contain duplicates.
@@ -95,6 +104,10 @@ public function removeDuplicates(record {}[] dataset, typedesc<record {}> return
 #     { "name": "Charlie", "city": "Chicago", "age": 35 }
 # ];
 # Customer[] updatedData = check etl:removeField(dataset, "age");
+#
+# => [{ "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "Los Angeles" },
+#     { "name": "Charlie", "city": "Chicago" }]
 # ```
 #
 # + dataset - Array of records with fields to be removed.
@@ -117,6 +130,8 @@ public function removeField(record {}[] dataset, string fieldName, typedesc<reco
 #     { "name": "Charlie", "city": "" }
 # ];
 # Customer[] filteredData = check etl:removeNull(dataset);
+#
+# => [{ "name": "Alice", "city": "New York" }]
 # ```
 #
 # + dataset - Array of records containing potential null or empty fields.
@@ -138,6 +153,10 @@ public function removeNull(record {}[] dataset, typedesc<record {}> returnType =
 #     { "name": "Charlie", "city": "Chicago" }
 # ];
 # Customer[] updatedData = check etl:replaceText(dataset, "city", re `New York`, "San Francisco");
+#
+# => [{ "name": "Alice", "city": "San Francisco" },
+#     { "name": "Bob", "city": "Los Angeles" },
+#     { "name": "Charlie", "city": "Chicago" }]
 # ```
 #
 # + dataset - Array of records where text in a specified field will be replaced.
@@ -162,6 +181,10 @@ public function replaceText(record {}[] dataset, string fieldName, regexp:RegExp
 #     { "name": "Charlie", "age": 22 }
 # ];
 # Customer[] sortedData = check etl:sort(dataset, "age");
+#
+# => [{ "name": "Charlie", "age": 22 },
+#     { "name": "Alice", "age": 25 },
+#     { "name": "Bob", "age": 30 }]
 # ```
 #
 # + dataset - Array of records to be sorted.
@@ -183,9 +206,14 @@ public function sortData(record {}[] dataset, string fieldName, boolean isAscend
 #     { "name": "Alice", "city": "New York" },
 #     { "name": "Bob", "city": "newyork-usa" },
 #     { "name": "John", "city": "new york" },
-#     { "name": "Charlie", "city": "Los Angeles" }
+#     { "name": "Charlie", "city": "los angeles" }
 # ];
 # Customer[] standardizedData = check etl:standardizeData(dataset, "city", ["New York", "Los Angeles"]);
+#
+# => [{ "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "New York" },
+#     { "name": "John", "city": "New York" },
+#     { "name": "Charlie", "city": "Los Angeles" }]
 # ```
 #
 # + dataset - Array of records containing string values to be standardized.
