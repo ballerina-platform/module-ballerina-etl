@@ -71,6 +71,10 @@ subprojects {
         jbalTools ("org.ballerinalang:jballerina-tools:${ballerinaLangVersion}") {
             transitive = false
         }
+        
+        ballerinaStdLibs "io.ballerina.stdlib:observe-ballerina:${observeVersion}"
+        ballerinaStdLibs "io.ballerina:observe-ballerina:${observeInternalVersion}"
+        ballerinaStdLibs "io.ballerina.lib:openai.chat-ballerina:${openAIChatlVersion}"
 
     }
 }
