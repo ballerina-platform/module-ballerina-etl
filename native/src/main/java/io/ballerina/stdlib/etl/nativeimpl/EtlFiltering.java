@@ -19,7 +19,6 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.values.BArray;
-import io.ballerina.runtime.api.values.BIterator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
 import io.ballerina.runtime.api.values.BString;
@@ -29,8 +28,15 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static io.ballerina.stdlib.etl.utils.CommonUtils.copyBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.evaluateCondition;
-import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
+import static io.ballerina.stdlib.etl.utils.Constants.FLOAT;
+import static io.ballerina.stdlib.etl.utils.Constants.INT;
+import static io.ballerina.stdlib.etl.utils.Constants.INT_OR_FLOAT;
+import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 
 /**
  * This class hold Java external functions for ETL - data filtering APIs.
@@ -41,64 +47,65 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 public class EtlFiltering {
 
     public static Object filterDataByRatio(BArray dataset, float ratio, BTypedesc returnType) {
-        BArray filteredDataset = initializeNestedBArray(returnType, 2);
+        if (ratio < 0 || ratio > 1) {
+            return ErrorUtils.createInvalidRatioError(ratio);
+        }
+        BArray filteredDataset = initializeBArray(returnType);
         ArrayList<Object> suffledDataset = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
-            suffledDataset.add(dataset.get(i));
+            suffledDataset.add(copyBMap((BMap<BString, Object>) dataset.get(i), returnType));
         }
         Collections.shuffle(suffledDataset);
         int splitIndex = (int) (suffledDataset.size() * ratio);
-        for (int i = 0; i < suffledDataset.size(); i++) {
-            if (i < splitIndex) {
-                ((BArray) filteredDataset.get(0)).append(suffledDataset.get(i));
-            } else {
-                ((BArray) filteredDataset.get(1)).append(suffledDataset.get(i));
-            }
+        for (int i = 0; i < splitIndex; i++) {
+            ((BArray) filteredDataset).append(suffledDataset.get(i));
         }
         return filteredDataset;
     }
 
     public static Object filterDataByRegex(BArray dataset, BString fieldName, BRegexpValue regexPattern,
             BTypedesc returnType) {
-        BArray filteredDataset = initializeNestedBArray(returnType, 2);
-        boolean isFieldExist = false;
-        BIterator<?> iterator = dataset.getIterator();
-        while (iterator.hasNext()) {
-            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
-            if (data.containsKey(fieldName)) {
-                String fieldvalue = data.get(fieldName).toString();
-                if (fieldvalue.matches(regexPattern.toString())) {
-                    ((BArray) filteredDataset.get(0)).append(data);
-                } else {
-                    ((BArray) filteredDataset.get(1)).append(data);
-                }
-                isFieldExist = true;
-            } else {
-                ((BArray) filteredDataset.get(1)).append(data);
+        if (!isFieldExist(dataset, fieldName)) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
+        }
+        String field = getFieldType(returnType, fieldName);
+        if (!field.contains(STRING)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, field);
+        }
+        BArray filteredDataset = initializeBArray(returnType);
+        for (int i = 0; i < dataset.size(); i++) {
+            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
+            if (!newData.containsKey(fieldName)) {
+                continue;
+            }
+            String fieldvalue = newData.get(fieldName).toString();
+            if (fieldvalue.matches(regexPattern.toString())) {
+                ((BArray) filteredDataset).append(newData);
             }
         }
-        return isFieldExist ? filteredDataset : ErrorUtils.createFieldNotFoundError(fieldName);
+        return filteredDataset;
     }
 
     public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, float value,
             BTypedesc returnType) {
-        BArray filteredDataset = initializeNestedBArray(returnType, 2);
-        boolean isFieldExist = false;
-        BIterator<?> iterator = dataset.getIterator();
-        while (iterator.hasNext()) {
-            BMap<BString, Object> data = (BMap<BString, Object>) iterator.next();
-            if (data.containsKey(fieldName)) {
-                float fieldValue = Float.parseFloat(data.get(fieldName).toString());
-                if (evaluateCondition(fieldValue, value, operation.toString())) {
-                    ((BArray) filteredDataset.get(0)).append(data);
-                } else {
-                    ((BArray) filteredDataset.get(1)).append(data);
-                }
-                isFieldExist = true;
-            } else {
-                ((BArray) filteredDataset.get(1)).append(data);
+        if (!isFieldExist(dataset, fieldName)) {
+            return ErrorUtils.createFieldNotFoundError(fieldName);
+        }
+        String field = getFieldType(returnType, fieldName);
+        if (!field.contains(INT) && !field.contains(FLOAT)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, field);
+        }
+        BArray filteredDataset = initializeBArray(returnType);
+        for (int i = 0; i < dataset.size(); i++) {
+            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
+            if (!newData.containsKey(fieldName)) {
+                continue;
+            }
+            float fieldValue = Float.parseFloat(newData.get(fieldName).toString());
+            if (evaluateCondition(fieldValue, value, operation.getValue())) {
+                ((BArray) filteredDataset).append(newData);
             }
         }
-        return isFieldExist ? filteredDataset : ErrorUtils.createFieldNotFoundError(fieldName);
+        return filteredDataset;
     }
 }

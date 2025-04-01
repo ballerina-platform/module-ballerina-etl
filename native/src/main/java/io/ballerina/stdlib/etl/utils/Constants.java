@@ -23,6 +23,9 @@ public class Constants {
     public static final String IDLE_TIMEOUT_ERROR = "IdleTimeoutError";
     public static final String CLIENT_CONNECTOR_ERROR = "ClientConnectorError";
     public static final String STRING = "string";
+    public static final String INT = "int";
+    public static final String FLOAT = "float";
+    public static final String INT_OR_FLOAT = "int or float";
     public static final String REGEX_MULTIPLE_WHITESPACE = "\\s+";
     public static final String SINGLE_WHITESPACE = " ";
     public static final String GROUP_APPROXIMATE_DUPLICATES = "groupApproximateDuplicatesFunc";

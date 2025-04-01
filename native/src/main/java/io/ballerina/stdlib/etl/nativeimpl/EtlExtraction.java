@@ -20,12 +20,13 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.TypeUtils;
-import io.ballerina.runtime.api.values.BArray;
+import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.getReturnTypeSchema;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.EXTRACT_FROM_UNSTRUCTURED_DATA;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
@@ -39,9 +40,10 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 public class EtlExtraction {
 
-    public static Object extractFromUnstructuredData(Environment env, BString dataset, BArray fieldNames,
-            BString modelName, BTypedesc returnType) {
-        Object[] args = new Object[] { dataset, fieldNames, modelName, returnType };
+    public static Object extractFromUnstructuredData(Environment env, BString dataset,
+            BString modelId, BTypedesc returnType) {
+        BMap<BString, Object> returnTypeSchema = getReturnTypeSchema(returnType);
+        Object[] args = new Object[] { dataset, returnTypeSchema, modelId };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
                 null, args);
         switch (TypeUtils.getType(clientResponse).getName()) {

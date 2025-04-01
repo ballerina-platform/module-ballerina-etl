@@ -31,9 +31,11 @@ public class ErrorUtils {
 
     private ErrorUtils() {
     }
-    
-    public static BError createPrimaryKeyNotFoundError(int datasetIndex) {
-        return ErrorCreator.createError(StringUtils.fromString("Primary key not found in the dataset" + datasetIndex));
+
+    public static BError createCommonFieldNotFoundError(int datasetIndex) {
+        return ErrorCreator.createError(
+                StringUtils.fromString(String.format("The dataset%d does not contain the field - '%s'", datasetIndex,
+                        "fieldName")));
     }
 
     public static BError createNoMatchesFoundError() {
@@ -42,7 +44,21 @@ public class ErrorUtils {
 
     public static BError createFieldNotFoundError(BString fieldName) {
         return ErrorCreator
-                .createError(StringUtils.fromString("The dataset does not contain the field - " + fieldName));
+                .createError(StringUtils
+                        .fromString(
+                                String.format("The dataset does not contain the field - '%s'", fieldName)));
+    }
+
+    public static BError createInvalidFieldTypeError(BString fieldName, String expectedType, String actualType) {
+        return ErrorCreator.createError(StringUtils.fromString(
+                String.format("The field '%s' is expected to be of type '%s' but found '%s'", fieldName,
+                        expectedType,
+                        actualType)));
+    }
+
+    public static BError createInvalidRatioError(float ratio) {
+        return ErrorCreator.createError(StringUtils.fromString(
+                String.format("Invalid ratio value: %f. Ratio should be between 0 and 1", ratio)));
     }
 
     public static BError createClientConnectionError() {
@@ -55,10 +71,12 @@ public class ErrorUtils {
     }
 
     public static BError createEncryptingError(String message) {
-        return ErrorCreator.createError(StringUtils.fromString("Error occurred while encrypting data: " + message));
+        return ErrorCreator.createError(
+                StringUtils.fromString(String.format("Error occurred while encrypting data: %s", message)));
     }
 
     public static BError createDecryptingError(String message) {
-        return ErrorCreator.createError(StringUtils.fromString("Error occurred while decrypting data: " + message));
+        return ErrorCreator.createError(
+                StringUtils.fromString(String.format("Error occurred while decrypting data: %s", message)));
     }
 }

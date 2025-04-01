@@ -39,6 +39,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
@@ -50,9 +51,14 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 @SuppressWarnings("unchecked")
 public class EtlSecurity {
 
-    public static Object encryptData(BArray dataset, BArray fieldNames, BString key, BTypedesc returnType) {
+    public static Object encryptData(BArray dataset, BArray fieldNames, BArray key, BTypedesc returnType) {
+        for (int i = 0; i < fieldNames.size(); i++) {
+            if (!isFieldExist(dataset, fieldNames.getBString(i))) {
+                return ErrorUtils.createFieldNotFoundError(fieldNames.getBString(i));
+            }
+        }
         BArray encryptedDataset = initializeBArray(returnType);
-        byte[] encryptKey = Base64.getDecoder().decode(key.getValue());
+        byte[] encryptKey = key.getBytes();
         Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -63,12 +69,6 @@ public class EtlSecurity {
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> encryptedData = initializeBMap(returnType);
-            for (int j = 0; j < fieldNames.size(); j++) {
-                BString fieldName = (BString) fieldNames.get(j);
-                if (!data.containsKey(fieldName)) {
-                    return ErrorUtils.createFieldNotFoundError(fieldName);
-                }
-            }
             BString[] keys = data.getKeys();
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
@@ -92,9 +92,14 @@ public class EtlSecurity {
         return encryptedDataset;
     }
 
-    public static Object decryptData(BArray dataset, BArray fieldNames, BString key, BTypedesc returnType) {
+    public static Object decryptData(BArray dataset, BArray fieldNames, BArray key, BTypedesc returnType) {
+        for (int i = 0; i < fieldNames.size(); i++) {
+            if (!isFieldExist(dataset, fieldNames.getBString(i))) {
+                return ErrorUtils.createFieldNotFoundError(fieldNames.getBString(i));
+            }
+        }
         BArray decryptedDataset = initializeBArray(returnType);
-        byte[] decryptKey = Base64.getDecoder().decode(key.getValue());
+        byte[] decryptKey = key.getBytes();
         Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -105,12 +110,6 @@ public class EtlSecurity {
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> decryptedData = initializeBMap(returnType);
-            for (int j = 0; j < fieldNames.size(); j++) {
-                BString fieldName = (BString) fieldNames.get(j);
-                if (!data.containsKey(fieldName)) {
-                    return ErrorUtils.createFieldNotFoundError(fieldName);
-                }
-            }
             BString[] keys = data.getKeys();
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
@@ -134,9 +133,9 @@ public class EtlSecurity {
         return decryptedDataset;
     }
 
-    public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter, BString modelName,
+    public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter, BString modelId,
             BTypedesc returnType) {
-        Object[] args = new Object[] { dataset, maskCharacter, modelName, returnType };
+        Object[] args = new Object[] { dataset, maskCharacter, modelId };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {

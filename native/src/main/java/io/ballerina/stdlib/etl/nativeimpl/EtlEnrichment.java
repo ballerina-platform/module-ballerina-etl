@@ -26,6 +26,7 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 
 /**
  * This class hold Java external functions for ETL - data enrichment APIs.
@@ -36,37 +37,35 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 @SuppressWarnings("unchecked")
 public class EtlEnrichment {
 
-    public static Object joinData(BArray dataset1, BArray dataset2, BString primaryKey, BTypedesc returnType) {
+    public static Object joinData(BArray dataset1, BArray dataset2, BString fieldName, BTypedesc returnType) {
+        if (!isFieldExist(dataset1, fieldName)) {
+            return ErrorUtils.createCommonFieldNotFoundError(1);
+        }
+        if (!isFieldExist(dataset2, fieldName)) {
+            return ErrorUtils.createCommonFieldNotFoundError(2);
+        }
         BArray joinedDataset = initializeBArray(returnType);
-        boolean isFieldExistForDataset1 = false;
         for (int i = 0; i < dataset1.size(); i++) {
             BMap<BString, Object> data1 = (BMap<BString, Object>) dataset1.get(i);
-            if (data1.containsKey(primaryKey)) {
-                isFieldExistForDataset1 = true;
-                boolean isFieldExistForDataset2 = false;
-                for (int j = 0; j < dataset2.size(); j++) {
-                    BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
-                    if (data2.containsKey(primaryKey)) {
-                        isFieldExistForDataset2 = true;
-                        if (data1.get(primaryKey).equals(data2.get(primaryKey))) {
-                            BMap<BString, Object> newData = initializeBMap(returnType);
-                            for (BString key : data1.getKeys()) {
-                                newData.put(key, data1.get(key));
-                            }
-                            for (BString key : data2.getKeys()) {
-                                newData.put(key, data2.get(key));
-                            }
-                            joinedDataset.append(newData);
-                        }
-                    }  
+            if (data1.get(fieldName) == null) {
+                continue;
+            }
+            for (int j = 0; j < dataset2.size(); j++) {
+                BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
+                if (data2.get(fieldName) == null) {
+                    continue;
                 }
-                if (!isFieldExistForDataset2) {
-                    return ErrorUtils.createPrimaryKeyNotFoundError(2);
+                if (data1.get(fieldName).equals(data2.get(fieldName))) {
+                    BMap<BString, Object> newData = initializeBMap(returnType);
+                    for (BString key : data1.getKeys()) {
+                        newData.put(key, data1.get(key));
+                    }
+                    for (BString key : data2.getKeys()) {
+                        newData.put(key, data2.get(key));
+                    }
+                    joinedDataset.append(newData);
                 }
             }
-        }
-        if (!isFieldExistForDataset1) {
-            return ErrorUtils.createPrimaryKeyNotFoundError(1);
         }
         if (joinedDataset.size() == 0) {
             return ErrorUtils.createNoMatchesFoundError();

@@ -21,14 +21,19 @@ package io.ballerina.stdlib.etl.utils;
 import io.ballerina.runtime.api.creators.TypeCreator;
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.types.ArrayType;
+import io.ballerina.runtime.api.types.Field;
+import io.ballerina.runtime.api.types.StructureType;
 import io.ballerina.runtime.api.types.Type;
 import io.ballerina.runtime.api.utils.JsonUtils;
+import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BIterator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
+
+import java.util.Map;
 
 /**
  * Represents the util functions of ETL operations.
@@ -64,16 +69,14 @@ public class CommonUtils {
     }
 
     public static BArray initializeBArray(BTypedesc type) {
-        Type describingType = TypeUtils.getReferredType(type.getDescribingType());
-        return ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
+        Type arrayType = TypeUtils.getReferredType(type.getDescribingType());
+        return ValueCreator.createArrayValue(TypeCreator.createArrayType(arrayType));
     }
 
     public static BArray initializeNestedBArray(BTypedesc type, int size) {
-        Type describingType = TypeUtils.getReferredType(type.getDescribingType());
-        BArray nestedArray = ValueCreator.createArrayValue(TypeCreator.createArrayType(describingType));
-        for (int i = 0; i < size; i++) {
-            nestedArray.add(i, ValueCreator.createArrayValue((ArrayType) nestedArray.getElementType()));
-        }
+        ArrayType arrayType = TypeCreator.createArrayType(TypeUtils.getReferredType(type.getDescribingType()));
+        BArray nestedArray = ValueCreator.createArrayValue(TypeCreator.createArrayType(arrayType));
+        nestedArray.setLength(size);
         return nestedArray;
     }
 
@@ -82,7 +85,14 @@ public class CommonUtils {
         return ValueCreator.createRecordValue(
                 TypeCreator.createRecordType(describingType.getName(), describingType.getPackage(),
                         describingType.getFlags(), false, 0));
+    }
 
+    public static BMap<BString, Object> copyBMap(BMap<BString, Object> source, BTypedesc targetType) {
+        BMap<BString, Object> target = initializeBMap(targetType);
+        for (BString key : source.getKeys()) {
+            target.put(key, source.get(key));
+        }
+        return target;
     }
 
     public static BArray convertJSONToBArray(Object source, BTypedesc type) {
@@ -90,8 +100,52 @@ public class CommonUtils {
         return (BArray) JsonUtils.convertJSON(source, TypeCreator.createArrayType(describingType));
     }
 
+    public static BArray convertJSONToNestedBArray(Object source, BTypedesc type) {
+        ArrayType arrayType = TypeCreator.createArrayType(TypeUtils.getReferredType(type.getDescribingType()));
+        return (BArray) JsonUtils.convertJSON(source, TypeCreator.createArrayType(arrayType));
+    }
+
     public static Object convertJSONToRecord(Object source, BTypedesc type) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
         return JsonUtils.convertJSON(source, describingType);
+    }
+
+    public static BString[] getFields(BTypedesc type) {
+        Type describingType = TypeUtils.getReferredType(type.getDescribingType());
+        StructureType structType = (StructureType) describingType;
+        Map<String, Field> fields = structType.getFields();
+        BString[] fieldNames = new BString[fields.size()];
+        int i = 0;
+        for (Map.Entry<String, Field> entry : fields.entrySet()) {
+            fieldNames[i++] = StringUtils.fromString(entry.getKey());
+        }
+        return fieldNames;
+    }
+
+    public static boolean isFieldExist(BArray dataset, BString fieldName) {
+        Type describingType = TypeUtils.getReferredType(dataset.getElementType());
+        StructureType structType = (StructureType) describingType;
+        Map<String, Field> fields = structType.getFields();
+        return fields.containsKey(fieldName.getValue());
+    }
+
+    public static String getFieldType(BTypedesc type, BString fieldName) {
+        Type describingType = TypeUtils.getReferredType(type.getDescribingType());
+        StructureType structType = (StructureType) describingType;
+        Map<String, Field> fields = structType.getFields();
+        return fields.get(fieldName.getValue()).getFieldType().toString();
+    }
+
+    public static BMap<BString, Object> getReturnTypeSchema(BTypedesc type) {
+        BString[] fieldNames = getFields(type);
+        BString[] fieldTypes = new BString[fieldNames.length];
+        for (int i = 0; i < fieldNames.length; i++) {
+            fieldTypes[i] = StringUtils.fromString(getFieldType(type, fieldNames[i]));
+        }
+        BMap<BString, Object> returnTypeDetails = ValueCreator.createMapValue();
+        for (int i = 0; i < fieldNames.length; i++) {
+            returnTypeDetails.put(fieldNames[i], fieldTypes[i]);
+        }
+        return returnTypeDetails;
     }
 }
