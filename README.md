@@ -15,12 +15,12 @@ The functions in this package are categorized into the following ETL process sta
 ## Features
 
 ### Unstructured Data Extraction
-- `extractFromUnstructuredData`: Extracts relevant details from a string and maps them to the specified fields using OpenAI's GPT model.
+- `extractFromUnstructuredData`: Extracts relevant details from a string and maps them to a ballerina record.
 
 ### Data Cleaning
 - `standardizeData`: Standardizes string values in a dataset based on approximate matches.
 - `groupApproximateDuplicates`: Identifies approximate duplicates in a dataset and groups them, returning unique records separately.
-- `removeNull`: Removes records that contain null or empty string values in any field.
+- `removeEmptyValues`: Removes records that contain nil, empty parentheses, or empty string values in any field.
 - `removeDuplicates`: Removes exact duplicate records from a dataset based on their content.
 - `removeField`: Removes a specified field from each record in the dataset.
 - `replaceText`: Replaces text in a specific field of a dataset using regular expressions.
@@ -28,12 +28,12 @@ The functions in this package are categorized into the following ETL process sta
 - `handleWhiteSpaces`: Cleans up whitespace in all fields of a dataset by replacing multiple spaces with a single space and trimming the values.
 
 ### Data Enrichment
-- `joinData`: Merges two datasets based on a common primary key, updating records from the first dataset with matching records from the second.
+- `joinData`: Merges two datasets based on a given key, updating records from the first dataset with matching records from the second.
 - `mergeData`: Merges multiple datasets into a single dataset by flattening a nested array of records.
 
 ### Data Security
-- `encryptData`: Encrypts a dataset using AES-ECB encryption with a given Base64-encoded key.
-- `decryptData`: Decrypts a dataset using AES-ECB decryption with a given Base64-encoded key, returning records of the specified type.
+- `encryptData`: Encrypts a dataset using AES-ECB encryption with a given symmetric key.
+- `decryptData`: Decrypts a dataset using AES-ECB decryption with a given symmetric key.
 - `maskSensitiveData`: Masks specified fields of a dataset by replacing each character in the sensitive fields with a masking character.
 
 ### Data Filtering
@@ -83,9 +83,9 @@ type Customer record {|
 |};
 
 Customer[] dataset = [
-    { "name": "Alice", "city": "New York" },
-    { "name": "Bob", "city": "Los Angeles" },
-    { "name": "Alice", "city": "New York" }
+    { name: "Alice", city: "New York" },
+    { name: "Bob", city: "Los Angeles" },
+    { name: "Alice", city: "New York" }
 ];
 
 public function main() returns error? {
