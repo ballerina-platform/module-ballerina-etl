@@ -17,10 +17,9 @@
 import ballerina/test;
 
 type Person1 record {|
-    string? name?;
-    string? phone?;
-    string? city?;
-    int? age?;
+    string? name;
+    string? city;
+
 |};
 
 type Person2 record {|
@@ -28,138 +27,155 @@ type Person2 record {|
     string city;
 |};
 
+type Person3 record {|
+    string name;
+    string city;
+    int age?;
+|};
+
+type Person4 record {|
+    string name;
+    int age;
+|};
+
+type ContactDetails record {|
+    string name;
+    string phone;
+|};
+
 @test:Config {}
 function testGroupApproximateDuplicatess() returns error? {
     Person2[] dataset = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": "Boston"},
-        {"name": "John", "city": "Chicago"},
-        {"name": "Alice", "city": "new york"},
-        {"name": "Charlie", "city": "Los Angeles"},
-        {"name": "charlie", "city": "los angeles - usa"}
+        {name: "Alice", city: "New York"},
+        {name: "Alice", city: "new york"},
+        {name: "Charlie", city: "Los Angeles"},
+        {name: "Bob", city: "Boston"},
+        {name: "John", city: "Chicago"},
+        {name: "charlie", city: "los angeles - usa"}
     ];
     Person2[] uniqueRecords = [
-        {"name": "Bob", "city": "Boston"},
-        {"name": "John", "city": "Chicago"}
+        {name: "Bob", city: "Boston"},
+        {name: "John", city: "Chicago"}
     ];
     Person2[][] duplicateGroups = [
-        [{"name": "Alice", "city": "New York"}, {"name": "Alice", "city": "new york"}],
-        [{"name": "Charlie", "city": "Los Angeles"}, {"name": "charlie", "city": "los angeles - usa"}]
+        [{name: "Alice", city: "New York"}, {name: "Alice", city: "new york"}],
+        [{name: "Charlie", city: "Los Angeles"}, {name: "charlie", city: "los angeles - usa"}]
     ];
     Person2[][] result = check groupApproximateDuplicates(dataset);
     test:assertEquals(result[0], uniqueRecords);
     test:assertEquals(result.slice(1), duplicateGroups);
-
 }
 
 @test:Config {}
 function testHandleWhiteSpaces() returns error? {
-    Person1[] dataset = [
-        {"name": "  Alice   ", "city": "New   York  "},
-        {"name": "   Bob", "city": "Los  Angeles  "}
+    Person2[] dataset = [
+        {name: "  Alice   ", city: "New   York  "},
+        {name: "   Bob", city: "Los  Angeles  "}
     ];
-    Person1[] expected = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": "Los Angeles"}
+    Person2[] expected = [
+        {name: "Alice", city: "New York"},
+        {name: "Bob", city: "Los Angeles"}
     ];
-    Person1[] result = check handleWhiteSpaces(dataset);
+    Person2[] result = check handleWhiteSpaces(dataset);
     test:assertEquals(result, expected);
 }
 
 @test:Config {}
 function testRemoveDuplicates() returns error? {
-    Person1[] dataset = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": "Los Angeles"},
-        {"name": "Alice", "city": "New York"}
+    Person2[] dataset = [
+        {name: "Alice", city: "New York"},
+        {name: "Alice", city: "New York"},
+        {name: "Bob", city: "Los Angeles"}
     ];
-    Person1[] expected = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": "Los Angeles"}
+    Person2[] expected = [
+        {name: "Alice", city: "New York"},
+        {name: "Bob", city: "Los Angeles"}
     ];
-    Person1[] result = check removeDuplicates(dataset);
+    Person2[] result = check removeDuplicates(dataset);
     test:assertEquals(result, expected);
 }
 
 @test:Config {}
 function testRemoveField() returns error? {
-    Person1[] dataset = [
-        {"name": "Alice", "city": "New York", "age": 30},
-        {"name": "Bob", "city": "Los Angeles", "age": 25},
-        {"name": "Charlie", "city": "Chicago", "age": 35}
+    Person3[] dataset = [
+        {name: "Alice", city: "New York", age: 30},
+        {name: "Bob", city: "Los Angeles", age: 25},
+        {name: "Charlie", city: "Chicago", age: 35}
     ];
     string fieldName = "age";
-    Person1[] expected = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": "Los Angeles"},
-        {"name": "Charlie", "city": "Chicago"}
+    Person2[] expected = [
+        {name: "Alice", city: "New York"},
+        {name: "Bob", city: "Los Angeles"},
+        {name: "Charlie", city: "Chicago"}
     ];
-    Person1[] result = check removeField(dataset, fieldName);
+    Person2[] result = check removeField(dataset, fieldName);
     test:assertEquals(result, expected);
 }
 
 @test:Config {}
-function testRemoveNull() returns error? {
+function testRemoveEmptyValues() returns error? {
     Person1[] dataset = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "Bob", "city": null},
-        {"name": "Charlie", "city": ""}
+        {name: "Alice", city: "New York"},
+        {name: "Bob", city: null},
+        {name: "", city: "Los Angeles"},
+        {name: "Charlie", city: "Boston"},
+        {name: "David", city: ()}
     ];
-    Person1[] expected = [
-        {"name": "Alice", "city": "New York"}
+    Person2[] expected = [
+        {name: "Alice", city: "New York"},
+        {name: "Charlie", city: "Boston"}
     ];
-    Person1[] result = check removeNull(dataset);
+    Person2[] result = check removeEmptyValues(dataset);
     test:assertEquals(result, expected);
 }
 
 @test:Config {}
 function testReplaceText() returns error? {
 
-    Person1[] dataset = [
+    ContactDetails[] dataset = [
         {name: "John", phone: "0718083203"},
         {name: "Doe", phone: "0718320382"}
     ];
 
-    Person1[] dataset2 = [
+    ContactDetails[] dataset2 = [
         {name: "John", phone: "+94718083203"},
         {name: "Doe", phone: "+94718320382"}
     ];
-    Person1[] result = check replaceText(dataset, "phone", re `^0+`, "+94");
+    ContactDetails[] result = check replaceText(dataset, "phone", re `^0+`, "+94");
     test:assertEquals(result, dataset2);
 
 }
 
 @test:Config {}
 function testSort() returns error? {
-    Person1[] dataset = [
-        {"name": "Alice", "age": 25},
-        {"name": "Bob", "age": 30},
-        {"name": "Charlie", "age": 22}
+    Person4[] dataset = [
+        {name: "Alice", age: 25},
+        {name: "Bob", age: 30},
+        {name: "Charlie", age: 22}
     ];
     string fieldName = "age";
-    boolean isAscending = true;
-    Person1[] expected = [
-        {"name": "Charlie", "age": 22},
-        {"name": "Alice", "age": 25},
-        {"name": "Bob", "age": 30}
+    Person4[] expected = [
+        {name: "Charlie", age: 22},
+        {name: "Alice", age: 25},
+        {name: "Bob", age: 30}
     ];
-    Person1[] result = check sortData(dataset, fieldName, isAscending);
+    Person4[] result = check sortData(dataset, fieldName);
     test:assertEquals(result, expected);
 }
 
 @test:Config {}
 function testStandardizeData() returns error? {
     Person2[] dataset = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "John", "city": "new york"},
-        {"name": "Charlie", "city": "los-angeles"}
+        {name: "Alice", city: "New York"},
+        {name: "John", city: "newyork - usa "},
+        {name: "Charlie", city: "los-angeles"}
     ];
     string fieldName = "city";
     string[] searchValues = ["New York", "Los Angeles"];
     Person2[] expected = [
-        {"name": "Alice", "city": "New York"},
-        {"name": "John", "city": "New York"},
-        {"name": "Charlie", "city": "Los Angeles"}
+        {name: "Alice", city: "New York"},
+        {name: "John", city: "New York"},
+        {name: "Charlie", city: "Los Angeles"}
     ];
     Person2[] result = check standardizeData(dataset, fieldName, searchValues);
     test:assertEquals(result, expected);

@@ -31,35 +31,39 @@ type User2 record {|
 @test:Config {}
 function testDecryptData() returns error? {
     User1[] encryptedData = [
-        {"id": 1, "name": "kHKa63v98rbDm+FB2DJ3ig==", "age": "DwknVxmigukb2VBkDj2rHg=="},
-        {"id": 2, "name": "S0x+hpmvSOIT7UE8hOGZkA==", "age": "goBjsnnKAMRoEfkZsbRYwg=="}
+        {id: 1, name: "A86md8hKcPxPtyHOaFGkVA==", age: "uo//698HbSwcKIGSNkhpwQ=="},
+        {id: 2, name: "DWyJ/vwgiiRckHNvAYD98Q==", age: "eRy1rD0U00pDhzK/IrE+ig=="}
     ];
-    string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
+    byte[16] key = [78, 45, 73, 76, 56, 73, 116, 116, 72, 70, 105, 108, 97, 110, 65, 100];
     User1[] expectedDecryptedData = [
-        {"id": 1, "name": "Alice", "age": "25"},
-        {"id": 2, "name": "Bob", "age": "30"}
+        {id: 1, name: "Alice", age: "25"},
+        {id: 2, name: "Bob", age: "30"}
     ];
-    User1[] decryptedData = check decryptData(encryptedData, ["name", "age"], keyBase64);
+    User1[] decryptedData = check decryptData(encryptedData, ["name", "age"], key);
     test:assertEquals(decryptedData, expectedDecryptedData);
 }
 
 @test:Config {}
 function testEncryptData() returns error? {
     User1[] dataset = [
-        {"id": 1, "name": "Alice", "age": 25},
-        {"id": 2, "name": "Bob", "age": 30}
+        {id: 1, name: "Alice", age: 25},
+        {id: 2, name: "Bob", age: 30}
     ];
-    string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
-    User1[] encryptedData = check encryptData(dataset, ["name", "age"], keyBase64);
-    test:assertEquals(encryptedData.length(), dataset.length());
+    User1[] expectedEncryptedData = [
+        {id: 1, name: "A86md8hKcPxPtyHOaFGkVA==", age: "uo//698HbSwcKIGSNkhpwQ=="},
+        {id: 2, name: "DWyJ/vwgiiRckHNvAYD98Q==", age: "eRy1rD0U00pDhzK/IrE+ig=="}
+    ];
+    byte[16] key = [78, 45, 73, 76, 56, 73, 116, 116, 72, 70, 105, 108, 97, 110, 65, 100];
+    User1[] encryptedData = check encryptData(dataset, ["name", "age"], key);
+    test:assertEquals(encryptedData, expectedEncryptedData);
 }
 
 @test:Config {}
 function testMaskSensitiveData() returns error? {
     User2[] dataset = [
-        {"id": 1, "name": "John Doe", "email": "john@example.com"},
-        {"id": 2, "name": "Jane Smith", "email": "jane@example.com"},
-        {"id": 3, "name": "Alice", "email": "alice@example.com"}
+        {id: 1, name: "John Doe", email: "john@example.com"},
+        {id: 2, name: "Jane Smith", email: "jane@example.com"},
+        {id: 3, name: "Alice", email: "alice@example.com"}
     ];
     User2[] maskedData = check maskSensitiveData(dataset);
     test:assertEquals(maskedData.length(), dataset.length());

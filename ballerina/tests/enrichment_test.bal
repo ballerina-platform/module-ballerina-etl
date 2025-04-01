@@ -33,11 +33,11 @@ function testJoinData() returns error? {
         {"id": 2, "age": 30}
     ];
     string primaryKey = "id";
-    record {}[] expected = [
+    Customer[] expected = [
         {"id": 1, "name": "Alice", "age": 25},
         {"id": 2, "name": "Bob", "age": 30}
     ];
-    record {}[] mergedData = check joinData(dataset1, dataset2, primaryKey);
+    Customer[] mergedData = check joinData(dataset1, dataset2, primaryKey);
     test:assertEquals(mergedData, expected);
 }
 
