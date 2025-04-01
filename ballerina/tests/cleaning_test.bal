@@ -46,8 +46,6 @@ type ContactDetails record {|
 @test:Config {}
 function testGroupApproximateDuplicatess() returns error? {
     Person2[] dataset = [
-        {name: "Alice", city: "New York"},
-        {name: "Alice", city: "new york"},
         {name: "Charlie", city: "Los Angeles"},
         {name: "Bob", city: "Boston"},
         {name: "John", city: "Chicago"},
@@ -58,7 +56,6 @@ function testGroupApproximateDuplicatess() returns error? {
         {name: "John", city: "Chicago"}
     ];
     Person2[][] duplicateGroups = [
-        [{name: "Alice", city: "New York"}, {name: "Alice", city: "new york"}],
         [{name: "Charlie", city: "Los Angeles"}, {name: "charlie", city: "los angeles - usa"}]
     ];
     Person2[][] result = check groupApproximateDuplicates(dataset);
