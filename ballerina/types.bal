@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Represents the available comparison operations.
+# Represents the available comparison operations for the `filterDataByRelativeExp` function.
 #
 # + GREATER_THAN - Checks if the left operand is greater than the right operand.
 # + LESS_THAN - Checks if the left operand is less than the right operand.
@@ -30,3 +30,29 @@ public enum Operation {
     GREATER_THAN_OR_EQUAL = ">=",
     LESS_THAN_OR_EQUAL = "<="
 }
+
+# Represents the direction for the `sortData` function
+#
+# + ASCENDING - Sorts the data in ascending order.
+# + DESCENDING - Sorts the data in descending order.
+public enum SortDirection {
+    ASCENDING = "ascending",
+    DESCENDING = "descending"
+}
+
+# Represents the supported OpenAI model IDs.
+#
+# + GPT_4_TURBO - GPT-4 Turbo model.
+# + GPT_4o - GPT-4o model.
+# + GPT_4o_MINI - GPT-4o Mini model.
+public enum ModelId {
+    GPT_4_TURBO = "gpt-4-turbo",
+    GPT_4o = "gpt-4o",
+    GPT_4o_MINI = "gpt-4o-mini"
+}
+
+# Represents the category ranges in the `filterDataByCategory` function.
+# - `float` - Represents the minimum value.
+# - `float[]` - Represents the intermediate breakpoints.
+# - `float` - Represents the maximum value.
+public type CategoryRanges [float, float[], float];
