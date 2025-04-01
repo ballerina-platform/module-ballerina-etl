@@ -30,7 +30,7 @@ public function main() returns error? {
     UserFeedback[] userFeedbacks = [];
     string[] feedbacks = check io:fileReadLines("resources/feedbacks.txt");
     foreach string feedback in feedbacks {
-        UserFeedback userFeedback = check etl:extractFromUnstructuredData(feedback, ["userId", "brandName", "comment"]);
+        UserFeedback userFeedback = check etl:extractFromUnstructuredData(feedback);
         userFeedbacks.push(userFeedback);
         log:printInfo(string `Extracted user feedback for user ID:${userFeedback.userId}`);
     }

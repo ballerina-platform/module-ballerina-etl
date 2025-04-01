@@ -24,7 +24,7 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-configurable string SYMMETRIC_KEY = ?;
+configurable byte[16] SYMMETRIC_KEY = ?;
 
 configurable string USER = ?;
 configurable string PASSWORD = ?;
@@ -54,12 +54,11 @@ type ProductCatalog record {|
 // Use below function to generate a new key and update the SYMMETRIC_KEY in the Config.toml file
 function generateKey() returns error? {
     // Generate a new key
-    byte[16] aesKey = [];
+    byte[16] key = [];
     foreach var i in 0 ... 15 {
-        aesKey[i] = <byte>(check random:createIntInRange(0, 255));
+        key[i] = <byte>(check random:createIntInRange(0, 255));
     }
-    string newKey = aesKey.toBase64();
-    io:println(`New Key: ${newKey}`);
+    io:println(`New Key: ${key}`);
 }
 
 public function main() returns error? {
@@ -85,7 +84,8 @@ public function main() returns error? {
     log:printInfo("Data encryption completed");
 
     log:printInfo("Categorizing data...");
-    Product[][] categorizedProducts = check etl:categorizeNumeric(encryptedProducts, "stock", [[0, 100], [100, 300], [300, 10000]]);
+    etl:CategoryRanges categoryRanges = [0, [100, 300], 1000];
+    Product[][] categorizedProducts = check etl:categorizeNumeric(encryptedProducts, "stock", categoryRanges);
     log:printInfo("Data categorization completed");
 
     log:printInfo("Loading data to the database...");
@@ -148,4 +148,5 @@ public function main() returns error? {
         sql:ExecutionResult _ = check dbClient->execute(query);
     }
     log:printInfo("Data loading completed");
+    
 }
