@@ -19,54 +19,46 @@ import ballerina/jballerina.java;
 # Decrypts specific fields of a dataset using AES-ECB decryption with a given Base64-encoded key.
 #
 # ```ballerina
-# type Customer record {
-#     string name;
-#     int age;
-# };
 # Customer[] encryptedDataset = [
-#     { "name": "kHKa63v98rbDm+FB2DJ3ig==", "age": 23 },
-#     { "name": "S0x+hpmvSOIT7UE8hOGZkA==", "age": 35 }
+#     { name: "kHKa63v98rbDm+FB2DJ3ig==", age: 23 },
+#     { name: "S0x+hpmvSOIT7UE8hOGZkA==", age: 35 }
 # ];
-# string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
-# Customer[] decryptedData = check etl:decryptData(encryptedDataset, ["name"], keyBase64);
+# byte[16] key = [78, 45, 73, 76, 56, 73, 116, 116, 72, 70, 105, 108, 97, 110, 65, 100];
+# DecryptedCustomer[] decryptedData = check etl:decryptData(encryptedDataset, ["name"], key);
 #
-# => [{ "name": "Alice", "age": 23 },
-#     { "name": "Bob", "age": 35 }]
+# => [{ name: "Alice", age: 23 },
+#     { name: "Bob", age: 35 }]
 # ```
 #
 # + dataset - The dataset containing records with Base64-encoded encrypted fields.
 # + fieldNames - An array of field names that should be decrypted.
-# + keyBase64 - The AES decryption key in Base64 format.
+# + key - The AES decryption key in byte array format.
 # + returnType - The type of the return value (Ballerina record).
 # + return - A dataset with the specified fields decrypted or an `etl:Error`.
-public function decryptData(record {}[] dataset, string[] fieldNames, string keyBase64, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function decryptData(record {}[] dataset, string[] fieldNames, byte[16] key, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;
 
 # Encrypts specific fields of a dataset using AES-ECB encryption with a given Base64-encoded key.
 #
 # ```ballerina
-# type Customer record {
-#     string name;
-#     int age;
-# };
 # Customer[] dataset = [
-#     { "id": 1, "name": "Alice", "age": 25 },
-#     { "id": 2, "name": "Bob", "age": 30 }
+#     { id: 1, name: "Alice", age: 25 },
+#     { id: 2, name: "Bob", age: 30 }
 # ];
-# string keyBase64 = "TgMtILI4IttHFilanAdZbw==";
-# Customer[] encryptedData = check etl:encryptData(dataset, ["name"], keyBase64);
+# byte[16] key = [78, 45, 73, 76, 56, 73, 116, 116, 72, 70, 105, 108, 97, 110, 65, 100];
+# EncryptedCustomer[] encryptedData = check etl:encryptData(dataset, ["name"], key);
 #
-# =>[{"id": 1, "name": "kHKa63v98rbDm+FB2DJ3ig==", "age": 25 },
-#    {"id": 2, "name": "S0x+hpmvSOIT7UE8hOGZkA==", "age": 30 }]
+# =>[{ id: 1, name: "kHKa63v98rbDm+FB2DJ3ig==", age: 25 },
+#    { id: 2, name: "S0x+hpmvSOIT7UE8hOGZkA==", age: 30 }]
 # ```
 #
 # + dataset - The dataset containing records where specific fields need encryption.
 # + fieldNames - An array of field names that should be encrypted.
-# + keyBase64 - The AES encryption key in Base64 format.
+# + key - The AES encryption key in byte array format.
 # + returnType - The type of the return value (Ballerina record ).
 # + return - A dataset with specified fields encrypted and Base64-encoded or an `etl:Error`.
-public function encryptData(record {}[] dataset, string[] fieldNames, string keyBase64, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function encryptData(record {}[] dataset, string[] fieldNames, byte[16] key, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;
 
@@ -76,26 +68,21 @@ public function encryptData(record {}[] dataset, string[] fieldNames, string key
 # and replaces all characters in those fields with the default masking character 'X'.
 #
 # ```ballerina
-# type Customer record {
-#    int id;
-#    string name;
-#    string email;
-# };
 # Customer[] dataset = [
-#     { "id": 1, "name": "John Doe", "email": "john@example.com" },
-#     { "id": 2, "name": "Jane Smith", "email": "jane@example.com" }
+#     { id: 1, name: "John Doe", email: "john@example.com" },
+#     { id: 2, name: "Jane Smith", email: "jane@example.com" }
 # ];
-# Customer[] maskedData = check etl:maskSensitiveData(dataset);
+# MaskedCustomer[] maskedData = check etl:maskSensitiveData(dataset);
 #
-# => [{ "id": 1, "name": "XXX XXX", "email": "XXXXXXXXXXXXXXX" },
-#     { "id": 2, "name": "XXXX XXXX", "email": "XXXXXXXXXXXXXXX" }]
+# => [{ id: 1, name: "XXX XXX", email: "XXXXXXXXXXXXXXX" },
+#     { id: 2, name: "XXXX XXXX", email: "XXXXXXXXXXXXXXX" }]
 # ```
 #
 # + dataset - The dataset containing records where sensitive fields should be masked.
-# + modelName - The name of the GPT model to use for identifying PII. Default is "gpt-4o".
 # + maskingCharacter - The character to use for masking sensitive fields. Default is 'X'.
+# + modelId - Model ID of the Open AI model.
 # + returnType - The type of the return value (Ballerina record).
 # + return - A dataset where the specified fields containing PII are masked with the given masking character or an `etl:Error`.
-public function maskSensitiveData(record {}[] dataset, string:Char maskingCharacter = "X", string modelName = "gpt-4o", typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function maskSensitiveData(record {}[] dataset, string:Char maskingCharacter = "X", ModelId modelId = GPT_4o, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;
