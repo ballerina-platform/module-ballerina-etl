@@ -69,14 +69,4 @@ public class ErrorUtils {
         return ErrorCreator.createError(
                 StringUtils.fromString("Operation failed due to idle timeout. Size of the dataset may be too large"));
     }
-
-    public static BError createEncryptingError(String message) {
-        return ErrorCreator.createError(
-                StringUtils.fromString(String.format("Error occurred while encrypting data: %s", message)));
-    }
-
-    public static BError createDecryptingError(String message) {
-        return ErrorCreator.createError(
-                StringUtils.fromString(String.format("Error occurred while decrypting data: %s", message)));
-    }
 }

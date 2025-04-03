@@ -18,4 +18,5 @@
 
 module io.ballerina.stdlib.etl {
     requires io.ballerina.runtime;
+    requires io.ballerina.stdlib.crypto;
 }

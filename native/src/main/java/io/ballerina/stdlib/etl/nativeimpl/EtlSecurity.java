@@ -19,21 +19,19 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
+import io.ballerina.stdlib.crypto.nativeimpl.Decrypt;
+import io.ballerina.stdlib.crypto.nativeimpl.Encrypt;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.spec.SecretKeySpec;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
@@ -58,14 +56,6 @@ public class EtlSecurity {
             }
         }
         BArray encryptedDataset = initializeBArray(returnType);
-        byte[] encryptKey = key.getBytes();
-        Cipher cipher;
-        try {
-            cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey, "AES"));
-        } catch (Exception e) {
-            return ErrorUtils.createEncryptingError(e.getMessage());
-        }
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> encryptedData = initializeBMap(returnType);
@@ -73,14 +63,9 @@ public class EtlSecurity {
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
                     String value = data.get(keyField).toString();
-                    byte[] encryptedBytes = null;
-                    try {
-                        encryptedBytes = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
-                    } catch (IllegalBlockSizeException e) {
-                        return ErrorUtils.createEncryptingError(e.getMessage());
-                    } catch (BadPaddingException e) {
-                        return ErrorUtils.createEncryptingError(e.getMessage());
-                    }
+                    Object encryptedValue = Encrypt.encryptAesEcb(
+                            ValueCreator.createArrayValue(value.getBytes(StandardCharsets.UTF_8)), key, "PKCS5");
+                    byte[] encryptedBytes = ((BArray) encryptedValue).getBytes();
                     String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedBytes);
                     encryptedData.put(keyField, StringUtils.fromString(encryptedBase64));
                 } else {
@@ -99,14 +84,6 @@ public class EtlSecurity {
             }
         }
         BArray decryptedDataset = initializeBArray(returnType);
-        byte[] decryptKey = key.getBytes();
-        Cipher cipher;
-        try {
-            cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey, "AES"));
-        } catch (Exception e) {
-            return ErrorUtils.createDecryptingError(e.getMessage());
-        }
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> decryptedData = initializeBMap(returnType);
@@ -114,16 +91,11 @@ public class EtlSecurity {
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
                     String value = data.get(keyField).toString();
-                    byte[] decryptedBytes = null;
-                    try {
-                        decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(value));
-                    } catch (IllegalBlockSizeException e) {
-                        return ErrorUtils.createDecryptingError(e.getMessage());
-                    } catch (BadPaddingException e) {
-                        return ErrorUtils.createDecryptingError(e.getMessage());
-                    }
-                    String decryptedValue = new String(decryptedBytes, StandardCharsets.UTF_8);
-                    decryptedData.put(keyField, StringUtils.fromString(decryptedValue));
+                    byte[] decryptedBytes = Base64.getDecoder().decode(value);
+                    Object decryptedValue = Decrypt.decryptAesEcb(ValueCreator.createArrayValue(decryptedBytes), key,
+                            "PKCS5");
+                    decryptedData.put(keyField, StringUtils
+                            .fromString(new String((((BArray) decryptedValue).getBytes()), StandardCharsets.UTF_8)));
                 } else {
                     decryptedData.put(keyField, data.get(keyField));
                 }
