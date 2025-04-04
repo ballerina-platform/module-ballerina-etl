@@ -40,6 +40,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.getFields;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
+import static io.ballerina.stdlib.etl.utils.Constants.ASCENDING;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.GROUP_APPROXIMATE_DUPLICATES;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
@@ -186,7 +187,7 @@ public class EtlCleaning {
             BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
             dataToSort.add(newData);
         }
-        if (direction.equals(StringUtils.fromString("ascending"))) {
+        if (direction.equals(StringUtils.fromString(ASCENDING))) {
             dataToSort.sort(Comparator.comparing(
                     map -> map.get(fieldName),
                     Comparator.nullsLast(Comparator.comparing(Object::toString))));

@@ -32,4 +32,5 @@ public class Constants {
     public static final String STANDARDIZE_DATA = "standardizeDataFunc";
     public static final String CATEGORIZE_SEMANTIC = "categorizeSemanticFunc";
     public static final String EXTRACT_FROM_UNSTRUCTURED_DATA = "extractFromUnstructuredDataFunc";
+    public static final String ASCENDING = "ascending";
 }
