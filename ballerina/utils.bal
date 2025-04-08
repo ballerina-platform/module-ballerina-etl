@@ -17,7 +17,7 @@
 import ballerinax/openai.chat;
 
 function standardizeDataFunc(record {}[] dataset, string fieldName, string[] standardValues, ModelId modelId) returns json|Error {
-    string prompt = string ` Identify and replace any approximate matches of the given search values in the dataset with the standard values.  
+    string prompt = string `Identify and replace any approximate matches of the given search values in the dataset with the standard values.  
                                         - Input Dataset: ${dataset.toString()}  
                                         - Field Name: ${fieldName}  
                                         - Search Value: ${standardValues.toString()}  
@@ -56,7 +56,7 @@ function standardizeDataFunc(record {}[] dataset, string fieldName, string[] sta
 }
 
 function groupApproximateDuplicatesFunc(record {}[] dataset, ModelId modelId) returns json|Error {
-    string prompt = string ` Identify approximate duplicates in the dataset and group them.
+    string prompt = string `Identify approximate duplicates in the dataset and group them.
                                         - Input Dataset : ${dataset.toString()}  
                                          Respond only with an array of arrays of JSON objects without any formatting where the first array contains all the unique records which does not have any duplicates, and the rest of the arrays contain the duplicate groups.
                                          Do not include any additional text, explanations, or variations.
@@ -79,7 +79,7 @@ function groupApproximateDuplicatesFunc(record {}[] dataset, ModelId modelId) re
 }
 
 function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeSchema, ModelId modelId) returns json|Error {
-    string prompt = string ` Extract relevant details from the given text and map them to the specified fields. 
+    string prompt = string `Extract relevant details from the given text and map them to the specified fields. 
                                         - Input Data : ${dataset.toString()} 
                                         - Return Type Schema(Contains field names as keys and their corresponding types as values.): ${returnTypeSchema.toString()}
                                         - Feilds to extract: ${returnTypeSchema.keys().toString()}
@@ -109,7 +109,7 @@ function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeS
 }
 
 function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter, ModelId modelId) returns json|Error {
-    string prompt = string ` Personally Identifiable Information (PII) includes any data that can be used to identify an individual, either on its own or when combined with other information. Examples of PII include:
+    string prompt = string `Personally Identifiable Information (PII) includes any data that can be used to identify an individual, either on its own or when combined with other information. Examples of PII include:
                                             -Names: Full name, maiden name, alias
                                             -Addresses: Street, email
                                             -Phone numbers: Mobile, personal, business
