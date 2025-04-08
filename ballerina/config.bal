@@ -17,9 +17,12 @@
 import ballerinax/openai.chat;
 
 configurable string openAIKey = "";
+configurable string serviceUrl = "https://api.openai.com/v1";
+configurable decimal timeout = 120;
 
 final chat:Client chatClient = check new ({
     auth: {
         token: openAIKey
-    }
-});
+    },
+    timeout: timeout
+}, serviceUrl = serviceUrl);
