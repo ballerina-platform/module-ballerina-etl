@@ -141,11 +141,10 @@ function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter
 }
 
 function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories, ModelId modelId) returns json|Error {
-    string prompt = string `Classify the given dataset into one of the specified categories based on the provided field name.  
+    string prompt = string `Classify the given dataset into one of the specified categories based on the provided field name. If a data does not belong to any category, ignore them. 
                                             - Input Dataset: ${dataset.toString()}  
                                             - Categories: ${categories.toString()}  
                                             - Field: ${fieldName}  
-                                            If a record does not belong to any category, ignore them.  
                                             Respond only with an array of arrays of JSON objects without any formatting.  
                                             Do not include any additional text, explanations, or variations. 
 
