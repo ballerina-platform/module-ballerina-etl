@@ -24,9 +24,13 @@ import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
+
 
 /**
  * This class hold Java external functions for ETL - data enrichment APIs.
@@ -45,6 +49,7 @@ public class EtlEnrichment {
             return ErrorUtils.createCommonFieldNotFoundError(2);
         }
         BArray joinedDataset = initializeBArray(returnType);
+        Set<String> seenData = new HashSet<>();
         for (int i = 0; i < dataset1.size(); i++) {
             BMap<BString, Object> data1 = (BMap<BString, Object>) dataset1.get(i);
             if (data1.get(fieldName) == null) {
@@ -63,7 +68,10 @@ public class EtlEnrichment {
                     for (BString key : data2.getKeys()) {
                         newData.put(key, data2.get(key));
                     }
-                    joinedDataset.append(newData);
+                    if (!seenData.contains(newData.toString())) {
+                        seenData.add(newData.toString());
+                        joinedDataset.append(newData);
+                    }
                 }
             }
         }
