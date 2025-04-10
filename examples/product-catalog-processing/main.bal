@@ -26,7 +26,7 @@ import ballerinax/mysql.driver as _;
 
 configurable byte[16] SYMMETRIC_KEY = ?;
 
-configurable string USER = ?;
+configurable string user = ?;
 configurable string PASSWORD = ?;
 configurable string HOST = ?;
 configurable int PORT = ?;
@@ -148,5 +148,4 @@ public function main() returns error? {
         sql:ExecutionResult _ = check dbClient->execute(query);
     }
     log:printInfo("Data loading completed");
-    
 }

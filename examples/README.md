@@ -28,7 +28,7 @@ Execute the following commands to build and run an example from the source:
 * To build an example:
 
     ```bash
-    bal build
+    $ bal build
     ```
 
 * To run an example:

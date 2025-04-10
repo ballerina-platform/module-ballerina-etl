@@ -96,5 +96,4 @@ public function main() returns error? {
     check io:fileWriteCsv("resources/categories/silver_customers.csv", categorizedCustomers[1]);
     check io:fileWriteCsv("resources/categories/bronze_customers.csv", categorizedCustomers[2]);
     log:printInfo("Loading completed.");
-
 }
