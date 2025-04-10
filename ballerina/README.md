@@ -88,5 +88,6 @@ Customer[] dataset = [
 
 public function main() returns error? {
     Customer[] uniqueData = check etl:removeDuplicates(dataset);
+    io:println(`Customer Data Without Duplicates : ${uniqueData}`)
 }
 ```
