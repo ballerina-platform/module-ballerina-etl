@@ -24,16 +24,16 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-configurable byte[16] SYMMETRIC_KEY = ?;
+configurable byte[16] symmetricKey = ?;
 
 configurable string user = ?;
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
+configurable string password = ?;
+configurable string host = ?;
+configurable string database = ?;
+configurable int port = ?;
 
 final mysql:Client dbClient = check new (
-    host = HOST, user = USER, password = PASSWORD, port = PORT, database = DATABASE
+    host, user, password, database, port
 );
 
 type Product record {|
@@ -80,7 +80,7 @@ public function main() returns error? {
     log:printInfo("Data merging completed");
 
     log:printInfo("Encrypting data...");
-    Product[] encryptedProducts = check etl:encryptData(allProducts, ["supplier"], SYMMETRIC_KEY);
+    Product[] encryptedProducts = check etl:encryptData(allProducts, ["supplier"], symmetricKey);
     log:printInfo("Data encryption completed");
 
     log:printInfo("Categorizing data...");
