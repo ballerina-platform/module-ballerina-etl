@@ -37,8 +37,9 @@ The script performs the following data cleaning operations:
 Before running the example, ensure that your `Config.toml` file is set up in the root directory as follows:
 
 ```toml
-[ballerina.etl]
-openAIKey = "<OPEN_AI_KEY>"
+[ballerina.etl.modelConfig]
+connectionConfig.auth.token = "<OPEN_AI_KEY>"
+model = "<GPT_MODEL>"
 ```
 
 ## Run the Example

@@ -12,14 +12,18 @@ The `ballerinax/etl` package provides practical examples illustrating its usage 
 
 1. Create an [OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
 
-2. For each example, create a `Config.toml` file with the necessary configuration. Here's an example:
+2. Add the relevant configuration in the `Config.toml` file as follows.:
 
 ```toml
-[ballerina.etl]
-openAIKey = "<OPEN_AI_KEY>"
+[ballerina.etl.modelConfig]
+connectionConfig.auth.token = "<OPEN_AI_KEY>"
+model = "<GPT_MODEL>"
 ```
 
-3. Replace `<OPEN_AI_KEY>` with the key you obtained.
+- Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
+    - `"gpt-4-turbo"`
+    - `"gpt-4o"`
+    - `"gpt-4o-mini"`
 
 ## Running an Example
 

@@ -33,12 +33,12 @@ The script follows these steps:
 Before running the example, ensure that your `Config.toml` file is set up in the root directory as follows:
 
 ```toml
-SYMMETRIC_KEY = "your-encryption-key"
-USER = "your-mysql-username"
-PASSWORD = "your-mysql-password"
-HOST = "your-mysql-host"
-PORT = 3306
-DATABASE = "your-database-name"
+symmetricKey = "your-encryption-key"
+user = "your-mysql-username"
+password = "your-mysql-password"
+host = "your-mysql-host"
+port = 3306
+database = "your-database-name"
 ```
 
 ## Run the Example

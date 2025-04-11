@@ -61,14 +61,26 @@ If your Ballerina application uses any of these functions, follow the steps belo
 
 1. Create an [OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
 
-2. Ensure that your `Config.toml file in the root directory is configured as follows:
+2. Values need to be provided for the `modelConfig` configurable value. Add the relevant configuration in the `Config.toml` file as follows.
 
 ```toml
-[ballerina.etl]
-openAIKey = "<OPEN_AI_KEY>"
+[ballerina.etl.modelConfig]
+connectionConfig.auth.token = "<OPEN_AI_KEY>"
+model = "<GPT_MODEL>"
 ```
 
-3. Replace `<OPEN_AI_KEY>` with the key you obtained.
+- Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
+    - `"gpt-4-turbo"`
+    - `"gpt-4o"`
+    - `"gpt-4o-mini"`
+
+4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `connectionConfig.auth.timeout` field as shown below:
+
+```toml
+connectionConfig.auth.timeout = <TIMEOUT_IN_SECONDS>
+```
+
+- Replace `<TIMEOUT_IN_SECONDS>` with your desired timeout duration. 
 
 ### Dependent Type Support 
 
@@ -76,6 +88,7 @@ All functions in this package support dependent types. Here is an example of how
 
 ```ballerina 
 import ballerina/etl;
+import ballerina/io;
 
 type Customer record {|
     string name;
@@ -90,7 +103,7 @@ Customer[] dataset = [
 
 public function main() returns error? {
     Customer[] uniqueData = check etl:removeDuplicates(dataset);
-    io:println(`Customer Data Without Duplicates : ${uniqueData}`)
+    io:println(`Customer Data Without Duplicates : ${uniqueData}`);
 }
 ```
 
