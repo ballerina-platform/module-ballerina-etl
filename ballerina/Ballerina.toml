@@ -2,7 +2,7 @@
 distribution = "2201.12.2"
 org = "ballerina"
 name = "etl"
-version = "1.0.0"
+version = "0.8.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["etl"]
@@ -17,5 +17,5 @@ graalvmCompatible = true
 [[platform.java21.dependency]]
 groupId = "io.ballerina.lib"
 artifactId = "etl-native"
-version = "1.0.0"
-path = "../native/build/libs/etl-native-1.0.0-SNAPSHOT.jar"
+version = "0.8.0"
+path = "../native/build/libs/etl-native-0.8.0-SNAPSHOT.jar"
