@@ -16,13 +16,39 @@
 
 import ballerinax/openai.chat;
 
-configurable string openAIKey = "";
-configurable string serviceUrl = "https://api.openai.com/v1";
-configurable decimal timeout = 120;
+type ModelConfig record{|
+    chat:ConnectionConfig connectionConfig; 
+    string? serviceUrl?;
+    string model;
+|};
 
-final chat:Client chatClient = check new ({
-    auth: {
-        token: openAIKey
-    },
-    timeout: timeout
-}, serviceUrl = serviceUrl);
+configurable ModelConfig? modelConfig = ();
+
+chat:Client? chatClient = ();
+string? model = ();
+function init() returns error?{
+    ModelConfig? modelConfigVar = modelConfig;
+    if modelConfigVar is ModelConfig {
+        string? serviceUrl = modelConfigVar?.serviceUrl;
+        chatClient = serviceUrl is () ? check new chat:Client(modelConfigVar?.connectionConfig) : check new chat:Client(modelConfigVar?.connectionConfig, serviceUrl);
+        model = modelConfigVar?.model;
+        return;
+    }
+}
+
+function getChatClient() returns chat:Client {
+    final chat:Client? clientVar = chatClient;
+    if clientVar is (){
+        panic error("Chat client is not initialized");
+    }
+    return clientVar;
+}
+
+function getModel() returns string {
+    final string? modelVar = model;
+    if modelVar is (){
+        panic error("Model is not initialized");
+    }
+    return modelVar;
+}
+
