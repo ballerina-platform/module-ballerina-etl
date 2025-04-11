@@ -75,7 +75,7 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "etl"
-version = "1.0.0"
+version = "0.8.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "jballerina.java"},
