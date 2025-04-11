@@ -75,7 +75,7 @@ model = "<GPT_MODEL>"
 4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `connectionConfig.auth.timeout` field as shown below:
 
 ```toml
-connectionConfig.auth.timeout = <TIMEOUT_IN_SECONDS>
+connectionConfig.timeout = <TIMEOUT_IN_SECONDS>
 ```
 
 - Replace `<TIMEOUT_IN_SECONDS>` with your desired timeout duration. 
