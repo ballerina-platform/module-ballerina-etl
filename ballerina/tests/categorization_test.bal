@@ -80,6 +80,6 @@ function testCategorizeSemantic() returns error? {
         [{id: 1, comment: "Great service!"}, {id: 2, comment: "Good service!"}],
         [{id: 3, comment: "Terrible experience"}]
     ];
-    Review[][] categorized = check categorizeSemantic(dataset, fieldName, categories, "gpt-4o-mini");
+    Review[][] categorized = check categorizeSemantic(dataset, fieldName, categories);
     test:assertEquals(categorized, expected);
 }
