@@ -40,10 +40,9 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
 public class EtlExtraction {
 
-    public static Object extractFromUnstructuredData(Environment env, BString dataset,
-            BString modelId, BTypedesc returnType) {
+    public static Object extractFromUnstructuredData(Environment env, BString dataset, BTypedesc returnType) {
         BMap<BString, Object> returnTypeSchema = getReturnTypeSchema(returnType);
-        Object[] args = new Object[] { dataset, returnTypeSchema, modelId };
+        Object[] args = new Object[] { dataset, returnTypeSchema };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
                 null, args);
         switch (TypeUtils.getType(clientResponse).getName()) {

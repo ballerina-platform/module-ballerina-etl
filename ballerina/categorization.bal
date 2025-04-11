@@ -85,9 +85,8 @@ public function categorizeRegex(record {}[] dataset, string fieldName, regexp:Re
 # + dataset - Array of records containing textual data.
 # + fieldName - Name of the field to categorize.
 # + categories - Array of category names for classification.
-# + modelId - Model ID of the Open AI model.
 # + returnType - The type of the return value (Ballerina record array).
 # + return - A nested array of categorized records or an `etl:Error`.
-public function categorizeSemantic(record {}[] dataset, string fieldName, string[] categories, ModelId modelId = GPT_4o, typedesc<record {}> returnType = <>) returns returnType[][]|Error = @java:Method {
+public function categorizeSemantic(record {}[] dataset, string fieldName, string[] categories, typedesc<record {}> returnType = <>) returns returnType[][]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCategorization"
 } external;

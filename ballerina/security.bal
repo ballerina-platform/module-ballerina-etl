@@ -64,9 +64,6 @@ public function encryptData(record {}[] dataset, string[] fieldNames, byte[16] k
 
 # Masks specified fields of a dataset by replacing each character in the sensitive fields with a default masking character.
 #
-# This function sends a request to the GPT-4 API to identify fields in the dataset that contain Personally Identifiable Information (PII),
-# and replaces all characters in those fields with the default masking character 'X'.
-#
 # ```ballerina
 # Customer[] dataset = [
 #     { id: 1, name: "John Doe", email: "john@example.com" },
@@ -80,9 +77,8 @@ public function encryptData(record {}[] dataset, string[] fieldNames, byte[16] k
 #
 # + dataset - The dataset containing records where sensitive fields should be masked.
 # + maskingCharacter - The character to use for masking sensitive fields. Default is 'X'.
-# + modelId - Model ID of the Open AI model.
 # + returnType - The type of the return value (Ballerina record).
 # + return - A dataset where the specified fields containing PII are masked with the given masking character or an `etl:Error`.
-public function maskSensitiveData(record {}[] dataset, string:Char maskingCharacter = "X", ModelId modelId = GPT_4o, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function maskSensitiveData(record {}[] dataset, string:Char maskingCharacter = "X", typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;

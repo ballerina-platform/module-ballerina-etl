@@ -116,7 +116,7 @@ public class EtlCategorization {
     }
 
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
-            BString modelId, BTypedesc returnType) {
+            BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
@@ -124,7 +124,7 @@ public class EtlCategorization {
         if (!fieldType.contains(STRING)) {
             return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, fieldType);
         }
-        Object[] args = new Object[] { dataset, fieldName, categories, modelId };
+        Object[] args = new Object[] { dataset, fieldName, categories };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {

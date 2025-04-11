@@ -105,9 +105,9 @@ public class EtlSecurity {
         return decryptedDataset;
     }
 
-    public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter, BString modelId,
+    public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter,
             BTypedesc returnType) {
-        Object[] args = new Object[] { dataset, maskCharacter, modelId };
+        Object[] args = new Object[] { dataset, maskCharacter };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {

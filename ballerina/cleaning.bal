@@ -35,11 +35,10 @@ import ballerina/lang.regexp;
 # ```
 #
 # + dataset - Array of records that may contain approximate duplicates.
-# + modelId - Name of the Open AI model.
 # + returnType - The type of the return value (Ballerina record).
 # + return - A nested array of records where the first array contains all unique records that do not have any duplicates,
 # and the remaining arrays contain duplicate groups or an `etl:Error`.
-public function groupApproximateDuplicates(record {}[] dataset, ModelId modelId = GPT_4o, typedesc<record {}[]> returnType = <>) returns returnType[]|Error = @java:Method {
+public function groupApproximateDuplicates(record {}[] dataset, typedesc<record {}[]> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
@@ -197,9 +196,8 @@ public function sortData(record {}[] dataset, string fieldName, SortDirection di
 # + dataset - Array of records containing string values to be standardized.
 # + fieldName - The name of the field to standardize.
 # + standardValues - An array of standard values to replace approximate matches.
-# + modelId - Name of the Open AI model.
 # + returnType - The type of the return value (Ballerina record).
 # + return - An updated dataset with standardized string values or an error if the operation fails or an `etl:Error`.
-public function standardizeData(record {}[] dataset, string fieldName, string[] standardValues, ModelId modelId = GPT_4o, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
+public function standardizeData(record {}[] dataset, string fieldName, string[] standardValues, typedesc<record {}> returnType = <>) returns returnType[]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;

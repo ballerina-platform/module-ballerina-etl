@@ -58,9 +58,8 @@ import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 @SuppressWarnings("unchecked")
 public class EtlCleaning {
 
-    public static Object groupApproximateDuplicates(Environment env, BArray dataset, BString modelId,
-            BTypedesc returnType) {
-        Object[] args = new Object[] { dataset, modelId };
+    public static Object groupApproximateDuplicates(Environment env, BArray dataset, BTypedesc returnType) {
+        Object[] args = new Object[] { dataset };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), GROUP_APPROXIMATE_DUPLICATES,
                 null,
                 args);
@@ -205,11 +204,11 @@ public class EtlCleaning {
     }
 
     public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BArray standardValues,
-            BString modelId, BTypedesc returnType) {
+            BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        Object[] args = new Object[] { dataset, fieldName, standardValues, modelId };
+        Object[] args = new Object[] { dataset, fieldName, standardValues };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null,
                 args);
         switch (TypeUtils.getType(clientResponse).getName()) {
