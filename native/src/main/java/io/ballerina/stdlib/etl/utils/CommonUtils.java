@@ -54,17 +54,17 @@ public class CommonUtils {
     public static boolean evaluateCondition(float fieldValue, float comparisonValue, String operation) {
         switch (operation) {
             case ">":
-                return (fieldValue > comparisonValue);
+                return fieldValue > comparisonValue;
             case "<":
-                return (fieldValue < comparisonValue);
+                return fieldValue < comparisonValue;
             case ">=":
-                return (fieldValue >= comparisonValue);
+                return fieldValue >= comparisonValue;
             case "<=":
-                return (fieldValue <= comparisonValue);
+                return fieldValue <= comparisonValue;
             case "==":
-                return (fieldValue == comparisonValue);
+                return fieldValue == comparisonValue;
             default:
-                return (fieldValue != comparisonValue);
+                return fieldValue != comparisonValue;
         }
     }
 
