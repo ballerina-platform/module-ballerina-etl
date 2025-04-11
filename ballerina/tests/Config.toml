@@ -1,2 +1,4 @@
-openAIKey = "test"
-serviceUrl =  "http://localhost:8080"
+[ballerina.etl.modelConfig]
+connectionConfig.auth.token = "test_token"
+serviceUrl = "http://localhost:8080"
+model = "test_model"
