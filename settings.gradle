@@ -41,7 +41,6 @@ include ':etl-native'
 
 project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
 project(':etl-ballerina').projectDir = file("ballerina")
-project(':etl-examples').projectDir = file("examples")
 project(':etl-native').projectDir = file("native")
 
 gradleEnterprise {
