@@ -42,7 +42,7 @@ import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 /**
  * This class hold Java external functions for ETL - data categorization APIs.
  *
- * * @since 1.0.0
+ * * @since 0.8.0
  */
 @SuppressWarnings("unchecked")
 public class EtlCategorization {

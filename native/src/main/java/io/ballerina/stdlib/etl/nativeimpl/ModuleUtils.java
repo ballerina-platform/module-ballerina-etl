@@ -24,13 +24,10 @@ import io.ballerina.runtime.api.Module;
 /**
  * This class will hold module related utility functions.
  *
- * @since 1.0.0
+ * @since 0.8.0
  */
 public class ModuleUtils {
 
-  /**
-   * I/O standard library package ID.
-   */
   private static Module etlModule = null;
 
   private ModuleUtils() {

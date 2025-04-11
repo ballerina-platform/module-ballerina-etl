@@ -35,7 +35,7 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
  * This class hold Java external functions for ETL - unstructured data
  * extraction APIs.
  *
- * * @since 1.0.0
+ * * @since 0.8.0
  */
 
 public class EtlExtraction {

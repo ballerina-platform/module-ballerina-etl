@@ -44,7 +44,7 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 /**
  * This class hold Java external functions for ETL - data security APIs.
  *
- * * @since 1.0.0
+ * * @since 0.8.0
  */
 @SuppressWarnings("unchecked")
 public class EtlSecurity {
