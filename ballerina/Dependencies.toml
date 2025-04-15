@@ -341,6 +341,7 @@ modules = [
 org = "ballerinax"
 name = "openai.chat"
 version = "4.0.0"
+scope = "testOnly"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
 	{org = "ballerina", name = "http"},
