@@ -1,11 +1,10 @@
 import ballerina/http;
-import ballerinax/openai.chat;
 
 service on new http:Listener(8080) {
-    resource function post chat/completions(chat:CreateChatCompletionRequest payload)
+    resource function post chat/completions(OpenAICreateChatCompletionRequest payload)
             returns json|error {
 
-        chat:ChatCompletionRequestMessage message = payload.messages[0];
+        OpenAIChatCompletionRequestUserMessage message = payload.messages[0];
         anydata content = message["content"];
         string contentStr = content.toString();
         return {
