@@ -5,7 +5,7 @@
 
 [ballerina]
 dependencies-toml-version = "2"
-distribution-version = "2201.12.2"
+distribution-version = "2201.12.3"
 
 [[package]]
 org = "ballerina"
@@ -80,8 +80,7 @@ dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.regexp"},
-	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "openai.chat"}
+	{org = "ballerinai", name = "observe"}
 ]
 modules = [
 	{org = "ballerina", packageName = "etl", moduleName = "etl"}
@@ -372,19 +371,6 @@ name = "mysql.driver"
 version = "1.8.0"
 modules = [
 	{org = "ballerinax", packageName = "mysql.driver", moduleName = "mysql.driver"}
-]
-
-[[package]]
-org = "ballerinax"
-name = "openai.chat"
-version = "4.0.0"
-dependencies = [
-	{org = "ballerina", name = "constraint"},
-	{org = "ballerina", name = "http"},
-	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "os"},
-	{org = "ballerina", name = "url"},
-	{org = "ballerinai", name = "observe"}
 ]
 
 [[package]]
