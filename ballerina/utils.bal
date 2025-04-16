@@ -14,8 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/openai.chat;
-
 function standardizeDataFunc(record {}[] dataset, string fieldName, string[] standardValues) returns json|Error {
     string prompt = string `Identify and replace any approximate matches of the given search values in the dataset with the standard values.  
                                         - Input Dataset: ${dataset.toString()}  
@@ -170,7 +168,7 @@ function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] 
 }
 
 function getResponseFromModel(string prompt) returns json|error {
-    chat:CreateChatCompletionRequest request = {
+    OpenAICreateChatCompletionRequest request = {
         model: getModel(),
         messages: [
             {
@@ -179,7 +177,7 @@ function getResponseFromModel(string prompt) returns json|error {
             }
         ]
     };
-    chat:CreateChatCompletionResponse response = check (getChatClient())->/chat/completions.post(request);
+    OpenAICreateChatCompletionResponse response = check (getChatClient()).chat(request);
     string content = check response.choices[0].message?.content.ensureType();
     return check content.fromJsonString();
 }
