@@ -14,31 +14,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/openai.chat;
-
-type ModelConfig record{|
-    chat:ConnectionConfig connectionConfig; 
+type ModelConfig record {|
+    OpenAIConnectionConfig connectionConfig;
     string? serviceUrl?;
     string model;
 |};
 
 configurable ModelConfig? modelConfig = ();
 
-chat:Client? chatClient = ();
+OpenAIClient? chatClient = ();
 string? model = ();
-function init() returns error?{
+
+function init() returns error? {
     ModelConfig? modelConfigVar = modelConfig;
     if modelConfigVar is ModelConfig {
         string? serviceUrl = modelConfigVar?.serviceUrl;
-        chatClient = serviceUrl is () ? check new chat:Client(modelConfigVar?.connectionConfig) : check new chat:Client(modelConfigVar?.connectionConfig, serviceUrl);
+        chatClient = serviceUrl is () ? check new OpenAIClient(modelConfigVar?.connectionConfig) : check new OpenAIClient(modelConfigVar?.connectionConfig, serviceUrl);
         model = modelConfigVar?.model;
         return;
     }
 }
 
-function getChatClient() returns chat:Client {
-    final chat:Client? clientVar = chatClient;
-    if clientVar is (){
+function getChatClient() returns OpenAIClient {
+    final OpenAIClient? clientVar = chatClient;
+    if clientVar is () {
         panic error("Chat client is not initialized");
     }
     return clientVar;
@@ -46,7 +45,7 @@ function getChatClient() returns chat:Client {
 
 function getModel() returns string {
     final string? modelVar = model;
-    if modelVar is (){
+    if modelVar is () {
         panic error("Model is not initialized");
     }
     return modelVar;
