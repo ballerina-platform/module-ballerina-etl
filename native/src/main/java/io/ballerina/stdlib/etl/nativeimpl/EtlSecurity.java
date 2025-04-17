@@ -29,9 +29,10 @@ import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.crypto.nativeimpl.Decrypt;
 import io.ballerina.stdlib.crypto.nativeimpl.Encrypt;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
+import org.ballerinalang.langlib.array.FromBase64;
+import org.ballerinalang.langlib.array.ToBase64;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
@@ -63,11 +64,9 @@ public class EtlSecurity {
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
                     String value = data.get(keyField).toString();
-                    Object encryptedValue = Encrypt.encryptAesEcb(
+                    BArray encryptedValue = (BArray) Encrypt.encryptAesEcb(
                             ValueCreator.createArrayValue(value.getBytes(StandardCharsets.UTF_8)), key, "PKCS5");
-                    byte[] encryptedBytes = ((BArray) encryptedValue).getBytes();
-                    String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedBytes);
-                    encryptedData.put(keyField, StringUtils.fromString(encryptedBase64));
+                    encryptedData.put(keyField, ToBase64.toBase64(encryptedValue));
                 } else {
                     encryptedData.put(keyField, data.get(keyField));
                 }
@@ -90,12 +89,12 @@ public class EtlSecurity {
             BString[] keys = data.getKeys();
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
-                    String value = data.get(keyField).toString();
-                    byte[] decryptedBytes = Base64.getDecoder().decode(value);
-                    Object decryptedValue = Decrypt.decryptAesEcb(ValueCreator.createArrayValue(decryptedBytes), key,
+                    BArray decryptedBytes = (BArray) FromBase64
+                            .fromBase64(StringUtils.fromString(data.get(keyField).toString()));
+                    BArray decryptedValue = (BArray) Decrypt.decryptAesEcb(decryptedBytes, key,
                             "PKCS5");
                     decryptedData.put(keyField, StringUtils
-                            .fromString(new String((((BArray) decryptedValue).getBytes()), StandardCharsets.UTF_8)));
+                            .fromString(new String(((decryptedValue).getBytes()), StandardCharsets.UTF_8)));
                 } else {
                     decryptedData.put(keyField, data.get(keyField));
                 }

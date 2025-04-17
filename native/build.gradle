@@ -30,6 +30,7 @@ dependencies {
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
     implementation group: 'io.ballerina.stdlib', name: 'crypto-native', version: "${stdlibCryptoVersion}"
     implementation group: 'org.ballerinalang', name: 'regexp', version: "${ballerinaLangVersion}"
+    implementation group: 'org.ballerinalang', name: 'array', version: "${ballerinaLangVersion}"
 }
 
 checkstyle {
