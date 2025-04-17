@@ -65,8 +65,13 @@ public class ErrorUtils {
         return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connector error"));
     }
 
+    public static BError createClientRequestError() {
+        return ErrorCreator.createError(StringUtils
+                .fromString("Operation failed due to client request error. Configuration values may be incorrect"));
+    }
+
     public static BError createIdleTimeoutError() {
         return ErrorCreator.createError(
-                StringUtils.fromString("Operation failed due to idle timeout. Size of the dataset may be too large"));
+                StringUtils.fromString("Operation failed due to idle timeout."));
     }
 }

@@ -28,6 +28,7 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getReturnTypeSchema;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.EXTRACT_FROM_UNSTRUCTURED_DATA;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 
@@ -50,6 +51,8 @@ public class EtlExtraction {
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
             default:
                 return convertJSONToRecord(clientResponse, returnType);
         }

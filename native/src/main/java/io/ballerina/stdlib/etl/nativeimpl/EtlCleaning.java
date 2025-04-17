@@ -42,6 +42,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 import static io.ballerina.stdlib.etl.utils.Constants.ASCENDING;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.GROUP_APPROXIMATE_DUPLICATES;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.REGEX_MULTIPLE_WHITESPACE;
@@ -68,6 +69,8 @@ public class EtlCleaning {
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);
         }
@@ -216,6 +219,8 @@ public class EtlCleaning {
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
             default:
                 return convertJSONToBArray(clientResponse, returnType);
         }

@@ -35,6 +35,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 import static io.ballerina.stdlib.etl.utils.Constants.CATEGORIZE_SEMANTIC;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.FLOAT;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.INT;
@@ -134,6 +135,8 @@ public class EtlCategorization {
                 return ErrorUtils.createClientConnectionError();
             case IDLE_TIMEOUT_ERROR:
                 return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
             default:
                 return convertJSONToNestedBArray(clientResponse, returnType);
         }

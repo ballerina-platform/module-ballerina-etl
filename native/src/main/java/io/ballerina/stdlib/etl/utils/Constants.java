@@ -22,6 +22,7 @@ public class Constants {
 
     public static final String IDLE_TIMEOUT_ERROR = "IdleTimeoutError";
     public static final String CLIENT_CONNECTOR_ERROR = "ClientConnectorError";
+    public static final String CLIENT_REQUEST_ERROR = "ClientRequestError";
     public static final String STRING = "string";
     public static final String INT = "int";
     public static final String FLOAT = "float";
