@@ -58,7 +58,7 @@ public class EtlFiltering {
             suffledDataset.add(copyBMap((BMap<BString, Object>) dataset.get(i), returnType));
         }
         Collections.shuffle(suffledDataset);
-        int splitIndex = (int) (suffledDataset.size() * ratio);
+        int splitIndex = (int) Math.ceil(suffledDataset.size() * ratio);
         for (int i = 0; i < splitIndex; i++) {
             ((BArray) filteredDataset).append(suffledDataset.get(i));
         }
