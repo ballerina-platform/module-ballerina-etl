@@ -19,6 +19,7 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
@@ -26,6 +27,7 @@ import io.ballerina.runtime.api.values.BRegexpValue;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
+import org.ballerinalang.langlib.regexp.Matches;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
@@ -102,10 +104,10 @@ public class EtlCategorization {
                 ((BArray) categorizedData.get(regexArray.size())).append(data);
                 continue;
             }
-            String fieldValue = String.valueOf(data.get(fieldName));
+            BString fieldValue = StringUtils.fromString(data.get(fieldName).toString());
             for (int j = 0; j < regexArray.size(); j++) {
                 BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
-                if (fieldValue.matches(regexPattern.toString())) {
+                if (Matches.isFullMatch(regexPattern, fieldValue)) {
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
                 }

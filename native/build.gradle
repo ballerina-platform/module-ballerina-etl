@@ -29,6 +29,7 @@ dependencies {
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstylePluginVersion}"
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
     implementation group: 'io.ballerina.stdlib', name: 'crypto-native', version: "${stdlibCryptoVersion}"
+    implementation group: 'org.ballerinalang', name: 'regexp', version: "${ballerinaLangVersion}"
 }
 
 checkstyle {

@@ -18,12 +18,14 @@
 
 package io.ballerina.stdlib.etl.nativeimpl;
 
+import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
+import org.ballerinalang.langlib.regexp.Matches;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,8 +80,8 @@ public class EtlFiltering {
             if (!newData.containsKey(fieldName)) {
                 continue;
             }
-            String fieldvalue = newData.get(fieldName).toString();
-            if (fieldvalue.matches(regexPattern.toString())) {
+            BString fieldvalue = StringUtils.fromString(newData.get(fieldName).toString());
+            if (Matches.isFullMatch(regexPattern, fieldvalue)) {
                 ((BArray) filteredDataset).append(newData);
             }
         }

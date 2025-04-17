@@ -19,5 +19,6 @@
 module io.ballerina.stdlib.etl {
     requires transitive io.ballerina.runtime;
     requires io.ballerina.stdlib.crypto;
+    requires io.ballerina.lang.regexp;
     exports io.ballerina.stdlib.etl.nativeimpl;
 }
