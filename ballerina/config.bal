@@ -22,32 +22,21 @@ type ModelConfig record {|
 
 configurable ModelConfig? modelConfig = ();
 
-OpenAIClient? chatClient = ();
-string? model = ();
+OpenAIModel? openAIModel = ();
 
 function init() returns error? {
     ModelConfig? modelConfigVar = modelConfig;
     if modelConfigVar is ModelConfig {
         string? serviceUrl = modelConfigVar?.serviceUrl;
-        chatClient = serviceUrl is () ? check new OpenAIClient(modelConfigVar?.connectionConfig) : check new OpenAIClient(modelConfigVar?.connectionConfig, serviceUrl);
-        model = modelConfigVar?.model;
+        openAIModel = serviceUrl is () ? check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model) : check new OpenAIModel(modelConfigVar?.connectionConfig,modelConfigVar?.model,serviceUrl);
         return;
     }
 }
 
-function getChatClient() returns OpenAIClient {
-    final OpenAIClient? clientVar = chatClient;
-    if clientVar is () {
-        panic error("Chat client is not initialized");
+function getModel() returns OpenAIModel {
+    final OpenAIModel? openAIModelVar = openAIModel;
+    if openAIModelVar is () {
+        panic error("OpenAI Model is not initialized");
     }
-    return clientVar;
+    return openAIModelVar;
 }
-
-function getModel() returns string {
-    final string? modelVar = model;
-    if modelVar is () {
-        panic error("Model is not initialized");
-    }
-    return modelVar;
-}
-

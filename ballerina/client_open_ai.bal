@@ -16,10 +16,11 @@
 
 import ballerina/http;
 
-isolated client class OpenAIClient {
+isolated client class OpenAIModel {
     final http:Client clientEp;
+    final string model;
 
-    isolated function init(OpenAIConnectionConfig config, string serviceUrl = "https://api.openai.com/v1") returns error? {
+    isolated function init(OpenAIConnectionConfig config, string model, string serviceUrl = "https://api.openai.com/v1") returns error? {
         http:ClientConfiguration httpClientConfig = {auth: config.auth, httpVersion: config.httpVersion, timeout: config.timeout, forwarded: config.forwarded, poolConfig: config.poolConfig, compression: config.compression, circuitBreaker: config.circuitBreaker, retryConfig: config.retryConfig, validation: config.validation};
         do {
             if config.http1Settings is ClientHttp1Settings {
@@ -44,6 +45,7 @@ isolated client class OpenAIClient {
         }
         http:Client httpEp = check new (serviceUrl, httpClientConfig);
         self.clientEp = httpEp;
+        self.model = model;
         return;
     }
 
@@ -51,5 +53,4 @@ isolated client class OpenAIClient {
             returns OpenAICreateChatCompletionResponse|error {
         return self.clientEp->/chat/completions.post(chatBody);
     }
-
 }
