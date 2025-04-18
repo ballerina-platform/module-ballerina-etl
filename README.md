@@ -37,14 +37,14 @@ The functions in this package are categorized into the following ETL process sta
 - `maskSensitiveData`: Masks specified fields of a dataset by replacing each character in the sensitive fields with a masking character.
 
 ### Data Filtering
-- `filterDataByRatio`: Splits a dataset into two parts based on a given ratio.
-- `filterDataByRegex`: Filters a dataset into two subsets based on a regex pattern match.
+- `filterDataByRatio`: Filters a random set of records from a dataset based on a specified ratio.
+- `filterDataByRegex`: Filters a dataset based on a regex pattern match.
 - `filterDataByRelativeExp`: Filters a dataset based on a relative numeric comparison expression.
 
 ### Data Categorization
 - `categorizeNumeric`: Categorizes a dataset based on a numeric field and specified ranges.
 - `categorizeRegexData`: Categorizes a dataset based on a string field using a set of regular expressions.
-- `categorizeSemantic`: Categorizes a dataset based on a string field using semantic classification via OpenAI's GPT model.
+- `categorizeSemantic`: Categorizes a dataset based on a string field using semantic classification.
 
 ## Usage
 
