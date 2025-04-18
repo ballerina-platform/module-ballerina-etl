@@ -72,6 +72,6 @@ public class ErrorUtils {
 
     public static BError createIdleTimeoutError() {
         return ErrorCreator.createError(
-                StringUtils.fromString("Operation failed due to idle timeout."));
+                StringUtils.fromString("Operation failed due to idle timeout error."));
     }
 }
