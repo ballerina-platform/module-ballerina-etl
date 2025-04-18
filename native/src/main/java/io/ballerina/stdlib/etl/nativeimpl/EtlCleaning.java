@@ -30,7 +30,6 @@ import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
@@ -43,6 +42,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 import static io.ballerina.stdlib.etl.utils.Constants.ASCENDING;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
+import static io.ballerina.stdlib.etl.utils.Constants.GET_UNIQUE_DATA;
 import static io.ballerina.stdlib.etl.utils.Constants.GROUP_APPROXIMATE_DUPLICATES;
 import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
 import static io.ballerina.stdlib.etl.utils.Constants.REGEX_MULTIPLE_WHITESPACE;
@@ -62,8 +62,7 @@ public class EtlCleaning {
     public static Object groupApproximateDuplicates(Environment env, BArray dataset, BTypedesc returnType) {
         Object[] args = new Object[] { dataset };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), GROUP_APPROXIMATE_DUPLICATES,
-                null,
-                args);
+                null, args);
         switch (TypeUtils.getType(clientResponse).getName()) {
             case CLIENT_CONNECTOR_ERROR:
                 return ErrorUtils.createClientConnectionError();
@@ -96,16 +95,16 @@ public class EtlCleaning {
         return cleanedDataset;
     }
 
-    public static Object removeDuplicates(BArray dataset, BTypedesc returnType) {
-        BArray uniqueDataset = initializeBArray(returnType);
-        HashSet<String> seenData = new HashSet<>();
-        for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (seenData.add(data.toString())) {
-                uniqueDataset.append(copyBMap(data, returnType));
-            }
+    public static Object removeDuplicates(Environment env, BArray dataset, BTypedesc returnType) {
+        BArray deDuplicatedDataset = initializeBArray(returnType);
+        Object[] args = new Object[] { dataset };
+        BArray uniqueItems = (BArray) env.getRuntime().callFunction(env.getCurrentModule(),
+                GET_UNIQUE_DATA, null, args);
+        for (int i = 0; i < uniqueItems.size(); i++) {
+            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) uniqueItems.get(i), returnType);
+            deDuplicatedDataset.append(newData);
         }
-        return uniqueDataset;
+        return deDuplicatedDataset;
     }
 
     public static Object removeField(BArray dataset, BString fieldName, BTypedesc returnType) {

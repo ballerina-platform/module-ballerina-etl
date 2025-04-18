@@ -181,3 +181,9 @@ function getResponseFromModel(string prompt) returns json|error {
     string content = check response.choices[0].message?.content.ensureType();
     return check content.fromJsonString();
 }
+
+function getUniqueData(record {}[] dataset) returns record {}[] {
+    return from var data in dataset
+        group by data
+        select data;
+}
