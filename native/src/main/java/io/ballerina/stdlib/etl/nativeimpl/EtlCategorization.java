@@ -66,7 +66,6 @@ public class EtlCategorization {
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if (!data.containsKey(fieldName)) {
-                ((BArray) categorizedData.get(numCategories)).append(data);
                 continue;
             }
             float fieldValue = Float.parseFloat(String.valueOf(data.get(fieldName)));
@@ -102,7 +101,6 @@ public class EtlCategorization {
         for (int i = 0; i < dataset.size(); i++) {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if (!data.containsKey(fieldName)) {
-                ((BArray) categorizedData.get(regexArray.size())).append(data);
                 continue;
             }
             BString fieldValue = StringUtils.fromString(data.get(fieldName).toString());
