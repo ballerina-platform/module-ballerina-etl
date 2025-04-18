@@ -38,7 +38,7 @@ public function filterDataByRatio(record {}[] dataset, float ratio, typedesc<rec
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlFiltering"
 } external;
 
-# Filters a dataset into two subsets based on a regex pattern match.
+# Filters a dataset based on a regex pattern match.
 # ```ballerina
 # Customer[] dataset = [
 #     { id: 1, city: "New York" },
