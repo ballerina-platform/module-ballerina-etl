@@ -28,7 +28,7 @@ function init() returns error? {
     ModelConfig? modelConfigVar = modelConfig;
     if modelConfigVar is ModelConfig {
         string? serviceUrl = modelConfigVar?.serviceUrl;
-        openAIModel = serviceUrl is () ? check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model) : check new OpenAIModel(modelConfigVar?.connectionConfig,modelConfigVar?.model,serviceUrl);
+        openAIModel = serviceUrl is () ? check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model) : check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model, serviceUrl);
         return;
     }
 }

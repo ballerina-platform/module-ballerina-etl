@@ -55,7 +55,6 @@ import static io.ballerina.stdlib.etl.utils.Constants.STRING;
  *
  * * @since 0.8.0
  */
-
 @SuppressWarnings("unchecked")
 public class EtlCleaning {
 

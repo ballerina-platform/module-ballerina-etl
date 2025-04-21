@@ -26,7 +26,6 @@ import io.ballerina.runtime.api.values.BString;
 /**
  * Represents the errors of ETL module.
  */
-
 public class ErrorUtils {
 
     private ErrorUtils() {

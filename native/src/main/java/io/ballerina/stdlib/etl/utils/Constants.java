@@ -18,6 +18,9 @@
 
 package io.ballerina.stdlib.etl.utils;
 
+/**
+ * Constants for ETL operations.
+ */
 public class Constants {
 
     public static final String IDLE_TIMEOUT_ERROR = "IdleTimeoutError";

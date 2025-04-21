@@ -21,5 +21,6 @@ module io.ballerina.stdlib.etl {
     requires io.ballerina.stdlib.crypto;
     requires io.ballerina.lang.regexp;
     requires io.ballerina.lang.array;
+
     exports io.ballerina.stdlib.etl.nativeimpl;
 }

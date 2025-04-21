@@ -38,7 +38,6 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
  *
  * * @since 0.8.0
  */
-
 public class EtlExtraction {
 
     public static Object extractFromUnstructuredData(Environment env, BString dataset, BTypedesc returnType) {
