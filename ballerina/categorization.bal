@@ -68,7 +68,7 @@ public function categorizeRegex(record {}[] dataset, string fieldName, regexp:Re
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCategorization"
 } external;
 
-# Categorizes a dataset based on a string field using semantic classification via OpenAI's GPT model.
+# Categorizes a dataset based on a string field using semantic classification.
 # ```ballerina
 # Review[] dataset = [
 #     { id: 1, comment: "Great service!" },

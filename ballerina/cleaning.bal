@@ -17,7 +17,7 @@
 import ballerina/jballerina.java;
 import ballerina/lang.regexp;
 
-# Identifies approximate duplicates in a dataset and groups them, returning unique records separately.
+# Identifies and groups approximate duplicates in a dataset, returning a nested array with unique records first, followed by groups of similar records.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York" },
@@ -42,7 +42,7 @@ public function groupApproximateDuplicates(record {}[] dataset, typedesc<record 
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Cleans up extra whitespace in all string fields of a dataset.
+# Returns a new dataset with all extra whitespace removed from string fields.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "  Alice  ", city: "  New   York  " },
@@ -63,7 +63,7 @@ public function handleWhiteSpaces(record {}[] dataset, typedesc<record {}> retur
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Removes duplicate records from the dataset based on their exact content.
+# Returns a new dataset with all duplicate records removed.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York" },
@@ -86,7 +86,7 @@ public function removeDuplicates(record {}[] dataset, typedesc<record {}> return
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Removes a specified field from each record in the dataset.
+# Returns a new dataset with a specified field removed from each record.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York", age: 25 },
@@ -108,7 +108,7 @@ public function removeField(record {}[] dataset, string fieldName, typedesc<reco
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Removes records that contain nil, empty parentheses, or empty string values in any field.
+# Returns a new dataset with all records containing nil or empty string values removed.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York" },
@@ -130,7 +130,7 @@ public function removeEmptyValues(record {}[] dataset, typedesc<record {}> retur
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Replaces text in a specific string field of a dataset using regular expressions.
+# Returns a new dataset where matches of the given regex pattern in a specified string field are replaced with a new value.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York" },
@@ -154,7 +154,7 @@ public function replaceText(record {}[] dataset, string fieldName, regexp:RegExp
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Sorts a dataset based on a specific field in ascending or descending order.
+# Returns a new dataset sorted by a specified field in ascending or descending order.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", age: 25 },
@@ -177,7 +177,7 @@ public function sortData(record {}[] dataset, string fieldName, SortDirection di
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 
-# Standardizes string values in a dataset based on approximate matches.
+# Returns a new dataset with all string values in a specified field standardized to a set of standard values.
 # ```ballerina
 # Customer[] dataset = [
 #     { name: "Alice", city: "New York" },

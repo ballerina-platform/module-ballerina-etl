@@ -16,7 +16,7 @@
 
 import ballerina/jballerina.java;
 
-# Decrypts specific fields of a dataset using AES-ECB decryption with a given Base64-encoded key.
+# Returns a new dataset with specified fields decrypted using AES-ECB decryption with a given symmetric key.
 #
 # ```ballerina
 # Customer[] encryptedDataset = [
@@ -39,7 +39,7 @@ public function decryptData(record {}[] dataset, string[] fieldNames, byte[16] k
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;
 
-# Encrypts specific fields of a dataset using AES-ECB encryption with a given Base64-encoded key.
+# Returns a new dataset with specified fields encrypted using AES-ECB encryption with a given symmetric key.
 #
 # ```ballerina
 # Customer[] dataset = [
@@ -62,7 +62,7 @@ public function encryptData(record {}[] dataset, string[] fieldNames, byte[16] k
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlSecurity"
 } external;
 
-# Masks specified fields of a dataset by replacing each character in the sensitive fields with a default masking character.
+# Returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character.
 #
 # ```ballerina
 # Customer[] dataset = [
