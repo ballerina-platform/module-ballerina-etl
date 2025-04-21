@@ -5,57 +5,57 @@
 This package provides a collection of functions designed for data processing and manipulation, enabling seamless ETL workflows and supporting a variety of use cases.
 
 The functions in this package are categorized into the following ETL process stages:
-- Unstructured Data Extraction
+- Data Categorization
 - Data Cleaning
 - Data Enrichment
-- Data Security
 - Data Filtering
-- Data Categorization
+- Data Security
+- Unstructured Data Extraction
 
 ## Features
-
-### Unstructured Data Extraction
-- `extractFromUnstructuredData`: Extracts relevant details from a string and maps them to a ballerina record.
-
-### Data Cleaning
-- `standardizeData`: Standardizes string values in a dataset based on approximate matches.
-- `groupApproximateDuplicates`: Identifies approximate duplicates in a dataset and groups them, returning unique records separately.
-- `removeEmptyValues`: Removes records that contain nil, empty parentheses, or empty string values in any field.
-- `removeDuplicates`: Removes exact duplicate records from a dataset based on their content.
-- `removeField`: Removes a specified field from each record in the dataset.
-- `replaceText`: Replaces text in a specific field of a dataset using regular expressions.
-- `sortData`: Sorts a dataset based on a specific field in ascending or descending order.
-- `handleWhiteSpaces`: Cleans up whitespace in all fields of a dataset by replacing multiple spaces with a single space and trimming the values.
-
-### Data Enrichment
-- `joinData`: Merges two datasets based on a given key, updating records from the first dataset with matching records from the second.
-- `mergeData`: Merges multiple datasets into a single dataset by flattening a nested array of records.
-
-### Data Security
-- `encryptData`: Encrypts a dataset using AES-ECB encryption with a given symmetric key.
-- `decryptData`: Decrypts a dataset using AES-ECB decryption with a given symmetric key.
-- `maskSensitiveData`: Masks specified fields of a dataset by replacing each character in the sensitive fields with a masking character.
-
-### Data Filtering
-- `filterDataByRatio`: Filters a random set of records from a dataset based on a specified ratio.
-- `filterDataByRegex`: Filters a dataset based on a regex pattern match.
-- `filterDataByRelativeExp`: Filters a dataset based on a relative numeric comparison expression.
 
 ### Data Categorization
 - `categorizeNumeric`: Categorizes a dataset based on a numeric field and specified ranges.
 - `categorizeRegexData`: Categorizes a dataset based on a string field using a set of regular expressions.
 - `categorizeSemantic`: Categorizes a dataset based on a string field using semantic classification.
 
+### Data Cleaning
+- `groupApproximateDuplicates`: Identifies and groups approximate duplicates in a dataset, returning a nested array with unique records first, followed by groups of similar records.
+- `handleWhiteSpaces`: Returns a new dataset with all extra whitespace removed from string fields.
+- `removeDuplicates`: Returns a new dataset with all duplicate records removed.
+- `removeEmptyValues`: Returns a new dataset with all records containing nil or empty string values removed.
+- `removeField`: Returns a new dataset with a specified field removed from each record.
+- `replaceText`: Returns a new dataset where matches of the given regex pattern in a specified string field are replaced with a new value.
+- `sortData`: Returns a new dataset sorted by a specified field in ascending or descending order.
+- `standardizeData`: Returns a new dataset with all string values in a specified field standardized to a set of standard values.
+
+### Data Enrichment
+- `joinData`: Merges two datasets based on a common specified field and returns a new dataset with the merged records.
+- `mergeData`: Merges multiple datasets into a single dataset by flattening a nested array of records.
+
+### Data Filtering
+- `filterDataByRatio`: Filters a random set of records from a dataset based on a specified ratio.
+- `filterDataByRegex`: Filters a dataset based on a regex pattern match.
+- `filterDataByRelativeExp`: Filters a dataset based on a relative numeric comparison expression.
+
+### Data Security
+- `decryptData`: Returns a new dataset with specified fields encrypted using AES-ECB encryption with a given symmetric key.
+- `encryptData`: Returns a new dataset with specified fields encrypted using AES-ECB encryption with a given symmetric key.
+- `maskSensitiveData`: Returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character
+
+### Unstructured Data Extraction
+- `extractFromUnstructuredData`: Extracts unstructured data from a string and maps it to a ballerina record.
+
 ## Usage
 
 ### Configurations
 
-The following functions require an OpenAI API key to operate:
+The following APIs require an OpenAI API key to operate:
+- `categorizeSemantic`
 - `extractFromUnstructuredData`
 - `groupApproximateDuplicates`
-- `standardizeData`
 - `maskSensitiveData`
-- `categorizeSemantic`
+- `standardizeData`
 
 If your Ballerina application uses any of these functions, follow the steps below before calling them:
 
@@ -106,6 +106,16 @@ public function main() returns error? {
     io:println(`Customer Data Without Duplicates : ${uniqueData}`);
 }
 ```
+
+## Examples
+
+The `ballerina/etl` package provides practical examples illustrating its usage in various scenarios. Explore these examples, covering different use cases:
+
+1. [Customer Data Processing](https://github.com/module-ballerina-etl/tree/main/examples/customer-data-processing/) - Processes customer data collected from various sources by extracting relevant information, cleaning and validating fields, enriching with additional metadata, and categorizing the data for downstream applications.
+
+2. [Product Catalog Processing](https://github.com/module-ballerina-etl/tree/main/examples/product-catalog-processing/) - Consolidates product catalog data from multiple sources by extracting and merging entries, encrypting sensitive fields, classifying products into relevant categories, and storing the structured data securely in a MySQL database for easy access and analysis.
+
+3. [User Feedback Analysis](https://github.com/module-ballerina-etl/tree/main/examples/user-feedback-analysis/) - Handles raw user feedback by extracting and standardizing input, classifying comments based on content and sentiment, and storing the processed feedback for further analysis.
 
 ## Build from the source
 
