@@ -19,7 +19,6 @@ import ballerina/test;
 type Person1 record {|
     string? name;
     string? city;
-
 |};
 
 type Person2 record {|

@@ -75,8 +75,7 @@ public class CommonUtils {
 
     public static BArray initializeNestedBArray(BTypedesc type, int size) {
         ArrayType arrayType = TypeCreator.createArrayType(TypeUtils.getReferredType(type.getDescribingType()));
-        BArray nestedArray = ValueCreator.createArrayValue(TypeCreator.createArrayType(arrayType, size));
-        return nestedArray;
+        return ValueCreator.createArrayValue(TypeCreator.createArrayType(arrayType, size));
     }
 
     public static BMap<BString, Object> initializeBMap(BTypedesc type) {

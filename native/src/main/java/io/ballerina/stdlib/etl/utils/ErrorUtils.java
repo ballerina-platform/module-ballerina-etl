@@ -33,7 +33,7 @@ public class ErrorUtils {
 
     public static BError createCommonFieldNotFoundError(int datasetIndex) {
         return ErrorCreator.createError(
-                StringUtils.fromString(String.format("The dataset%d does not contain the field - '%s'", datasetIndex,
+                StringUtils.fromString(String.format("The dataset %d does not contain the field - '%s'", datasetIndex,
                         "fieldName")));
     }
 
