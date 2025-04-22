@@ -183,7 +183,7 @@ function getResponseFromModel(string prompt) returns json|error {
 }
 
 function getUniqueData(record {}[] dataset) returns record {}[] {
-    return from var data in dataset
+    return from record {} data in dataset
         group by data
         select data;
 }

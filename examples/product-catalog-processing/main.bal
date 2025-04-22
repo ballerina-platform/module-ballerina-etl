@@ -125,7 +125,7 @@ public function main() returns error? {
         PRIMARY KEY (productId)
         )`
     );
-    foreach var product in categorizedProducts[0] {
+    foreach Product product in categorizedProducts[0] {
         sql:ParameterizedQuery query = `INSERT INTO low_stock_products 
         (productId, name, price, stock, category, brand, supplier) 
         VALUES (${product.productId}, ${product.name}, ${product.price}, ${product.stock}, 
@@ -133,14 +133,14 @@ public function main() returns error? {
         sql:ExecutionResult _ = check dbClient->execute(query);
 
     }
-    foreach var product in categorizedProducts[1] {
+    foreach Product product in categorizedProducts[1] {
         sql:ParameterizedQuery query = `INSERT INTO medium_stock_products 
         (productId, name, price, stock, category, brand, supplier) 
         VALUES (${product.productId}, ${product.name}, ${product.price}, ${product.stock}, 
                 ${product.category}, ${product.brand}, ${product.supplier})`;
         sql:ExecutionResult _ = check dbClient->execute(query);
     }
-    foreach var product in categorizedProducts[2] {
+    foreach Product product in categorizedProducts[2] {
         sql:ParameterizedQuery query = `INSERT INTO high_stock_products 
         (productId, name, price, stock, category, brand, supplier) 
         VALUES (${product.productId}, ${product.name}, ${product.price}, ${product.stock}, 
