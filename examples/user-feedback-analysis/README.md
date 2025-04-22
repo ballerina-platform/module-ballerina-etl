@@ -34,7 +34,7 @@ Before running the example, ensure that your `Config.toml` file is set up in the
 
 ```toml
 [ballerina.etl.modelConfig]
-connectionConfig.auth.token = "<OPEN_AI_KEY>"
+openAIToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 

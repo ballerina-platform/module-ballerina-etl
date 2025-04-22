@@ -65,7 +65,7 @@ If your Ballerina application uses any of these functions, follow the steps belo
 
 ```toml
 [ballerina.etl.modelConfig]
-connectionConfig.auth.token = "<OPEN_AI_KEY>"
+openAIToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
@@ -77,7 +77,7 @@ model = "<GPT_MODEL>"
 4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `connectionConfig.auth.timeout` field as shown below:
 
 ```toml
-connectionConfig.timeout = <TIMEOUT_IN_SECONDS>
+timeout = <TIMEOUT_IN_SECONDS>
 ```
 
 - Replace `<TIMEOUT_IN_SECONDS>` with your desired timeout duration. 

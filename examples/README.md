@@ -16,7 +16,7 @@ The `ballerina/etl` package provides practical examples illustrating its usage i
 
 ```toml
 [ballerina.etl.modelConfig]
-connectionConfig.auth.token = "<OPEN_AI_KEY>"
+openAIToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
