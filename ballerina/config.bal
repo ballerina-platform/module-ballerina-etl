@@ -15,9 +15,10 @@
 // under the License.
 
 type ModelConfig record {|
-    OpenAIConnectionConfig connectionConfig;
+    string openAIToken;
+    int? timeout?;
     string? serviceUrl?;
-    string model;
+    Model model;
 |};
 
 configurable ModelConfig? modelConfig = ();
@@ -27,9 +28,9 @@ OpenAIModel? openAIModel = ();
 function init() returns error? {
     ModelConfig? modelConfigVar = modelConfig;
     if modelConfigVar is ModelConfig {
-        string? serviceUrl = modelConfigVar?.serviceUrl;
-        openAIModel = serviceUrl is () ? check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model) : check new OpenAIModel(modelConfigVar?.connectionConfig, modelConfigVar?.model, serviceUrl);
-        return;
+        string serviceUrl = modelConfigVar?.serviceUrl ?: "https://api.openai.com/v1";
+        int timeout = modelConfigVar?.timeout ?: 60;
+        openAIModel = check new OpenAIModel(modelConfigVar?.openAIToken, modelConfigVar?.model, timeout, serviceUrl);
     }
 }
 
