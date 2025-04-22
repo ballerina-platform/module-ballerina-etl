@@ -22,7 +22,9 @@ type Customer record {|
     int age?;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testJoinData() returns error? {
     Customer[] dataset1 = [
         {"id": 1, "name": "Alice"},
@@ -41,7 +43,9 @@ function testJoinData() returns error? {
     test:assertEquals(mergedData, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testMergeData() returns error? {
     record {}[][] dataSets = [
         [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}],

@@ -28,7 +28,9 @@ type User2 record {|
     string email;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testDecryptData() returns error? {
     User1[] encryptedData = [
         {id: 1, name: "A86md8hKcPxPtyHOaFGkVA==", age: "uo//698HbSwcKIGSNkhpwQ=="},
@@ -43,7 +45,9 @@ function testDecryptData() returns error? {
     test:assertEquals(decryptedData, expectedDecryptedData);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testEncryptData() returns error? {
     User1[] dataset = [
         {id: 1, name: "Alice", age: 25},
@@ -58,7 +62,9 @@ function testEncryptData() returns error? {
     test:assertEquals(encryptedData, expectedEncryptedData);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
 function testMaskSensitiveData() returns error? {
     User2[] dataset = [
         {id: 1, name: "John Doe", email: "john@example.com"},

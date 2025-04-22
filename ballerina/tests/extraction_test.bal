@@ -22,7 +22,9 @@ type ReviewSummary record {|
     string improvements;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
 public function testExtractFromUnstructuredData() returns error? {
     string reviews = "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming. However, the battery drains quickly, and the charging speed could be improved. The UI is intuitive, but some features feel outdated and need a refresh.";
     ReviewSummary expected = {

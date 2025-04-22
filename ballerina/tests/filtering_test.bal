@@ -24,7 +24,9 @@ type Employee record {|
     int age?;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testFilterDataByRatio() returns error? {
     Employee[] dataset = [
         {id: 1, name: "Alice"},
@@ -37,7 +39,9 @@ function testFilterDataByRatio() returns error? {
     test:assertEquals(part.length(), check (dataset.length() * ratio).ensureType(int));
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testFilterDataByRegex() returns error? {
     Employee[] dataset = [
         {id: 1, city: "New York"},
@@ -56,7 +60,9 @@ function testFilterDataByRegex() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testFilterDataByRelativeExp() returns error? {
     Employee[] dataset = [
         {id: 1, name: "Alice", age: 25},

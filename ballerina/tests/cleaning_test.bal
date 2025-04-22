@@ -37,12 +37,16 @@ type Person4 record {|
     int age;
 |};
 
+
 type ContactDetails record {|
     string name;
     string phone;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+
 function testGroupApproximateDuplicatess() returns error? {
     Person2[] dataset = [
         {name: "Charlie", city: "Los Angeles"},
@@ -62,7 +66,9 @@ function testGroupApproximateDuplicatess() returns error? {
     test:assertEquals(result.slice(1), duplicateGroups);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testHandleWhiteSpaces() returns error? {
     Person2[] dataset = [
         {name: "  Alice   ", city: "New   York  "},
@@ -76,7 +82,9 @@ function testHandleWhiteSpaces() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testRemoveDuplicates() returns error? {
     Person2[] dataset = [
         {name: "Alice", city: "New York"},
@@ -91,7 +99,9 @@ function testRemoveDuplicates() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testRemoveField() returns error? {
     Person3[] dataset = [
         {name: "Alice", city: "New York", age: 30},
@@ -108,7 +118,9 @@ function testRemoveField() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testRemoveEmptyValues() returns error? {
     Person1[] dataset = [
         {name: "Alice", city: "New York"},
@@ -125,7 +137,9 @@ function testRemoveEmptyValues() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testReplaceText() returns error? {
 
     ContactDetails[] dataset = [
@@ -142,7 +156,9 @@ function testReplaceText() returns error? {
 
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testSort() returns error? {
     Person4[] dataset = [
         {name: "Alice", age: 25},
@@ -159,7 +175,9 @@ function testSort() returns error? {
     test:assertEquals(result, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
 function testStandardizeData() returns error? {
     Person2[] dataset = [
         {name: "Alice", city: "New York"},

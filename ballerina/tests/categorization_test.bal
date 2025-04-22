@@ -28,7 +28,9 @@ type Review record {|
     string comment;
 |};
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testCategorizeNumeric() returns error? {
     Order[] dataset = [
         {orderId: 1, customerName: "Alice", totalAmount: 5.3},
@@ -48,7 +50,9 @@ function testCategorizeNumeric() returns error? {
     test:assertEquals(categorized, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testCategorizeRegexData() returns error? {
     Person1[] dataset = [
         {name: "Alice", city: "New York"},
@@ -67,7 +71,9 @@ function testCategorizeRegexData() returns error? {
     test:assertEquals(categorized, expected);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
 function testCategorizeSemantic() returns error? {
     Review[] dataset = [
         {id: 1, comment: "Great service!"},
