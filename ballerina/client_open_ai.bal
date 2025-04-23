@@ -27,7 +27,7 @@ isolated client class OpenAIModel {
     final Model model;
 
     isolated function init(string openAIToken, Model model, int timeout, string serviceUrl) returns error? {
-        http:ClientConfiguration httpClientConfig = {auth: {token: openAIToken}, timeout:check timeout.ensureType(decimal)};
+        http:ClientConfiguration httpClientConfig = {auth: {token: openAIToken}, timeout: check timeout.ensureType(decimal)};
         http:Client httpEp = check new (serviceUrl, httpClientConfig);
         self.clientEp = httpEp;
         self.model = model;

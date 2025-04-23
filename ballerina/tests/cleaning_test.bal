@@ -37,7 +37,6 @@ type Person4 record {|
     int age;
 |};
 
-
 type ContactDetails record {|
     string name;
     string phone;
