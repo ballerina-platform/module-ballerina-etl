@@ -19,6 +19,7 @@
 package io.ballerina.stdlib.etl.utils;
 
 import io.ballerina.runtime.api.creators.ErrorCreator;
+import io.ballerina.runtime.api.types.Type;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BError;
 import io.ballerina.runtime.api.values.BString;
@@ -43,16 +44,14 @@ public class ErrorUtils {
 
     public static BError createFieldNotFoundError(BString fieldName) {
         return ErrorCreator
-                .createError(StringUtils
-                        .fromString(
-                                String.format("The dataset does not contain the field - '%s'", fieldName)));
+                .createError(StringUtils.fromString(
+                        String.format("The dataset does not contain the field - '%s'", fieldName)));
     }
 
-    public static BError createInvalidFieldTypeError(BString fieldName, String expectedType, String actualType) {
+    public static BError createInvalidFieldTypeError(BString fieldName, String expectedType, Type actualType) {
         return ErrorCreator.createError(StringUtils.fromString(
                 String.format("The field '%s' is expected to be of type '%s' but found '%s'", fieldName,
-                        expectedType,
-                        actualType)));
+                        expectedType, actualType.toString())));
     }
 
     public static BError createInvalidRatioError(float ratio) {
@@ -70,7 +69,6 @@ public class ErrorUtils {
     }
 
     public static BError createIdleTimeoutError() {
-        return ErrorCreator.createError(
-                StringUtils.fromString("Operation failed due to idle timeout error."));
+        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to idle timeout error."));
     }
 }

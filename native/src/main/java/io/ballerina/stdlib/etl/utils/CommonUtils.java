@@ -24,6 +24,8 @@ import io.ballerina.runtime.api.types.ArrayType;
 import io.ballerina.runtime.api.types.Field;
 import io.ballerina.runtime.api.types.StructureType;
 import io.ballerina.runtime.api.types.Type;
+import io.ballerina.runtime.api.types.TypeTags;
+import io.ballerina.runtime.api.types.UnionType;
 import io.ballerina.runtime.api.utils.JsonUtils;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.utils.TypeUtils;
@@ -33,6 +35,7 @@ import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -131,18 +134,44 @@ public class CommonUtils {
         return fields.containsKey(fieldName.getValue());
     }
 
-    public static String getFieldType(BTypedesc type, BString fieldName) {
+    public static Type getFieldType(BTypedesc type, BString fieldName) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
-        return fields.get(fieldName.getValue()).getFieldType().toString();
+        return fields.get(fieldName.getValue()).getFieldType();
+    }
+
+    public static boolean isStringType(Type type) {
+        if (type.getTag() == TypeTags.UNION_TAG) {
+            List<Type> memberTypes = ((UnionType) type).getMemberTypes();
+            for (Type memberType : memberTypes) {
+                if (memberType.getTag() == TypeTags.STRING_TAG) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return type.getTag() == TypeTags.STRING_TAG;
+    }
+
+    public static boolean isNumericType(Type type) {
+        if (type.getTag() == TypeTags.UNION_TAG) {
+            List<Type> memberTypes = ((UnionType) type).getMemberTypes();
+            for (Type memberType : memberTypes) {
+                if (memberType.getTag() == TypeTags.INT_TAG || memberType.getTag() == TypeTags.FLOAT_TAG) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return type.getTag() == TypeTags.INT_TAG || type.getTag() == TypeTags.FLOAT_TAG;
     }
 
     public static BMap<BString, Object> getReturnTypeSchema(BTypedesc type) {
         BString[] fieldNames = getFields(type);
         BString[] fieldTypes = new BString[fieldNames.length];
         for (int i = 0; i < fieldNames.length; i++) {
-            fieldTypes[i] = StringUtils.fromString(getFieldType(type, fieldNames[i]));
+            fieldTypes[i] = StringUtils.fromString(getFieldType(type, fieldNames[i]).toString());
         }
         BMap<BString, Object> returnTypeDetails = ValueCreator.createMapValue();
         for (int i = 0; i < fieldNames.length; i++) {

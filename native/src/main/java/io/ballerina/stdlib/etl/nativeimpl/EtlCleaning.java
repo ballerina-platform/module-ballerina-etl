@@ -19,6 +19,8 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.constants.TypeConstants;
+import io.ballerina.runtime.api.types.Type;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
@@ -39,6 +41,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToNestedB
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isStringType;
 
 /**
  * This class hold Java external functions for ETL - data cleaning APIs.
@@ -68,7 +71,7 @@ public class EtlCleaning {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
             for (BString field : data.getKeys()) {
-                if (data.get(field) != null && getFieldType(returnType, field).contains("string")) {
+                if (data.get(field) != null && isStringType(getFieldType(returnType, field))) {
                     String fieldValue = data.get(field).toString();
                     String newFieldValue = fieldValue.replaceAll(REGEX_MULTIPLE_WHITESPACE, SINGLE_WHITESPACE)
                             .trim();
@@ -140,9 +143,9 @@ public class EtlCleaning {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains("string")) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
+        Type fieldType = getFieldType(returnType, fieldName);
+        if (!isStringType(fieldType)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {

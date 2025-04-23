@@ -19,6 +19,8 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
+import io.ballerina.runtime.api.constants.TypeConstants;
+import io.ballerina.runtime.api.types.Type;
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
@@ -32,6 +34,8 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isNumericType;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.isStringType;
 
 /**
  * This class hold Java external functions for ETL - data categorization APIs.
@@ -42,14 +46,16 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 public class EtlCategorization {
 
     public static final String CATEGORIZE_SEMANTIC = "categorizeSemanticFunc";
+    public static final String INT_OR_FLOAT = String.format("%s or %s", TypeConstants.INT_TNAME,
+            TypeConstants.FLOAT_TNAME);
 
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains("int") && !fieldType.contains("float")) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, "int or float", fieldType);
+        Type fieldType = getFieldType(returnType, fieldName);
+        if (!isNumericType(fieldType)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
         }
         double lowerBound = rangeArray.getFloat(0);
         BArray midRanges = (BArray) rangeArray.get(1);
@@ -86,9 +92,9 @@ public class EtlCategorization {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains("string")) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
+        Type fieldType = getFieldType(returnType, fieldName);
+        if (!isStringType(fieldType)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
         }
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size());
         for (int i = 0; i < dataset.size(); i++) {
@@ -114,9 +120,9 @@ public class EtlCategorization {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains("string")) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
+        Type fieldType = getFieldType(returnType, fieldName);
+        if (!isStringType(fieldType)) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
         }
         Object[] args = new Object[] { dataset, fieldName, categories };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
