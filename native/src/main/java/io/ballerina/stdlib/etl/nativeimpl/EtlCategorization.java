@@ -20,7 +20,6 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -29,18 +28,10 @@ import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.etl.utils.ErrorUtils;
 import org.ballerinalang.langlib.regexp.Matches;
 
-import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
-import static io.ballerina.stdlib.etl.utils.Constants.CATEGORIZE_SEMANTIC;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.FLOAT;
-import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.INT;
-import static io.ballerina.stdlib.etl.utils.Constants.INT_OR_FLOAT;
-import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 
 /**
  * This class hold Java external functions for ETL - data categorization APIs.
@@ -50,13 +41,15 @@ import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 @SuppressWarnings("unchecked")
 public class EtlCategorization {
 
+    public static final String CATEGORIZE_SEMANTIC = "categorizeSemanticFunc";
+
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains(INT) && !fieldType.contains(FLOAT)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
+        if (!fieldType.contains("int") && !fieldType.contains("float")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "int or float", fieldType);
         }
         double lowerBound = rangeArray.getFloat(0);
         BArray midRanges = (BArray) rangeArray.get(1);
@@ -94,8 +87,8 @@ public class EtlCategorization {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains(STRING)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, fieldType);
+        if (!fieldType.contains("string")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
         }
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size());
         for (int i = 0; i < dataset.size(); i++) {
@@ -122,21 +115,12 @@ public class EtlCategorization {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains(STRING)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, fieldType);
+        if (!fieldType.contains("string")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
         }
         Object[] args = new Object[] { dataset, fieldName, categories };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
                 args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToNestedBArray(clientResponse, returnType);
-        }
+        return processResponseToNestedBArray(clientResponse, returnType);
     }
 }

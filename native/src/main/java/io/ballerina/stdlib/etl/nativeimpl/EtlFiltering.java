@@ -35,10 +35,6 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.evaluateCondition;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
-import static io.ballerina.stdlib.etl.utils.Constants.FLOAT;
-import static io.ballerina.stdlib.etl.utils.Constants.INT;
-import static io.ballerina.stdlib.etl.utils.Constants.INT_OR_FLOAT;
-import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 
 /**
  * This class hold Java external functions for ETL - data filtering APIs.
@@ -71,8 +67,8 @@ public class EtlFiltering {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String field = getFieldType(returnType, fieldName);
-        if (!field.contains(STRING)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, field);
+        if (!field.contains("string")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", field);
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
@@ -94,8 +90,8 @@ public class EtlFiltering {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String field = getFieldType(returnType, fieldName);
-        if (!field.contains(INT) && !field.contains(FLOAT)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, field);
+        if (!field.contains("int") && !field.contains("float")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "int or float", field);
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {

@@ -21,7 +21,6 @@ package io.ballerina.stdlib.etl.nativeimpl;
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -35,13 +34,10 @@ import org.ballerinalang.langlib.array.ToBase64;
 import java.nio.charset.StandardCharsets;
 
 import static io.ballerina.stdlib.etl.utils.CommonUtils.contains;
-import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToBArray;
 
 /**
  * This class hold Java external functions for ETL - data security APIs.
@@ -110,15 +106,6 @@ public class EtlSecurity {
         Object[] args = new Object[] { dataset, maskCharacter };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
                 args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToBArray(clientResponse, returnType);
-        }
+        return processResponseToBArray(clientResponse, returnType);
     }
 }

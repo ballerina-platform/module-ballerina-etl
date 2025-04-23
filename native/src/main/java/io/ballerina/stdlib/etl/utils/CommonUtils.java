@@ -41,6 +41,10 @@ import java.util.Map;
 
 public class CommonUtils {
 
+    public static final String IDLE_TIMEOUT_ERROR = "IdleTimeoutError";
+    public static final String CLIENT_CONNECTOR_ERROR = "ClientConnectorError";
+    public static final String CLIENT_REQUEST_ERROR = "ClientRequestError";
+
     public static boolean contains(BArray array, BString key) {
         BIterator<?> iterator = array.getIterator();
         while (iterator.hasNext()) {
@@ -145,5 +149,44 @@ public class CommonUtils {
             returnTypeDetails.put(fieldNames[i], fieldTypes[i]);
         }
         return returnTypeDetails;
+    }
+
+    public static Object processResponseToBArray(Object clientResponse, BTypedesc returnType) {
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case CLIENT_CONNECTOR_ERROR:
+                return ErrorUtils.createClientConnectionError();
+            case IDLE_TIMEOUT_ERROR:
+                return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
+        }
+    }
+
+    public static Object processResponseToNestedBArray(Object clientResponse, BTypedesc returnType) {
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case CLIENT_CONNECTOR_ERROR:
+                return ErrorUtils.createClientConnectionError();
+            case IDLE_TIMEOUT_ERROR:
+                return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
+            default:
+                return convertJSONToNestedBArray(clientResponse, returnType);
+        }
+    }
+
+    public static Object processResponseToRecord(Object clientResponse, BTypedesc returnType) {
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case CLIENT_CONNECTOR_ERROR:
+                return ErrorUtils.createClientConnectionError();
+            case IDLE_TIMEOUT_ERROR:
+                return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
+            default:
+                return convertJSONToRecord(clientResponse, returnType);
+        }
     }
 }

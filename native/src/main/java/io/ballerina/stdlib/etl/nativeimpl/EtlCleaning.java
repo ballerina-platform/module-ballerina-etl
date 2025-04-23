@@ -20,7 +20,6 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -32,23 +31,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.copyBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFields;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
-import static io.ballerina.stdlib.etl.utils.Constants.ASCENDING;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.GET_UNIQUE_DATA;
-import static io.ballerina.stdlib.etl.utils.Constants.GROUP_APPROXIMATE_DUPLICATES;
-import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.REGEX_MULTIPLE_WHITESPACE;
-import static io.ballerina.stdlib.etl.utils.Constants.SINGLE_WHITESPACE;
-import static io.ballerina.stdlib.etl.utils.Constants.STANDARDIZE_DATA;
-import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 
 /**
  * This class hold Java external functions for ETL - data cleaning APIs.
@@ -58,20 +47,18 @@ import static io.ballerina.stdlib.etl.utils.Constants.STRING;
 @SuppressWarnings("unchecked")
 public class EtlCleaning {
 
+    public static final String ASCENDING = "ascending";
+    public static final String GET_UNIQUE_DATA = "getUniqueData";
+    public static final String GROUP_APPROXIMATE_DUPLICATES = "groupApproximateDuplicatesFunc";
+    public static final String REGEX_MULTIPLE_WHITESPACE = "\\s+";
+    public static final String SINGLE_WHITESPACE = " ";
+    public static final String STANDARDIZE_DATA = "standardizeDataFunc";
+
     public static Object groupApproximateDuplicates(Environment env, BArray dataset, BTypedesc returnType) {
         Object[] args = new Object[] { dataset };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), GROUP_APPROXIMATE_DUPLICATES,
                 null, args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToBArray(clientResponse, returnType);
-        }
+        return processResponseToBArray(clientResponse, returnType);
     }
 
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
@@ -80,7 +67,7 @@ public class EtlCleaning {
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
             for (BString field : data.getKeys()) {
-                if (data.get(field) != null && getFieldType(returnType, field).contains(STRING)) {
+                if (data.get(field) != null && getFieldType(returnType, field).contains("string")) {
                     String fieldValue = data.get(field).toString();
                     String newFieldValue = fieldValue.replaceAll(REGEX_MULTIPLE_WHITESPACE, SINGLE_WHITESPACE)
                             .trim();
@@ -153,8 +140,8 @@ public class EtlCleaning {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
         String fieldType = getFieldType(returnType, fieldName);
-        if (!fieldType.contains(STRING)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, STRING, fieldType);
+        if (!fieldType.contains("string")) {
+            return ErrorUtils.createInvalidFieldTypeError(fieldName, "string", fieldType);
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
@@ -212,15 +199,6 @@ public class EtlCleaning {
         Object[] args = new Object[] { dataset, fieldName, standardValues };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null,
                 args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToBArray(clientResponse, returnType);
-        }
+        return processResponseToBArray(clientResponse, returnType);
     }
 }

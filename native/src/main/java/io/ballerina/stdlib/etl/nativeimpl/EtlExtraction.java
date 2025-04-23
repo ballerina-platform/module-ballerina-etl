@@ -19,18 +19,12 @@
 package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
-import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.values.BTypedesc;
-import io.ballerina.stdlib.etl.utils.ErrorUtils;
 
-import static io.ballerina.stdlib.etl.utils.CommonUtils.convertJSONToRecord;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getReturnTypeSchema;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_CONNECTOR_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.CLIENT_REQUEST_ERROR;
-import static io.ballerina.stdlib.etl.utils.Constants.EXTRACT_FROM_UNSTRUCTURED_DATA;
-import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToRecord;
 
 /**
  * This class hold Java external functions for ETL - unstructured data
@@ -40,20 +34,13 @@ import static io.ballerina.stdlib.etl.utils.Constants.IDLE_TIMEOUT_ERROR;
  */
 public class EtlExtraction {
 
+    public static final String EXTRACT_FROM_UNSTRUCTURED_DATA = "extractFromUnstructuredDataFunc";
+
     public static Object extractFromUnstructuredData(Environment env, BString dataset, BTypedesc returnType) {
         BMap<BString, Object> returnTypeSchema = getReturnTypeSchema(returnType);
         Object[] args = new Object[] { dataset, returnTypeSchema };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
                 null, args);
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToRecord(clientResponse, returnType);
-        }
+        return processResponseToRecord(clientResponse, returnType);
     }
 }
