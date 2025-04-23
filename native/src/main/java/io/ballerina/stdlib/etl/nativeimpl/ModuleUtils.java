@@ -28,7 +28,7 @@ import io.ballerina.runtime.api.Module;
  */
 public class ModuleUtils {
 
-  private static Module etlModule = null;
+  private static Module etlModule;
 
   private ModuleUtils() {
   }

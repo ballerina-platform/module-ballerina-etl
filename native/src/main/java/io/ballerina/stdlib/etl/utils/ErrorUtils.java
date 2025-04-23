@@ -24,51 +24,55 @@ import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BError;
 import io.ballerina.runtime.api.values.BString;
 
+import static io.ballerina.stdlib.etl.nativeimpl.ModuleUtils.getModule;;
+
 /**
  * Represents the errors of ETL module.
  */
 public class ErrorUtils {
 
-    private ErrorUtils() {
+    public static final String ERROR = "Error";
+
+    public static BError createETLError(BString message) {
+        return ErrorCreator.createError(getModule(), ERROR, message, null, null);
     }
 
     public static BError createCommonFieldNotFoundError(int datasetIndex) {
-        return ErrorCreator.createError(
+        return createETLError(
                 StringUtils.fromString(String.format("The dataset %d does not contain the field - '%s'", datasetIndex,
                         "fieldName")));
     }
 
     public static BError createNoMatchesFoundError() {
-        return ErrorCreator.createError(StringUtils.fromString("No matching records found"));
+        return createETLError(StringUtils.fromString("No matching records found"));
     }
 
     public static BError createFieldNotFoundError(BString fieldName) {
-        return ErrorCreator
-                .createError(StringUtils.fromString(
-                        String.format("The dataset does not contain the field - '%s'", fieldName)));
+        return createETLError(
+                StringUtils.fromString(String.format("The dataset does not contain the field - '%s'", fieldName)));
     }
 
     public static BError createInvalidFieldTypeError(BString fieldName, String expectedType, Type actualType) {
-        return ErrorCreator.createError(StringUtils.fromString(
-                String.format("The field '%s' is expected to be of type '%s' but found '%s'", fieldName,
-                        expectedType, actualType.toString())));
+        return createETLError(
+                StringUtils.fromString(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                        fieldName, expectedType, actualType.toString())));
     }
 
     public static BError createInvalidRatioError(float ratio) {
-        return ErrorCreator.createError(StringUtils.fromString(
+        return createETLError(StringUtils.fromString(
                 String.format("Invalid ratio value: %f. Ratio should be between 0 and 1", ratio)));
     }
 
     public static BError createClientConnectionError() {
-        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to client connector error"));
+        return createETLError(StringUtils.fromString("Operation failed due to client connector error"));
     }
 
     public static BError createClientRequestError() {
-        return ErrorCreator.createError(StringUtils
+        return createETLError(StringUtils
                 .fromString("Operation failed due to client request error. Configuration values may be incorrect"));
     }
 
     public static BError createIdleTimeoutError() {
-        return ErrorCreator.createError(StringUtils.fromString("Operation failed due to idle timeout error."));
+        return createETLError(StringUtils.fromString("Operation failed due to idle timeout error."));
     }
 }

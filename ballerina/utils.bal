@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function standardizeDataFunc(record {}[] dataset, string fieldName, string[] standardValues) returns json|Error {
+function standardizeDataFunc(record {}[] dataset, string fieldName, string[] standardValues) returns json|error {
     string prompt = string `Identify and replace any approximate matches of the given search values in the dataset with the standard values.  
                                         - Input Dataset: ${dataset.toString()}  
                                         - Field Name: ${fieldName}  
@@ -53,7 +53,7 @@ function standardizeDataFunc(record {}[] dataset, string fieldName, string[] sta
     return getResponseFromModel(prompt);
 }
 
-function groupApproximateDuplicatesFunc(record {}[] dataset) returns json|Error {
+function groupApproximateDuplicatesFunc(record {}[] dataset) returns json|error {
     string prompt = string `Identify approximate duplicates in the dataset and group them.
                                         - Input Dataset : ${dataset.toString()}  
                                          Respond only with an array of arrays of JSON objects without any formatting where the first array contains all the unique records which does not have any duplicates, and the rest of the arrays contain the duplicate groups.
@@ -76,7 +76,7 @@ function groupApproximateDuplicatesFunc(record {}[] dataset) returns json|Error 
     return getResponseFromModel(prompt);
 }
 
-function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeSchema) returns json|Error {
+function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeSchema) returns json|error {
     string prompt = string `Extract relevant details from the given text and map them to the specified fields. 
                                         - Input Data : ${dataset.toString()} 
                                         - Return Type Schema(Contains field names as keys and their corresponding types as values.): ${returnTypeSchema.toString()}
@@ -106,7 +106,7 @@ function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeS
     return getResponseFromModel(prompt);
 }
 
-function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter) returns json|Error {
+function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter) returns json|error {
     string prompt = string `Personally Identifiable Information (PII) includes any data that can be used to identify an individual, either on its own or when combined with other information. Examples of PII include:
                                             -Names: Full name, maiden name, alias
                                             -Addresses: Street, email
@@ -138,7 +138,7 @@ function maskSensitiveDataFunc(record {}[] dataset, string:Char maskingCharacter
     return getResponseFromModel(prompt);
 }
 
-function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories) returns json|Error {
+function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] categories) returns json|error {
     string prompt = string `Classify the given dataset into one of the specified categories based on the provided field name. If a data does not belong to any category, ignore them. 
                                             - Input Dataset: ${dataset.toString()}  
                                             - Categories: ${categories.toString()}  

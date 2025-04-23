@@ -14,6 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/jballerina.java;
+
 type ModelConfig record {|
     string openAIToken;
     int? timeout?;
@@ -32,6 +34,7 @@ function init() returns error? {
         int timeout = modelConfigVar?.timeout ?: 60;
         openAIModel = check new OpenAIModel(modelConfigVar?.openAIToken, modelConfigVar?.model, timeout, serviceUrl);
     }
+    setModule();
 }
 
 function getModel() returns OpenAIModel {
@@ -41,3 +44,7 @@ function getModel() returns OpenAIModel {
     }
     return openAIModelVar;
 }
+
+function setModule() = @java:Method {
+    'class: "io.ballerina.stdlib.etl.nativeimpl.ModuleUtils"
+} external;

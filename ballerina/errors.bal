@@ -15,4 +15,4 @@
 // under the License.
 
 # Represents ETL module related errors.
-public type Error error;
+public type Error distinct error;
