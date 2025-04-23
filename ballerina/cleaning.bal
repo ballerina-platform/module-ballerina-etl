@@ -38,7 +38,7 @@ import ballerina/lang.regexp;
 # + returnType - The type of the return value (Ballerina record).
 # + return - A nested array of records where the first array contains all unique records that do not have any duplicates,
 # and the remaining arrays contain duplicate groups or an `etl:Error`.
-public function groupApproximateDuplicates(record {}[] dataset, typedesc<record {}[]> returnType = <>) returns returnType[]|Error = @java:Method {
+public function groupApproximateDuplicates(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[][]|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlCleaning"
 } external;
 

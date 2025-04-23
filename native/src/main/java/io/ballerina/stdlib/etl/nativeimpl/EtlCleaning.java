@@ -35,6 +35,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.copyBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFieldType;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.getFields;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToBArray;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeBMap;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
@@ -58,7 +59,7 @@ public class EtlCleaning {
         Object[] args = new Object[] { dataset };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), GROUP_APPROXIMATE_DUPLICATES,
                 null, args);
-        return processResponseToBArray(clientResponse, returnType);
+        return processResponseToNestedBArray(clientResponse, returnType);
     }
 
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
