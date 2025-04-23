@@ -88,7 +88,7 @@ public class EtlFiltering {
         return filteredDataset;
     }
 
-    public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, float value,
+    public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, double value,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
@@ -103,7 +103,8 @@ public class EtlFiltering {
             if (!newData.containsKey(fieldName)) {
                 continue;
             }
-            float fieldValue = Float.parseFloat(newData.get(fieldName).toString());
+            double fieldValue = newData.get(fieldName) instanceof Double ? (double) newData.get(fieldName)
+                    : ((Long) newData.get(fieldName)).doubleValue();
             if (evaluateCondition(fieldValue, value, operation.getValue())) {
                 ((BArray) filteredDataset).append(newData);
             }

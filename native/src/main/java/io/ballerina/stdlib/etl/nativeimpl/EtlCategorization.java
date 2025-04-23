@@ -58,9 +58,9 @@ public class EtlCategorization {
         if (!fieldType.contains(INT) && !fieldType.contains(FLOAT)) {
             return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
         }
-        float lowerBound = Float.parseFloat(String.valueOf(rangeArray.get(0)));
+        double lowerBound = rangeArray.getFloat(0);
         BArray midRanges = (BArray) rangeArray.get(1);
-        float upperBound = Float.parseFloat(String.valueOf(rangeArray.get(2)));
+        double upperBound = rangeArray.getFloat(2);
         int numCategories = midRanges.size() + 1;
         BArray categorizedData = initializeNestedBArray(returnType, numCategories);
         for (int i = 0; i < dataset.size(); i++) {
@@ -68,21 +68,21 @@ public class EtlCategorization {
             if (!data.containsKey(fieldName)) {
                 continue;
             }
-            float fieldValue = Float.parseFloat(String.valueOf(data.get(fieldName)));
+            double fieldValue = data.get(fieldName) instanceof Double ? (double) data.get(fieldName)
+                    : ((Long) data.get(fieldName)).doubleValue();
             if (fieldValue <= lowerBound || fieldValue > upperBound) {
                 continue;
             }
-            float prevBound = lowerBound;
+            double prevBound = lowerBound;
             for (int j = 0; j < midRanges.size(); j++) {
-                float nextBound = Float.parseFloat(String.valueOf(midRanges.get(j)));
+                double nextBound = midRanges.getFloat(j);
                 if (fieldValue > prevBound && fieldValue <= nextBound) {
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
                 }
                 prevBound = nextBound;
             }
-            if (fieldValue > Float.parseFloat(String.valueOf(midRanges.get(midRanges.size() - 1)))
-                    && fieldValue <= upperBound) {
+            if (fieldValue > midRanges.getFloat(midRanges.size() - 1) && fieldValue <= upperBound) {
                 ((BArray) categorizedData.get(midRanges.size())).append(data);
             }
         }

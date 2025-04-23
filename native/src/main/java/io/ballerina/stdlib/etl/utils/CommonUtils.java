@@ -51,7 +51,7 @@ public class CommonUtils {
         return false;
     }
 
-    public static boolean evaluateCondition(float fieldValue, float comparisonValue, String operation) {
+    public static boolean evaluateCondition(double fieldValue, double comparisonValue, String operation) {
         switch (operation) {
             case ">":
                 return fieldValue > comparisonValue;
