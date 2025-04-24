@@ -1,4 +1,0 @@
-[ballerina.etl.modelConfig]
-openAIToken = "test_token"
-serviceUrl = "http://localhost:8080"
-model = "gpt-4o"
