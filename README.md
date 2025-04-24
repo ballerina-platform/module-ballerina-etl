@@ -2,9 +2,9 @@
 
 ## Overview
 
-This package provides a collection of functions designed for data processing and manipulation, enabling seamless ETL workflows and supporting a variety of use cases.
+This package provides a collection of APIs designed for data processing and manipulation, enabling seamless ETL workflows and supporting a variety of use cases.
 
-The functions in this package are categorized into the following ETL process stages:
+The APIs in this package are categorized into the following ETL process stages:
 - Data Categorization
 - Data Cleaning
 - Data Enrichment
@@ -44,7 +44,7 @@ The functions in this package are categorized into the following ETL process sta
 - `maskSensitiveData`: Returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character
 
 ### Unstructured Data Extraction
-- `extractFromUnstructuredData`: Extracts unstructured data from a string and maps it to a ballerina record.
+- `extractFromText`: Extracts unstructured data from a string and maps it to a ballerina record.
 
 ## Usage
 
@@ -52,12 +52,12 @@ The functions in this package are categorized into the following ETL process sta
 
 The following APIs require an OpenAI API key to operate:
 - `categorizeSemantic`
-- `extractFromUnstructuredData`
+- `extractFromText`
 - `groupApproximateDuplicates`
 - `maskSensitiveData`
 - `standardizeData`
 
-If your Ballerina application uses any of these functions, follow the steps below before calling them:
+If your Ballerina application uses any of these APIs, follow the steps below before calling them:
 
 1. Create an [OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
 
@@ -74,36 +74,36 @@ model = "<GPT_MODEL>"
     - `"gpt-4o"`
     - `"gpt-4o-mini"`
 
-4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `connectionConfig.auth.timeout` field as shown below:
+4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `timeout` field as shown below:
 
 ```toml
-timeout = <TIMEOUT_IN_SECONDS>
+[ballerina.etl.modelConfig]
+openAIToken = "<OPEN_AI_KEY>"
+model = "<GPT_MODEL>"
+timeout = 120
 ```
-
-- Replace `<TIMEOUT_IN_SECONDS>` with your desired timeout duration. 
 
 ### Dependent Type Support 
 
-All functions in this package support dependent types. Here is an example of how to use them:
+All APIs in this package support dependent types. Here is an example of how to use them:
 
 ```ballerina 
 import ballerina/etl;
 import ballerina/io;
 
 type Customer record {|
-    string name;
-    string city;
+   string name;
+   string city;
 |};
 
-Customer[] dataset = [
-    { name: "Alice", city: "New York" },
-    { name: "Bob", city: "Los Angeles" },
-    { name: "Alice", city: "New York" }
-];
-
 public function main() returns error? {
-    Customer[] uniqueData = check etl:removeDuplicates(dataset);
-    io:println(`Customer Data Without Duplicates : ${uniqueData}`);
+   Customer[] dataset = [
+      { name: "Alice", city: "New York" },
+      { name: "Bob", city: "Los Angeles" },
+      { name: "Alice", city: "New York" }
+   ];
+   Customer[] uniqueData = check etl:removeDuplicates(dataset);
+   io:println(`Customer Data Without Duplicates : ${uniqueData}`);
 }
 ```
 
