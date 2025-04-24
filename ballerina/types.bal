@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Represents the available comparison operations for the `filterDataByRelativeExp` function.
+# Represents the available comparison operations for the `filterDataByRelativeExp` API.
 #
 # + GREATER_THAN - Checks if the left operand is greater than the right operand.
 # + LESS_THAN - Checks if the left operand is less than the right operand.
@@ -31,7 +31,7 @@ public enum Operation {
     LESS_THAN_OR_EQUAL = "<="
 }
 
-# Represents the direction for the `sortData` function
+# Represents the direction for the `sortData` API
 #
 # + ASCENDING - Sorts the data in ascending order.
 # + DESCENDING - Sorts the data in descending order.
@@ -40,7 +40,7 @@ public enum SortDirection {
     DESCENDING = "descending"
 }
 
-# Represents the category ranges in the `filterDataByCategory` function.
+# Represents the category ranges in the `categorizeNumeric` API
 # - `float` - Represents the minimum value.
 # - `float[]` - Represents the intermediate breakpoints.
 # - `float` - Represents the maximum value.
