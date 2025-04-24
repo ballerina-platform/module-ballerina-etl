@@ -117,6 +117,9 @@ public class CommonUtils {
 
     public static BString[] getFields(BTypedesc type) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
+        if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
+            ErrorUtils.createInvalidReturnTypeError();
+        }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
         BString[] fieldNames = new BString[fields.size()];
@@ -129,6 +132,9 @@ public class CommonUtils {
 
     public static boolean isFieldExist(BArray dataset, BString fieldName) {
         Type describingType = TypeUtils.getReferredType(dataset.getElementType());
+        if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
+            ErrorUtils.createInvalidReturnTypeError();
+        }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
         return fields.containsKey(fieldName.getValue());
@@ -136,6 +142,9 @@ public class CommonUtils {
 
     public static Type getFieldType(BTypedesc type, BString fieldName) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
+        if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
+            ErrorUtils.createInvalidReturnTypeError();
+        }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
         return fields.get(fieldName.getValue()).getFieldType();

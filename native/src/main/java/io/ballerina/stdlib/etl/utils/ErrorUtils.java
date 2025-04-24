@@ -58,9 +58,46 @@ public class ErrorUtils {
                         fieldName, expectedType, actualType.toString())));
     }
 
+    public static BError createInvalidDatasetError() {
+        return createETLError(StringUtils.fromString("Datasets to be merged must be of type 'record[]{}'"));
+    }
+
+    public static BError createInvalidDatasetElementError() {
+        return createETLError(
+                StringUtils.fromString("The elements of the dataset are expected to be of type 'record{}'"));
+    }
+
+    public static BError createInvalidRangeArrayError() {
+        return createETLError(StringUtils.fromString("Invalid range array"));
+    }
+
+    public static BError createInvalidRegexError() {
+        return createETLError(StringUtils.fromString("Invalid regex pattern found in the given regex array"));
+    }
+
     public static BError createInvalidRatioError(float ratio) {
         return createETLError(StringUtils.fromString(
                 String.format("Invalid ratio value: %f. Ratio should be between 0 and 1", ratio)));
+    }
+
+    public static BError createInvalidReturnTypeError() {
+        return createETLError(StringUtils.fromString("Invalid return type"));
+    }
+
+    public static BError createCategorizationError() {
+        return createETLError(StringUtils.fromString("Error occurred while categorizing the data"));
+    }
+
+    public static BError createDeduplicationError() {
+        return createETLError(StringUtils.fromString("Error occurred while deduplicating the data"));
+    }
+
+    public static BError createDecryptionError() {
+        return createETLError(StringUtils.fromString("Error occurred while decrypting the data"));
+    }
+
+    public static BError createEncryptionError() {
+        return createETLError(StringUtils.fromString("Error occurred while encrypting the data"));
     }
 
     public static BError createClientConnectionError() {

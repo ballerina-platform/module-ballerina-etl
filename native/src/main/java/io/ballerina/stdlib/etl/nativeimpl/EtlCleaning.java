@@ -21,7 +21,9 @@ package io.ballerina.stdlib.etl.nativeimpl;
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.constants.TypeConstants;
 import io.ballerina.runtime.api.types.Type;
+import io.ballerina.runtime.api.types.TypeTags;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -68,10 +70,13 @@ public class EtlCleaning {
     public static Object handleWhiteSpaces(BArray dataset, BTypedesc returnType) {
         BArray cleanedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
             for (BString field : data.getKeys()) {
-                if (data.get(field) != null && isStringType(getFieldType(returnType, field))) {
+                if (TypeUtils.getType(data.get(field)).getTag() == TypeTags.STRING_TAG) {
                     String fieldValue = data.get(field).toString();
                     String newFieldValue = fieldValue.replaceAll(REGEX_MULTIPLE_WHITESPACE, SINGLE_WHITESPACE)
                             .trim();
@@ -88,10 +93,16 @@ public class EtlCleaning {
     public static Object removeDuplicates(Environment env, BArray dataset, BTypedesc returnType) {
         BArray deDuplicatedDataset = initializeBArray(returnType);
         Object[] args = new Object[] { dataset };
-        BArray uniqueItems = (BArray) env.getRuntime().callFunction(env.getCurrentModule(),
+        Object uniqueItems = env.getRuntime().callFunction(env.getCurrentModule(),
                 GET_UNIQUE_DATA, null, args);
-        for (int i = 0; i < uniqueItems.size(); i++) {
-            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) uniqueItems.get(i), returnType);
+        if (TypeUtils.getType(uniqueItems).getTag() != TypeTags.ARRAY_TAG) {
+            ErrorUtils.createDeduplicationError();
+        }
+        for (int i = 0; i < ((BArray) uniqueItems).size(); i++) {
+            if (TypeUtils.getType(((BArray) uniqueItems).get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
+            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) ((BArray) uniqueItems).get(i), returnType);
             deDuplicatedDataset.append(newData);
         }
         return deDuplicatedDataset;
@@ -103,6 +114,9 @@ public class EtlCleaning {
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
             for (BString key : data.getKeys()) {
@@ -118,6 +132,9 @@ public class EtlCleaning {
     public static Object removeEmptyValues(BArray dataset, BTypedesc returnType) {
         BArray cleanedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             boolean isNull = false;
             for (BString field : getFields(returnType)) {
@@ -149,8 +166,11 @@ public class EtlCleaning {
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (dataset.get(i) instanceof BMap) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (data.get(fieldName) == null) {
+            if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
                 continue;
             }
             BMap<BString, Object> newData = initializeBMap(returnType);
@@ -175,6 +195,9 @@ public class EtlCleaning {
         BArray sortedDataset = initializeBArray(returnType);
         List<BMap<BString, Object>> dataToSort = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
             dataToSort.add(newData);
         }

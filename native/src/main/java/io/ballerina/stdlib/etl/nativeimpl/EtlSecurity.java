@@ -20,7 +20,9 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.creators.ValueCreator;
+import io.ballerina.runtime.api.types.TypeTags;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -55,15 +57,21 @@ public class EtlSecurity {
         }
         BArray encryptedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> encryptedData = initializeBMap(returnType);
             BString[] keys = data.getKeys();
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
                     String value = data.get(keyField).toString();
-                    BArray encryptedValue = (BArray) Encrypt.encryptAesEcb(
+                    Object encryptedValue = Encrypt.encryptAesEcb(
                             ValueCreator.createArrayValue(value.getBytes(StandardCharsets.UTF_8)), key, "PKCS5");
-                    encryptedData.put(keyField, ToBase64.toBase64(encryptedValue));
+                    if (TypeUtils.getType(encryptedValue).getTag() != TypeTags.ARRAY_TAG) {
+                        ErrorUtils.createEncryptionError();
+                    }
+                    encryptedData.put(keyField, ToBase64.toBase64((BArray) encryptedValue));
                 } else {
                     encryptedData.put(keyField, data.get(keyField));
                 }
@@ -81,17 +89,26 @@ public class EtlSecurity {
         }
         BArray decryptedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> decryptedData = initializeBMap(returnType);
             BString[] keys = data.getKeys();
             for (BString keyField : keys) {
                 if (contains(fieldNames, keyField)) {
-                    BArray decryptedBytes = (BArray) FromBase64
+                    Object decryptedBytes = FromBase64
                             .fromBase64(StringUtils.fromString(data.get(keyField).toString()));
-                    BArray decryptedValue = (BArray) Decrypt.decryptAesEcb(decryptedBytes, key,
+                    if (TypeUtils.getType(decryptedBytes).getTag() != TypeTags.ARRAY_TAG) {
+                        ErrorUtils.createDecryptionError();
+                    }
+                    Object decryptedValue = Decrypt.decryptAesEcb((BArray) decryptedBytes, key,
                             "PKCS5");
+                    if (TypeUtils.getType(decryptedValue).getTag() != TypeTags.ARRAY_TAG) {
+                        ErrorUtils.createDecryptionError();
+                    }
                     decryptedData.put(keyField, StringUtils
-                            .fromString(new String(((decryptedValue).getBytes()), StandardCharsets.UTF_8)));
+                            .fromString(new String((((BArray) decryptedValue).getBytes()), StandardCharsets.UTF_8)));
                 } else {
                     decryptedData.put(keyField, data.get(keyField));
                 }

@@ -18,6 +18,8 @@
 
 package io.ballerina.stdlib.etl.nativeimpl;
 
+import io.ballerina.runtime.api.types.TypeTags;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -36,7 +38,6 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
  *
  * * @since 0.8.0
  */
-
 @SuppressWarnings("unchecked")
 public class EtlEnrichment {
 
@@ -50,11 +51,17 @@ public class EtlEnrichment {
         BArray joinedDataset = initializeBArray(returnType);
         Set<String> seenData = new HashSet<>();
         for (int i = 0; i < dataset1.size(); i++) {
+            if (TypeUtils.getType(dataset1.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data1 = (BMap<BString, Object>) dataset1.get(i);
             if (data1.get(fieldName) == null) {
                 continue;
             }
             for (int j = 0; j < dataset2.size(); j++) {
+                if (TypeUtils.getType(dataset2.get(j)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                    ErrorUtils.createInvalidDatasetElementError();
+                }
                 BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
                 if (data2.get(fieldName) == null) {
                     continue;
@@ -83,6 +90,9 @@ public class EtlEnrichment {
     public static Object mergeData(BArray datasets, BTypedesc returnType) {
         BArray mergedDataset = initializeBArray(returnType);
         for (int i = 0; i < datasets.size(); i++) {
+            if (TypeUtils.getType(datasets.get(i)).getTag() != TypeTags.ARRAY_TAG) {
+                ErrorUtils.createInvalidDatasetError();
+            }
             BArray dataset = (BArray) datasets.get(i);
             for (int j = 0; j < dataset.size(); j++) {
                 mergedDataset.append(dataset.get(j));

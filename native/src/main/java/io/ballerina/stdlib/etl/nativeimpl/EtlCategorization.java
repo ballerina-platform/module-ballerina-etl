@@ -21,7 +21,9 @@ package io.ballerina.stdlib.etl.nativeimpl;
 import io.ballerina.runtime.api.Environment;
 import io.ballerina.runtime.api.constants.TypeConstants;
 import io.ballerina.runtime.api.types.Type;
+import io.ballerina.runtime.api.types.TypeTags;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -58,13 +60,20 @@ public class EtlCategorization {
             return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
         }
         double lowerBound = rangeArray.getFloat(0);
+        if (TypeUtils.getType(rangeArray.get(1)).getTag() != TypeTags.ARRAY_TAG) {
+            ErrorUtils.createInvalidRangeArrayError();
+        }
         BArray midRanges = (BArray) rangeArray.get(1);
         double upperBound = rangeArray.getFloat(2);
         int numCategories = midRanges.size() + 1;
         BArray categorizedData = initializeNestedBArray(returnType, numCategories);
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
+            if ((TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.FLOAT_TAG)
+                    && (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.INT_TAG)) {
                 continue;
             }
             double fieldValue = data.get(fieldName) instanceof Double ? (double) data.get(fieldName)
@@ -76,6 +85,9 @@ public class EtlCategorization {
             for (int j = 0; j < midRanges.size(); j++) {
                 double nextBound = midRanges.getFloat(j);
                 if (fieldValue > prevBound && fieldValue <= nextBound) {
+                    if (TypeUtils.getType(categorizedData.get(j)).getTag() != TypeTags.ARRAY_TAG) {
+                        ErrorUtils.createCategorizationError();
+                    }
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
                 }
@@ -98,14 +110,23 @@ public class EtlCategorization {
         }
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size());
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
-            if (!data.containsKey(fieldName)) {
+            if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
                 continue;
             }
             BString fieldValue = StringUtils.fromString(data.get(fieldName).toString());
             for (int j = 0; j < regexArray.size(); j++) {
+                if (TypeUtils.getType(regexArray.get(j)).getTag() != TypeTags.REG_EXP_TYPE_TAG) {
+                    ErrorUtils.createInvalidRegexError();
+                }
                 BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
                 if (Matches.isFullMatch(regexPattern, fieldValue)) {
+                    if (TypeUtils.getType(categorizedData.get(j)).getTag() != TypeTags.ARRAY_TAG) {
+                        ErrorUtils.createCategorizationError();
+                    }
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
                 }

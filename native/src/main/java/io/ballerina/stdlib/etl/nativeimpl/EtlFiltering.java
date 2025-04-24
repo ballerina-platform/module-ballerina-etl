@@ -20,7 +20,9 @@ package io.ballerina.stdlib.etl.nativeimpl;
 
 import io.ballerina.runtime.api.constants.TypeConstants;
 import io.ballerina.runtime.api.types.Type;
+import io.ballerina.runtime.api.types.TypeTags;
 import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BRegexpValue;
@@ -58,12 +60,15 @@ public class EtlFiltering {
         BArray filteredDataset = initializeBArray(returnType);
         ArrayList<Object> suffledDataset = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
             suffledDataset.add(copyBMap((BMap<BString, Object>) dataset.get(i), returnType));
         }
         Collections.shuffle(suffledDataset);
-        int splitIndex = (int) Math.ceil(suffledDataset.size() * ratio);
+        int splitIndex = Math.round(suffledDataset.size() * ratio);
         for (int i = 0; i < splitIndex; i++) {
-            ((BArray) filteredDataset).append(suffledDataset.get(i));
+            filteredDataset.append(suffledDataset.get(i));
         }
         return filteredDataset;
     }
@@ -79,13 +84,17 @@ public class EtlFiltering {
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
-            if (!newData.containsKey(fieldName)) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
                 continue;
             }
+            BMap<BString, Object> newData = copyBMap(data, returnType);
             BString fieldvalue = StringUtils.fromString(newData.get(fieldName).toString());
             if (Matches.isFullMatch(regexPattern, fieldvalue)) {
-                ((BArray) filteredDataset).append(newData);
+                filteredDataset.append(newData);
             }
         }
         return filteredDataset;
@@ -102,14 +111,19 @@ public class EtlFiltering {
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
-            BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
-            if (!newData.containsKey(fieldName)) {
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                ErrorUtils.createInvalidDatasetElementError();
+            }
+            BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
+            BMap<BString, Object> newData = copyBMap(data, returnType);
+            if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.FLOAT_TAG
+                    && TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.INT_TAG) {
                 continue;
             }
             double fieldValue = newData.get(fieldName) instanceof Double ? (double) newData.get(fieldName)
                     : ((Long) newData.get(fieldName)).doubleValue();
             if (evaluateCondition(fieldValue, value, operation.getValue())) {
-                ((BArray) filteredDataset).append(newData);
+                filteredDataset.append(newData);
             }
         }
         return filteredDataset;
