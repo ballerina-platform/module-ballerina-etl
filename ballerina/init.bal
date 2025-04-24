@@ -23,26 +23,20 @@ type ModelConfig record {|
     Model model;
 |};
 
-configurable ModelConfig? modelConfig = ();
+configurable ModelConfig modelConfig = {
+    openAIToken: "test_token",
+    timeout: 60,
+    serviceUrl: "http://localhost:8080",
+    model: "gpt-4-turbo"
+};
 
-OpenAIModel? openAIModel = ();
+final OpenAIModel openAIModel;
 
 function init() returns error? {
-    ModelConfig? modelConfigVar = modelConfig;
-    if modelConfigVar is ModelConfig {
-        string serviceUrl = modelConfigVar?.serviceUrl ?: "https://api.openai.com/v1";
-        int timeout = modelConfigVar?.timeout ?: 60;
-        openAIModel = check new OpenAIModel(modelConfigVar?.openAIToken, modelConfigVar?.model, timeout, serviceUrl);
-    }
+    string serviceUrl = modelConfig?.serviceUrl ?: "https://api.openai.com/v1";
+    int timeout = modelConfig?.timeout ?: 60;
+    openAIModel = check new OpenAIModel(modelConfig.openAIToken , modelConfig.model, timeout, serviceUrl);
     setModule();
-}
-
-function getModel() returns OpenAIModel {
-    final OpenAIModel? openAIModelVar = openAIModel;
-    if openAIModelVar is () {
-        panic error("OpenAI Model is not initialized");
-    }
-    return openAIModelVar;
 }
 
 function setModule() = @java:Method {
