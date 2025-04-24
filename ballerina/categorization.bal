@@ -56,7 +56,7 @@ public function categorizeNumeric(record {}[] dataset, string fieldName, Categor
 #
 # =>[[{ name: "Alice", city: "New York" }],
 #    [{ name: "Bob", city: "Colombo" }],
-#    [{ name: "Charlie", city: "Los Angeles" }]
+#    [{ name: "Charlie", city: "Los Angeles" }]]
 # ```
 #
 # + dataset - Array of records containing string values.
