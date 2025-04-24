@@ -49,6 +49,8 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToBArray;
 @SuppressWarnings("unchecked")
 public class EtlSecurity {
 
+    public static final String MASK_SENSITIVE_DATA = "maskSensitiveDataFunc";
+
     public static Object encryptData(BArray dataset, BArray fieldNames, BArray key, BTypedesc returnType) {
         for (int i = 0; i < fieldNames.size(); i++) {
             if (!isFieldExist(dataset, fieldNames.getBString(i))) {
@@ -120,9 +122,19 @@ public class EtlSecurity {
 
     public static Object maskSensitiveData(Environment env, BArray dataset, BString maskCharacter,
             BTypedesc returnType) {
-        Object[] args = new Object[] { dataset, maskCharacter };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), "maskSensitiveDataFunc", null,
-                args);
-        return processResponseToBArray(clientResponse, returnType);
+        BArray mergedResult = initializeBArray(returnType);
+        for (int i = 0; i < dataset.size(); i += 200) {
+            int end = Math.min(i + 200, dataset.size());
+            BArray chunk = dataset.slice(i, end);
+            Object[] args = new Object[] { chunk, maskCharacter };
+            Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), MASK_SENSITIVE_DATA, null,
+                    args);
+            BArray chunkResult = (BArray) processResponseToBArray(clientResponse, returnType);
+            for (int j = 0; j < chunkResult.size(); j++) {
+                mergedResult.append(chunkResult.get(j));
+            }
+        }
+        return mergedResult;
+
     }
 }

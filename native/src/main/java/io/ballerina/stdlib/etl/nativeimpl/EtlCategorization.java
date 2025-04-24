@@ -38,6 +38,7 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.initializeNestedBArray;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isFieldExist;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isNumericType;
 import static io.ballerina.stdlib.etl.utils.CommonUtils.isStringType;
+import static io.ballerina.stdlib.etl.utils.CommonUtils.mergeNestedBArrays;
 
 /**
  * This class hold Java external functions for ETL - data categorization APIs.
@@ -133,7 +134,6 @@ public class EtlCategorization {
             }
         }
         return categorizedData;
-
     }
 
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
@@ -145,9 +145,18 @@ public class EtlCategorization {
         if (!isStringType(fieldType)) {
             return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
         }
-        Object[] args = new Object[] { dataset, fieldName, categories };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
-                args);
-        return processResponseToNestedBArray(clientResponse, returnType);
+        BArray mergedResult = initializeNestedBArray(returnType, categories.size());
+        for (int i = 0; i < dataset.size(); i += 200) {
+            int end = Math.min(i + 200, dataset.size());
+            BArray chunk = dataset.slice(i, end);
+            Object[] args = new Object[] { chunk, fieldName, categories };
+            Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
+                    args);
+            BArray chunkResult = (BArray) processResponseToNestedBArray(clientResponse, returnType);
+            mergeNestedBArrays(mergedResult, chunkResult);
+        }
+
+        return mergedResult;
     }
+
 }

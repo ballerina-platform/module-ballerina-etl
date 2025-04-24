@@ -223,9 +223,17 @@ public class EtlCleaning {
         if (!isFieldExist(dataset, fieldName)) {
             return ErrorUtils.createFieldNotFoundError(fieldName);
         }
-        Object[] args = new Object[] { dataset, fieldName, standardValues };
-        Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null,
-                args);
-        return processResponseToBArray(clientResponse, returnType);
+        BArray mergedResult = initializeBArray(returnType);
+        for (int i = 0; i < dataset.size(); i += 200) {
+            int end = Math.min(i + 200, dataset.size());
+            BArray chunk = dataset.slice(i, end);
+            Object[] args = new Object[] { chunk, fieldName, standardValues };
+            Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null, args);
+            BArray chunkResult = (BArray) processResponseToBArray(clientResponse, returnType);
+            for (int j = 0; j < chunkResult.size(); j++) {
+                mergedResult.append(chunkResult.get(j));
+            };
+        }
+        return mergedResult;
     }
 }

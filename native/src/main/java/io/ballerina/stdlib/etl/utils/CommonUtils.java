@@ -201,6 +201,17 @@ public class CommonUtils {
                 return convertJSONToBArray(clientResponse, returnType);
         }
     }
+    
+    public static void mergeNestedBArrays(BArray target, BArray source) {
+        for (int i = 0; i < source.size(); i++) {
+            BArray sourceCategory = (BArray) source.get(i);
+            BArray targetCategory = (BArray) target.get(i);
+            for (int j = 0; j < sourceCategory.size(); j++) {
+                targetCategory.append(sourceCategory.get(j));
+            }
+        }
+    }
+    
 
     public static Object processResponseToNestedBArray(Object clientResponse, BTypedesc returnType) {
         switch (TypeUtils.getType(clientResponse).getName()) {
