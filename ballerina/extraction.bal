@@ -16,7 +16,7 @@
 
 import ballerina/jballerina.java;
 
-# Extracts unstructured data from a string and maps it to a ballerina record. 
+# Extracts structured data from a raw text input and maps it to a Ballerina record.
 # ```ballerina
 # type Review record{|
 #     string goodPoints;
@@ -25,7 +25,7 @@ import ballerina/jballerina.java;
 # |};
 #
 # string reviews = "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming. However, the battery drains quickly, and the charging speed could be improved. The UI is intuitive, but some features feel outdated and need a refresh.";
-# Review extractedDetails = check etl:extractFromUnstructuredData(reviews);
+# Review extractedDetails = check etl:extractFromText(reviews);
 #
 # => { goodPoints: "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming.",
 #      badPoints: "However, the battery drains quickly, and the charging speed could be improved.",
@@ -35,6 +35,6 @@ import ballerina/jballerina.java;
 # + dataset - Array of unstructured string data (e.g., reviews or comments).
 # + returnType - The type of the return value (Ballerina record).
 # + return - A record with extracted details mapped to the specified field names or an `etl:Error`.
-public function extractFromUnstructuredData(string dataset, typedesc<record {}> returnType = <>) returns returnType|Error = @java:Method {
+public function extractFromText(string dataset, typedesc<record {}> returnType = <>) returns returnType|Error = @java:Method {
     'class: "io.ballerina.stdlib.etl.nativeimpl.EtlExtraction"
 } external;

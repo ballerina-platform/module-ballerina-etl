@@ -76,7 +76,7 @@ function groupApproximateDuplicatesFunc(record {}[] dataset) returns json|error 
     return getResponseFromModel(prompt);
 }
 
-function extractFromUnstructuredDataFunc(string dataset, map<string> returnTypeSchema) returns json|error {
+function extractFromTextFunc(string dataset, map<string> returnTypeSchema) returns json|error {
     string prompt = string `Extract relevant details from the given text and map them to the specified fields. 
                                         - Input Data : ${dataset.toString()} 
                                         - Return Type Schema(Contains field names as keys and their corresponding types as values.): ${returnTypeSchema.toString()}

@@ -34,9 +34,9 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToRecord;
  */
 public class EtlExtraction {
 
-    public static final String EXTRACT_FROM_UNSTRUCTURED_DATA = "extractFromUnstructuredDataFunc";
+    public static final String EXTRACT_FROM_UNSTRUCTURED_DATA = "extractFromTextFunc";
 
-    public static Object extractFromUnstructuredData(Environment env, BString dataset, BTypedesc returnType) {
+    public static Object extractFromText(Environment env, BString dataset, BTypedesc returnType) {
         BMap<BString, Object> returnTypeSchema = getReturnTypeSchema(returnType);
         Object[] args = new Object[] { dataset, returnTypeSchema };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
