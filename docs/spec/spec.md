@@ -668,8 +668,8 @@ This API extracts relevant information from unstructured text and maps it to a B
 #      improvements: "The UI is intuitive, but some features feel outdated and need a refresh." }
 # ```
 #
-# + dataset - Array of unstructured string data (e.g., reviews or comments).
+# + sourceText - The raw text input from which structured data is to be extracted.
 # + returnType - The type of the return value (Ballerina record).
 # + return - A record with extracted details mapped to the specified field names or an `etl:Error`.
-public function extractFromText(string dataset, typedesc<record {}> returnType = <>) returns returnType|Error;
+public function extractFromText(string sourceText, typedesc<record {}> returnType = <>) returns returnType|Error;
 ```
