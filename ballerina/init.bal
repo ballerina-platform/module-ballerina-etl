@@ -35,7 +35,7 @@ final OpenAIModel openAIModel;
 function init() returns error? {
     string serviceUrl = modelConfig?.serviceUrl ?: "https://api.openai.com/v1";
     int timeout = modelConfig?.timeout ?: 60;
-    openAIModel = check new OpenAIModel(modelConfig.openAIToken , modelConfig.model, timeout, serviceUrl);
+    openAIModel = check new OpenAIModel(modelConfig.openAIToken, modelConfig.model, timeout, serviceUrl);
     setModule();
 }
 
