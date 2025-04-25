@@ -112,4 +112,13 @@ public class ErrorUtils {
     public static BError createIdleTimeoutError() {
         return createETLError(StringUtils.fromString("Operation failed due to idle timeout error."));
     }
+
+    public static BError createRemoteServerError() {
+        return createETLError(StringUtils.fromString("Operation failed due to remote server error."));
+    }
+
+    public static BError createResponseError() {
+        return createETLError(
+                StringUtils.fromString("Operation failed due to an error occurred while getting the OpenAI response."));
+    }
 }

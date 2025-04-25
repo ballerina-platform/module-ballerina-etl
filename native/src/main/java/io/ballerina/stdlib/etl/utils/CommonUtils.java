@@ -47,6 +47,8 @@ public class CommonUtils {
     public static final String IDLE_TIMEOUT_ERROR = "IdleTimeoutError";
     public static final String CLIENT_CONNECTOR_ERROR = "ClientConnectorError";
     public static final String CLIENT_REQUEST_ERROR = "ClientRequestError";
+    public static final String REMOTE_SERVER_ERROR = "RemoteServerError";
+    public static final String RESPONSE_ERROR = "error";
 
     public static boolean contains(BArray array, BString key) {
         BIterator<?> iterator = array.getIterator();
@@ -189,19 +191,6 @@ public class CommonUtils {
         return returnTypeDetails;
     }
 
-    public static Object processResponseToBArray(Object clientResponse, BTypedesc returnType) {
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            default:
-                return convertJSONToBArray(clientResponse, returnType);
-        }
-    }
-    
     public static void mergeNestedBArrays(BArray target, BArray source) {
         for (int i = 0; i < source.size(); i++) {
             BArray sourceCategory = (BArray) source.get(i);
@@ -211,7 +200,23 @@ public class CommonUtils {
             }
         }
     }
-    
+
+    public static Object processResponseToBArray(Object clientResponse, BTypedesc returnType) {
+        switch (TypeUtils.getType(clientResponse).getName()) {
+            case CLIENT_CONNECTOR_ERROR:
+                return ErrorUtils.createClientConnectionError();
+            case IDLE_TIMEOUT_ERROR:
+                return ErrorUtils.createIdleTimeoutError();
+            case CLIENT_REQUEST_ERROR:
+                return ErrorUtils.createClientRequestError();
+            case REMOTE_SERVER_ERROR:
+                return ErrorUtils.createClientConnectionError();
+            case RESPONSE_ERROR:
+                return ErrorUtils.createResponseError();
+            default:
+                return convertJSONToBArray(clientResponse, returnType);
+        }
+    }
 
     public static Object processResponseToNestedBArray(Object clientResponse, BTypedesc returnType) {
         switch (TypeUtils.getType(clientResponse).getName()) {
@@ -221,6 +226,10 @@ public class CommonUtils {
                 return ErrorUtils.createIdleTimeoutError();
             case CLIENT_REQUEST_ERROR:
                 return ErrorUtils.createClientRequestError();
+            case REMOTE_SERVER_ERROR:
+                return ErrorUtils.createRemoteServerError();
+            case RESPONSE_ERROR:
+                return ErrorUtils.createResponseError();
             default:
                 return convertJSONToNestedBArray(clientResponse, returnType);
         }
@@ -234,6 +243,10 @@ public class CommonUtils {
                 return ErrorUtils.createIdleTimeoutError();
             case CLIENT_REQUEST_ERROR:
                 return ErrorUtils.createClientRequestError();
+            case REMOTE_SERVER_ERROR:
+                return ErrorUtils.createRemoteServerError();
+            case RESPONSE_ERROR:
+                return ErrorUtils.createResponseError();
             default:
                 return convertJSONToRecord(clientResponse, returnType);
         }
