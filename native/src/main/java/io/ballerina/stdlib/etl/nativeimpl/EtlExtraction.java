@@ -36,9 +36,9 @@ public class EtlExtraction {
 
     public static final String EXTRACT_FROM_UNSTRUCTURED_DATA = "extractFromTextFunc";
 
-    public static Object extractFromText(Environment env, BString dataset, BTypedesc returnType) {
+    public static Object extractFromText(Environment env, BString sourceText, BTypedesc returnType) {
         BMap<BString, Object> returnTypeSchema = getReturnTypeSchema(returnType);
-        Object[] args = new Object[] { dataset, returnTypeSchema };
+        Object[] args = new Object[] { sourceText, returnTypeSchema };
         Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), EXTRACT_FROM_UNSTRUCTURED_DATA,
                 null, args);
         return processResponseToRecord(clientResponse, returnType);
