@@ -155,8 +155,6 @@ public class EtlCategorization {
             BArray chunkResult = (BArray) processResponseToNestedBArray(clientResponse, returnType);
             mergeNestedBArrays(mergedResult, chunkResult);
         }
-
         return mergedResult;
     }
-
 }

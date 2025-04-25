@@ -211,7 +211,6 @@ public class EtlCleaning {
                     Comparator.nullsLast(Comparator.comparing(Object::toString).reversed())));
             dataToSort.reversed();
         }
-
         for (BMap<BString, Object> record : dataToSort) {
             sortedDataset.append(record);
         }
