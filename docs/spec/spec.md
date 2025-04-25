@@ -26,7 +26,7 @@ The conforming implementation of the specification is released and included in t
     * 3.1 [Group Approximate Duplicates](#31-group-approximate-duplicates)
     * 3.2 [Handle Whitespaces](#32-handle-whitespaces)
     * 3.3 [Remove Dupicates](#33-remove-duplicates)
-    * 3.4 [Remove Field](#34-remove-field)
+    * 3.4 [Remove a Field](#34-remove-a-field)
     * 3.5 [Remove Empty Values](#35-remove-empty-values)
     * 3.6 [Replace Text](#36-replace-text)
     * 3.7 [Sort](#37-sort)
@@ -42,7 +42,7 @@ The conforming implementation of the specification is released and included in t
     * 6.1 [Encryption](#61-encryption)
     * 6.2 [Decryption](#62-decryption)
     * 6.3 [Masking](#63-masking)
-7. [Unstructured Data Extraction](7-unstructured-data-extraction)
+7. [Unstructured Data Extraction](#7-unstructured-data-extraction)
     * 7.1 [Extract from Text](#71-extract-from-text)
 
 ## 1. Overview
@@ -266,7 +266,7 @@ This API processes the given dataset of records and returns a new dataset with a
 public function removeDuplicates(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.4 Remove Field
+### 3.4 Remove a Field
 This API processes the given dataset of records and returns a new dataset with a specified field removed from each record.
 
 ```ballerina
@@ -673,7 +673,3 @@ This API extracts relevant information from unstructured text and maps it to a B
 # + return - A record with extracted details mapped to the specified field names or an `etl:Error`.
 public function extractFromText(string dataset, typedesc<record {}> returnType = <>) returns returnType|Error;
 ```
-
-
-
- 
