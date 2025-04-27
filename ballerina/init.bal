@@ -17,14 +17,14 @@
 import ballerina/jballerina.java;
 
 type ModelConfig record {|
-    string openAIToken;
+    string openAiToken;
     int? timeout?;
     string? serviceUrl?;
     Model model;
 |};
 
 configurable ModelConfig modelConfig = {
-    openAIToken: "test_token",
+    openAiToken: "test_token",
     timeout: 60,
     serviceUrl: "http://localhost:8080",
     model: "gpt-4-turbo"
@@ -35,7 +35,7 @@ final OpenAIModel openAIModel;
 function init() returns error? {
     string serviceUrl = modelConfig?.serviceUrl ?: "https://api.openai.com/v1";
     int timeout = modelConfig?.timeout ?: 60;
-    openAIModel = check new OpenAIModel(modelConfig.openAIToken, modelConfig.model, timeout, serviceUrl);
+    openAIModel = check new OpenAIModel(modelConfig.openAiToken, modelConfig.model, timeout, serviceUrl);
     setModule();
 }
 
