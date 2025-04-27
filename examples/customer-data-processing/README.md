@@ -9,6 +9,7 @@ This example demonstrates the usage of the `ballerina/etl` module in Ballerina t
 To run this example, ensure you have [Ballerina](https://ballerina.io/downloads/) installed on your system.
 
 Before running the example, set up the necessary input data:
+
 - Place a CSV file named `customer_details.csv` inside the `resources` directory. This file should contain fields such as `id`, `name`, `age`, `city`, `contactNumber`, and `email`.
 - Place another CSV file named `customer_preferences.csv` inside the `resources` directory. This file should contain fields such as `id`, `preferredCategory`, `membershipTier`, `annualSpending`, `preferredContactMethod`, `maritalStatus`, and `occupation`.
 
@@ -38,7 +39,7 @@ Before running the example, ensure that your `Config.toml` file is set up in the
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
@@ -53,4 +54,3 @@ $ bal run
 ## Output
 
 The categorized customer data is written to separate CSV files inside the `resources/categories/` directory, ready for further analysis or integration.
-

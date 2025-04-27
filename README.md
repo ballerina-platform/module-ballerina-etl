@@ -5,6 +5,7 @@
 This package provides a collection of APIs designed for data processing and manipulation, enabling seamless ETL workflows and supporting a variety of use cases.
 
 The APIs in this package are categorized into the following ETL process stages:
+
 - Data Categorization
 - Data Cleaning
 - Data Enrichment
@@ -15,11 +16,13 @@ The APIs in this package are categorized into the following ETL process stages:
 ## Features
 
 ### Data Categorization
+
 - `categorizeNumeric`: Categorizes a dataset based on a numeric field and specified ranges.
 - `categorizeRegexData`: Categorizes a dataset based on a string field using a set of regular expressions.
 - `categorizeSemantic`: Categorizes a dataset based on a string field using semantic classification.
 
 ### Data Cleaning
+
 - `groupApproximateDuplicates`: Identifies and groups approximate duplicates in a dataset, returning a nested array with unique records first, followed by groups of similar records.
 - `handleWhiteSpaces`: Returns a new dataset with all extra whitespace removed from string fields.
 - `removeDuplicates`: Returns a new dataset with all duplicate records removed.
@@ -30,20 +33,24 @@ The APIs in this package are categorized into the following ETL process stages:
 - `standardizeData`: Returns a new dataset with all string values in a specified field standardized to a set of standard values.
 
 ### Data Enrichment
+
 - `joinData`: Merges two datasets based on a common specified field and returns a new dataset with the merged records.
 - `mergeData`: Merges multiple datasets into a single dataset by flattening a nested array of records.
 
 ### Data Filtering
+
 - `filterDataByRatio`: Filters a random set of records from a dataset based on a specified ratio.
 - `filterDataByRegex`: Filters a dataset based on a regex pattern match.
 - `filterDataByRelativeExp`: Filters a dataset based on a relative numeric comparison expression.
 
 ### Data Security
+
 - `decryptData`: Returns a new dataset with specified fields encrypted using AES-ECB encryption with a given symmetric key.
 - `encryptData`: Returns a new dataset with specified fields encrypted using AES-ECB encryption with a given symmetric key.
 - `maskSensitiveData`: Returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character
 
 ### Unstructured Data Extraction
+
 - `extractFromText`: Extracts unstructured data from a string and maps it to a ballerina record.
 
 ## Usage
@@ -51,6 +58,7 @@ The APIs in this package are categorized into the following ETL process stages:
 ### Configurations
 
 The following APIs require an OpenAI API key to operate:
+
 - `categorizeSemantic`
 - `extractFromText`
 - `groupApproximateDuplicates`
@@ -65,29 +73,29 @@ If your Ballerina application uses any of these APIs, follow the steps below bef
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
 - Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
-    - `"gpt-4-turbo"`
-    - `"gpt-4o"`
-    - `"gpt-4o-mini"`
+  - `"gpt-4-turbo"`
+  - `"gpt-4o"`
+  - `"gpt-4o-mini"`
 
-4. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `timeout` field as shown below:
+3. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `timeout` field as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 timeout = 120
 ```
 
-### Dependent Type Support 
+### Dependent Type Support
 
 All APIs in this package support dependent types. Here is an example of how to use them:
 
-```ballerina 
+```ballerina
 import ballerina/etl;
 import ballerina/io;
 
@@ -123,8 +131,8 @@ The `ballerina/etl` package provides practical examples illustrating its usage i
 
 1. Download and install Java SE Development Kit (JDK) version 21. You can download it from either of the following sources:
 
-    * [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
-    * [OpenJDK](https://adoptium.net/)
+    - [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
+    - [OpenJDK](https://adoptium.net/)
 
    > **Note:** After installation, remember to set the `JAVA_HOME` environment variable to the directory where JDK was installed.
 
@@ -205,6 +213,6 @@ All the contributors are encouraged to read the [Ballerina Code of Conduct](http
 
 ## Useful links
 
-* For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
-* Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
-* Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
+- For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
+- Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
+- Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.

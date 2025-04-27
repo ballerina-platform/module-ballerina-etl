@@ -16,26 +16,26 @@ The `ballerina/etl` package provides practical examples illustrating its usage i
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
 - Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
-    - `"gpt-4-turbo"`
-    - `"gpt-4o"`
-    - `"gpt-4o-mini"`
+  - `"gpt-4-turbo"`
+  - `"gpt-4o"`
+  - `"gpt-4o-mini"`
 
 ## Running an Example
 
 Execute the following commands to build and run an example from the source:
 
-* To build an example:
+- To build an example:
 
     ```bash
     $ bal build
     ```
 
-* To run an example:
+- To run an example:
 
     ```bash
     $ bal run
