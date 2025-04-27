@@ -14,40 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
-
-type ClientHttp1Settings record {|
-    http:KeepAlive keepAlive = http:KEEPALIVE_AUTO;
-    http:Chunking chunking = http:CHUNKING_AUTO;
-    ProxyConfig proxy?;
-|};
-
-type ProxyConfig record {|
-    string host = "";
-    int port = 0;
-    string userName = "";
-    @display {label: "", kind: "password"}
-    string password = "";
-|};
-
-type OpenAIConnectionConfig record {|
-    http:BearerTokenConfig auth;
-    http:HttpVersion httpVersion = http:HTTP_2_0;
-    ClientHttp1Settings http1Settings?;
-    http:ClientHttp2Settings http2Settings?;
-    decimal timeout = 60;
-    string forwarded = "disable";
-    http:PoolConfiguration poolConfig?;
-    http:CacheConfig cache?;
-    http:Compression compression = http:COMPRESSION_AUTO;
-    http:CircuitBreakerConfig circuitBreaker?;
-    http:RetryConfig retryConfig?;
-    http:ResponseLimitConfigs responseLimits?;
-    http:ClientSecureSocket secureSocket?;
-    http:ProxyConfig proxy?;
-    boolean validation = true;
-|};
-
 type OpenAIChatCompletionRequestUserMessage record {
     string content;
     "user" role;
@@ -56,7 +22,7 @@ type OpenAIChatCompletionRequestUserMessage record {
 
 type OpenAICreateChatCompletionRequest record {
     OpenAIChatCompletionRequestUserMessage[1] messages;
-    string model;
+    Model model;
     boolean? store = false;
     decimal? frequency_penalty = 0;
     boolean? logprobs = false;
