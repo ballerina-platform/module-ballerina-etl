@@ -61,7 +61,7 @@ public class EtlFiltering {
         ArrayList<Object> suffledDataset = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             suffledDataset.add(copyBMap((BMap<BString, Object>) dataset.get(i), returnType));
         }
@@ -85,7 +85,7 @@ public class EtlFiltering {
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
@@ -112,7 +112,7 @@ public class EtlFiltering {
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = copyBMap(data, returnType);

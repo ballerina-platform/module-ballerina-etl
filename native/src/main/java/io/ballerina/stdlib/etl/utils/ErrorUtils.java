@@ -62,11 +62,6 @@ public class ErrorUtils {
         return createETLError(StringUtils.fromString("Datasets to be merged must be of type 'record[]{}'"));
     }
 
-    public static BError createInvalidDatasetElementError() {
-        return createETLError(
-                StringUtils.fromString("The elements of the dataset are expected to be of type 'record{}'"));
-    }
-
     public static BError createInvalidRangeArrayError() {
         return createETLError(StringUtils.fromString("Invalid range array"));
     }

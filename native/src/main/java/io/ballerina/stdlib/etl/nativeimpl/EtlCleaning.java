@@ -71,7 +71,7 @@ public class EtlCleaning {
         BArray cleanedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
@@ -100,7 +100,7 @@ public class EtlCleaning {
         }
         for (int i = 0; i < ((BArray) uniqueItems).size(); i++) {
             if (TypeUtils.getType(((BArray) uniqueItems).get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) ((BArray) uniqueItems).get(i), returnType);
             deDuplicatedDataset.append(newData);
@@ -115,7 +115,7 @@ public class EtlCleaning {
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> newData = initializeBMap(returnType);
@@ -133,7 +133,7 @@ public class EtlCleaning {
         BArray cleanedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             boolean isNull = false;
@@ -166,8 +166,8 @@ public class EtlCleaning {
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
-            if (dataset.get(i) instanceof BMap) {
-                ErrorUtils.createInvalidDatasetElementError();
+            if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
@@ -196,7 +196,7 @@ public class EtlCleaning {
         List<BMap<BString, Object>> dataToSort = new ArrayList<>();
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> newData = copyBMap((BMap<BString, Object>) dataset.get(i), returnType);
             dataToSort.add(newData);
@@ -228,10 +228,14 @@ public class EtlCleaning {
             BArray chunk = dataset.slice(i, end);
             Object[] args = new Object[] { chunk, fieldName, standardValues };
             Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), STANDARDIZE_DATA, null, args);
-            BArray chunkResult = (BArray) processResponseToBArray(clientResponse, returnType);
-            for (int j = 0; j < chunkResult.size(); j++) {
-                mergedResult.append(chunkResult.get(j));
-            };
+            Object chunkResult = processResponseToBArray(clientResponse, returnType);
+            if (TypeUtils.getType(chunkResult).getTag() != TypeTags.ARRAY_TAG) {
+                return chunkResult;
+            }
+            for (int j = 0; j < ((BArray) chunkResult).size(); j++) {
+                mergedResult.append(((BArray) chunkResult).get(j));
+            }
+            ;
         }
         return mergedResult;
     }

@@ -60,7 +60,7 @@ public class EtlSecurity {
         BArray encryptedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> encryptedData = initializeBMap(returnType);
@@ -92,7 +92,7 @@ public class EtlSecurity {
         BArray decryptedDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             BMap<BString, Object> decryptedData = initializeBMap(returnType);
@@ -129,10 +129,14 @@ public class EtlSecurity {
             Object[] args = new Object[] { chunk, maskCharacter };
             Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), MASK_SENSITIVE_DATA, null,
                     args);
-            BArray chunkResult = (BArray) processResponseToBArray(clientResponse, returnType);
-            for (int j = 0; j < chunkResult.size(); j++) {
-                mergedResult.append(chunkResult.get(j));
+            Object chunkResult = processResponseToBArray(clientResponse, returnType);
+            if (TypeUtils.getType(chunkResult).getTag() != TypeTags.ARRAY_TAG) {
+                return chunkResult;
             }
+            for (int j = 0; j < ((BArray) chunkResult).size(); j++) {
+                mergedResult.append(((BArray) chunkResult).get(j));
+            }
+            ;
         }
         return mergedResult;
     }

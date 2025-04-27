@@ -70,7 +70,7 @@ public class EtlCategorization {
         BArray categorizedData = initializeNestedBArray(returnType, numCategories);
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if ((TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.FLOAT_TAG)
@@ -112,7 +112,7 @@ public class EtlCategorization {
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size());
         for (int i = 0; i < dataset.size(); i++) {
             if (TypeUtils.getType(dataset.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data = (BMap<BString, Object>) dataset.get(i);
             if (TypeUtils.getType(data.get(fieldName)).getTag() != TypeTags.STRING_TAG) {
@@ -152,8 +152,11 @@ public class EtlCategorization {
             Object[] args = new Object[] { chunk, fieldName, categories };
             Object clientResponse = env.getRuntime().callFunction(env.getCurrentModule(), CATEGORIZE_SEMANTIC, null,
                     args);
-            BArray chunkResult = (BArray) processResponseToNestedBArray(clientResponse, returnType);
-            mergeNestedBArrays(mergedResult, chunkResult);
+            Object chunkResult = processResponseToNestedBArray(clientResponse, returnType);
+            if (TypeUtils.getType(chunkResult).getTag() != TypeTags.ARRAY_TAG) {
+                return chunkResult;
+            }
+            mergeNestedBArrays(mergedResult, (BArray) chunkResult);
         }
         return mergedResult;
     }

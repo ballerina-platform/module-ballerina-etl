@@ -52,7 +52,7 @@ public class EtlEnrichment {
         Set<String> seenData = new HashSet<>();
         for (int i = 0; i < dataset1.size(); i++) {
             if (TypeUtils.getType(dataset1.get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                ErrorUtils.createInvalidDatasetElementError();
+                continue;
             }
             BMap<BString, Object> data1 = (BMap<BString, Object>) dataset1.get(i);
             if (data1.get(fieldName) == null) {
@@ -60,7 +60,7 @@ public class EtlEnrichment {
             }
             for (int j = 0; j < dataset2.size(); j++) {
                 if (TypeUtils.getType(dataset2.get(j)).getTag() != TypeTags.RECORD_TYPE_TAG) {
-                    ErrorUtils.createInvalidDatasetElementError();
+                    continue;
                 }
                 BMap<BString, Object> data2 = (BMap<BString, Object>) dataset2.get(j);
                 if (data2.get(fieldName) == null) {
