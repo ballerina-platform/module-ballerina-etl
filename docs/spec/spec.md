@@ -3,7 +3,7 @@
 _Authors_: [@InduwaraGayashan001](https://github.com/InduwaraGayashan001) \
 _Reviewers_: [@ThisaruGuruge](https://github.com/ThisaruGuruge) \
 _Created_: 2025/04/25 \
-_Edition_: Swan Lake 
+_Edition_: Swan Lake
 
 ## Introduction
 
@@ -18,35 +18,38 @@ The conforming implementation of the specification is released and included in t
 ## Contents
 
 1. [Overview](#1-overview)
-2. [Data Categorization](#2-data-categorization)  
-    * 2.1 [Categorization by Numeric Ranges](#21-categorization-by-numeric-ranges)  
-    * 2.2 [Categorization by Regular Expressions](#22-categorization-by-regular-expressions)  
-    * 2.3 [Categorization by Semantic Matching](#23-categorization-by-semantic-matching)
-3. [Data Cleaning](#3-data-cleaning)
-    * 3.1 [Group Approximate Duplicates](#31-group-approximate-duplicates)
-    * 3.2 [Handle Whitespaces](#32-handle-whitespaces)
-    * 3.3 [Remove Dupicates](#33-remove-duplicates)
-    * 3.4 [Remove a Field](#34-remove-a-field)
-    * 3.5 [Remove Empty Values](#35-remove-empty-values)
-    * 3.6 [Replace Text](#36-replace-text)
-    * 3.7 [Sort](#37-sort)
-    * 3.8 [Standardize](#38-standardize)
-4. [Data Enrichment](#4-data-enrichment)
-    * 4.1 [Join](#41-join)
-    * 4.2 [Merge](#42-merge)
-5. [Data Filtering](#5-data-filtering)
-    * 5.1 [Filter by Random Sampling](#51-filter-by-random-sampling)
-    * 5.2 [Filter by a Regular Expression](#52-filter-by-a-regular-expression)
-    * 5.3 [Filter by a Relative Expression](#53-filter-by-a-relative-expression)
-6. [Data Security](#6-data-security)
-    * 6.1 [Encryption](#61-encryption)
-    * 6.2 [Decryption](#62-decryption)
-    * 6.3 [Masking](#63-masking)
-7. [Unstructured Data Extraction](#7-unstructured-data-extraction)
-    * 7.1 [Extract from Text](#71-extract-from-text)
+2. [Configurations](#2-configurations)
+3. [Data Categorization](#3-data-categorization)  
+    * 3.1 [Categorization by Numeric Ranges](#31-categorization-by-numeric-ranges)  
+    * 3.2 [Categorization by Regular Expressions](#32-categorization-by-regular-expressions)  
+    * 3.3 [Categorization by Semantic Matching](#33-categorization-by-semantic-matching)
+4. [Data Cleaning](#4-data-cleaning)
+    * 4.1 [Group Approximate Duplicates](#41-group-approximate-duplicates)
+    * 4.2 [Handle Whitespaces](#42-handle-whitespaces)
+    * 4.3 [Remove Dupicates](#43-remove-duplicates)
+    * 4.4 [Remove a Field](#44-remove-a-field)
+    * 4.5 [Remove Empty Values](#45-remove-empty-values)
+    * 4.6 [Replace Text](#46-replace-text)
+    * 4.7 [Sort](#47-sort)
+    * 4.8 [Standardize](#48-standardize)
+5. [Data Enrichment](#5-data-enrichment)
+    * 5.1 [Join](#51-join)
+    * 5.2 [Merge](#52-merge)
+6. [Data Filtering](#6-data-filtering)
+    * 6.1 [Filter by Random Sampling](#61-filter-by-random-sampling)
+    * 6.2 [Filter by a Regular Expression](#62-filter-by-a-regular-expression)
+    * 6.3 [Filter by a Relative Expression](#63-filter-by-a-relative-expression)
+7. [Data Security](#7-data-security)
+    * 7.1 [Encryption](#71-encryption)
+    * 7.2 [Decryption](#72-decryption)
+    * 7.3 [Masking](#73-masking)
+8. [Unstructured Data Extraction](#8-unstructured-data-extraction)
+    * 8.1 [Extract from Text](#81-extract-from-text)
 
 ## 1. Overview
+
 The APIs in this package are categorized into the following ETL process stages:
+
 1. Data Categorization
 2. Data Cleaning
 3. Data Enrichment
@@ -54,42 +57,52 @@ The APIs in this package are categorized into the following ETL process stages:
 5. Data Security
 6. Unstructured Data Extraction
 
-### Configurations
+## 2. Configurations
 
-The following APIs require values to be provided for the `modelConfig` configurable value:
-- [`categorizeSemantic`](#23-categorization-by-semantic-matching)
-- [`extractFromText`](#71-extract-from-text)
-- [`groupApproximateDuplicates`](#31-group-approximate-duplicates)
-- [`maskSensitiveData`](#63-masking)
-- [`standardizeData`](#38-standardize)
+Following APIs in this package utilize **OpenAI services** and require an **OpenAI API key** for operation.
 
+* [`categorizeSemantic`](#33-categorization-by-semantic-matching)
+* [`extractFromText`](#81-extract-from-text)
+* [`groupApproximateDuplicates`](#41-group-approximate-duplicates)
+* [`maskSensitiveData`](#73-masking)
+* [`standardizeData`](#48-standardize)
 
-Add the required configuration in the `Config.toml` file before invoking these APIs:
+> **Note**: Configuration is required only for the APIs listed above. It is not needed for the use of any other APIs in this package.
+
+### Setting up the OpenAI API Key
+
+1. [Create an OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
+2. Add the obtained [API key](https://platform.openai.com/account/api-keys) and a supported [GPT model](#supported-gpt-models) in the `Config.toml` file as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 ```
 
-Supported GPT models:
-- `"gpt-4-turbo"`
-- `"gpt-4o"`
-- `"gpt-4o-mini"`
+#### Supported GPT Models
 
-**(Optional)** The default client timeout is 60 seconds. To override it, include the `timeout` field as shown below:
+* `"gpt-4-turbo"`
+* `"gpt-4o"`
+* `"gpt-4o-mini"`
+
+### **(Optional)** Overriding Client Timeout
+
+The default client timeout is set to 60 seconds. This value can be adjusted by specifying the `timeout` field as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAIToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPEN_AI_KEY>"
 model = "<GPT_MODEL>"
 timeout = 120
 ```
 
-## 2. Data Categorization
+## 3. Data Categorization
+
 APIs for categorizing datasets based on numeric ranges, regular expressions, and semantic classification.
 
-### 2.1 Categorization by Numeric Ranges
+### 3.1 Categorization by Numeric Ranges
+
 This API Categorizes a dataset based on the value of a numeric field using defined range boundaries.
 
 ```ballerina
@@ -117,6 +130,7 @@ This API Categorizes a dataset based on the value of a numeric field using defin
 # + return - A nested array of categorized records or an `etl:Error`.
 public function categorizeNumeric(record {}[] dataset, string fieldName, CategoryRanges categoryRanges, typedesc<record {}> returnType = <>) returns returnType[][]|Error;
 ```
+
 This API expects category boundaries to be defined using the `CategoryRanges` tuple type:
 
 ```ballerina
@@ -127,7 +141,8 @@ This API expects category boundaries to be defined using the `CategoryRanges` tu
 public type CategoryRanges [float, float[], float];
 ```
 
-### 2.2 Categorization by Regular Expressions
+### 3.2 Categorization by Regular Expressions
+
 This API Categorizes a dataset based on a specified string field using a list of regular expressions.
 
 ```ballerina
@@ -155,10 +170,11 @@ This API Categorizes a dataset based on a specified string field using a list of
 public function categorizeRegex(record {}[] dataset, string fieldName, regexp:RegExp[] regexArray, typedesc<record {}> returnType = <>) returns returnType[][]|Error;
 ```
 
-### 2.3 Categorization by Semantic Matching
+### 3.3 Categorization by Semantic Matching
+
 This API uses semantic similarity to classify records based on the content of a given string field. It maps each record to the most relevant category provided by the user.
 
-> **Note**: [Required configurations](#configurations) must be provided before invoking this API.
+> **Note**: [Required configurations](#2-configurations) must be provided before invoking this API.
 
 ```ballerina
 # Categorizes a dataset based on a string field using semantic classification.
@@ -183,13 +199,15 @@ This API uses semantic similarity to classify records based on the content of a 
 public function categorizeSemantic(record {}[] dataset, string fieldName, string[] categories, typedesc<record {}> returnType = <>) returns returnType[][]|Error;
 ```
 
-## 3. Data Cleaning
+## 4. Data Cleaning
+
 APIs for cleaning and formatting datasets.
 
-### 3.1 Group Approximate Duplicates
+### 4.1 Group Approximate Duplicates
+
 This API identifies and groups approximate duplicates in a dataset. It returns a nested array where the first array contains unique records, and the subsequent arrays contain groups of similar (approximate) duplicates.
 
-> **Note**: [Required configurations](#configurations) must be provided before invoking this API. It is recommended to use datasets with fewer than 200 records for optimal performance.
+> **Note**: [Required configurations](#2-configurations) must be provided before invoking this API. It is recommended to use datasets with fewer than 200 records for optimal performance.
 
 ```ballerina
 # Identifies and groups approximate duplicates in a dataset, returning a nested array with unique records first, followed by groups of similar records.
@@ -216,7 +234,8 @@ This API identifies and groups approximate duplicates in a dataset. It returns a
 public function groupApproximateDuplicates(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[][]|Error;
 ```
 
-### 3.2 Handle Whitespaces
+### 4.2 Handle Whitespaces
+
 This API processes the given dataset of records and returns a new dataset where leading and trailing whitespace in string fields are removed, and multiple consecutive spaces within strings are replaced with a single space.
 
 ```ballerina
@@ -240,7 +259,8 @@ This API processes the given dataset of records and returns a new dataset where 
 public function handleWhiteSpaces(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.3 Remove Duplicates
+### 4.3 Remove Duplicates
+
 This API processes the given dataset of records and returns a new dataset with all duplicate records removed.
 
 ```ballerina
@@ -266,7 +286,8 @@ This API processes the given dataset of records and returns a new dataset with a
 public function removeDuplicates(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.4 Remove a Field
+### 4.4 Remove a Field
+
 This API processes the given dataset of records and returns a new dataset with a specified field removed from each record.
 
 ```ballerina
@@ -291,7 +312,8 @@ This API processes the given dataset of records and returns a new dataset with a
 public function removeField(record {}[] dataset, string fieldName, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.5 Remove Empty Values
+### 4.5 Remove Empty Values
+
 This API processes the given dataset of records and returns a new dataset with all records containing nil or empty string values removed.
 
 ```ballerina
@@ -316,7 +338,8 @@ This API processes the given dataset of records and returns a new dataset with a
 public function removeEmptyValues(record {}[] dataset, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.6 Replace Text
+### 4.6 Replace Text
+
 This API processes the given dataset of records and returns a new dataset where all occurrences that match a specified regular expression in a specific string field are replaced with a new value.
 
 ```ballerina
@@ -343,7 +366,8 @@ This API processes the given dataset of records and returns a new dataset where 
 public function replaceText(record {}[] dataset, string fieldName, regexp:RegExp searchValue, string replaceValue, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 3.7 Sort
+### 4.7 Sort
+
 This API processes the given dataset of records and returns a new dataset sorted by a specified field in ascending or descending order.
 
 ```ballerina
@@ -382,10 +406,11 @@ public enum SortDirection {
 }
 ```
 
-### 3.8 Standardize
+### 4.8 Standardize
+
 This API processes the given dataset of records and returns a new dataset with all string values in a specified field standardized to a set of standard values.
 
-> **Note**: [Required configurations](#configurations) must be provided before invoking this API.
+> **Note**: [Required configurations](#2-configurations) must be provided before invoking this API.
 
 ```ballerina
 # Returns a new dataset with all string values in a specified field standardized to a set of standard values.
@@ -412,10 +437,12 @@ This API processes the given dataset of records and returns a new dataset with a
 public function standardizeData(record {}[] dataset, string fieldName, string[] standardValues, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-## 4. Data Enrichment
+## 5. Data Enrichment
+
 APIs for enriching datasets by merging and combining them with additional information.
 
-### 4.1 Join
+### 5.1 Join
+
 This API performs a join operation between two datasets using a common field and returns a new dataset where matching records from both datasets are merged into single records.
 
 ```ballerina
@@ -437,7 +464,8 @@ This API performs a join operation between two datasets using a common field and
 public function joinData(record {}[] dataset1, record {}[] dataset2, string fieldName, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 4.2 Merge
+### 5.2 Merge
+
 This API takes a nested array of datasets and flattens it into a single dataset by combining all inner arrays into one continuous array of records.
 
 ```ballerina
@@ -461,10 +489,12 @@ This API takes a nested array of datasets and flattens it into a single dataset 
 public function mergeData(record {}[][] datasets, typedesc<record {}> returnType = <>) returns returnType[]|Error:
 ```
 
-## 5. Data Filtering
+## 6. Data Filtering
+
 APIs for filtering datasets based on different conditions.
 
-### 5.1 Filter by Random Sampling
+### 6.1 Filter by Random Sampling
+
 This API randomly selects a portion of the input dataset according to the given ratio and returns it as a new dataset.
 
 ```ballerina
@@ -488,7 +518,8 @@ This API randomly selects a portion of the input dataset according to the given 
 public function filterDataByRatio(record {}[] dataset, float ratio, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 5.2 Filter by a Regular Expression
+### 6.2 Filter by a Regular Expression
+
 This API returns a new dataset containing only the records where the values in a specified field match the provided regex pattern.
 
 ```ballerina
@@ -514,7 +545,8 @@ This API returns a new dataset containing only the records where the values in a
 public function filterDataByRegex(record {}[] dataset, string fieldName, regexp:RegExp regexPattern, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 5.3 Filter by a Relative Expression
+### 6.3 Filter by a Relative Expression
+
 This API returns a new dataset by comparing values in a specified numeric field against a given value using a comparison operation, and includes only the records that satisfy the comparison.
 
 ```ballerina
@@ -562,10 +594,12 @@ public enum Operation {
 }
 ```
 
-## 6. Data Security
+## 7. Data Security
+
 APIs for secure encryption, decryption, and data masking.
 
-### 6.1 Encryption
+### 7.1 Encryption
+
 This API returns a new dataset with the specified fields encrypted using AES-ECB encryption and a given symmetric key.
 
 ```ballerina
@@ -591,7 +625,8 @@ This API returns a new dataset with the specified fields encrypted using AES-ECB
 public function encryptData(record {}[] dataset, string[] fieldNames, byte[16] key, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 6.2 Decryption
+### 7.2 Decryption
+
 This API returns a new dataset with the specified fields decrypted using AES-ECB decryption and a given symmetric key.
 
 ```ballerina
@@ -617,10 +652,11 @@ This API returns a new dataset with the specified fields decrypted using AES-ECB
 public function decryptData(record {}[] dataset, string[] fieldNames, byte[16] key, typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-### 6.3 Masking
+### 7.3 Masking
+
 This API returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character.
 
-> **Note**: [Required configurations](#configurations) must be provided before invoking this API.
+> **Note**: [Required configurations](#2-configurations) must be provided before invoking this API.
 
 ```ballerina
 # Returns a new dataset with PII (Personally Identifiable Information) fields masked using a specified character.
@@ -643,13 +679,15 @@ This API returns a new dataset with PII (Personally Identifiable Information) fi
 public function maskSensitiveData(record {}[] dataset, string:Char maskingCharacter = "X", typedesc<record {}> returnType = <>) returns returnType[]|Error;
 ```
 
-## 7. Unstructured Data Extraction
+## 8. Unstructured Data Extraction
+
 APIs for extracting structured information from unstructured sources.
 
-### 7.1. Extract from Text
+### 8.1. Extract from Text
+
 This API extracts relevant information from unstructured text and maps it to a Ballerina record.
 
-> **Note**: [Required configurations](#configurations) must be provided before invoking this API.
+> **Note**: [Required configurations](#2-configurations) must be provided before invoking this API.
 
 ```ballerina
 # Extracts structured data from a raw text input and maps it to a Ballerina record. 
