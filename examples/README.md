@@ -10,20 +10,22 @@ The `ballerina/etl` package provides practical examples illustrating its usage i
 
 ## Prerequisites
 
-1. Create an [OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
-
-2. Add the relevant configuration in the `Config.toml` file as follows.:
+1. [Create an OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
+2. Add the obtained [API key](https://platform.openai.com/account/api-keys) and a supported [GPT model](#supported-gpt-models) in the `Config.toml` file as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 ```
 
-- Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
-  - `"gpt-4-turbo"`
-  - `"gpt-4o"`
-  - `"gpt-4o-mini"`
+### Supported GPT Models
+
+- `"gpt-4-turbo"`
+- `"gpt-4o"`
+- `"gpt-4o-mini"`
+
+> **Note**: The above configurations are required only for the [Customer Data Processing](https://github.com/module-ballerina-etl/tree/main/examples/customer-data-processing/) and [User Feedback Analysis](https://github.com/module-ballerina-etl/tree/main/examples/user-feedback-analysis/) examples.
 
 ## Running an Example
 

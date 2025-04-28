@@ -55,7 +55,7 @@ The APIs in this package are categorized into the following ETL process stages:
 
 ### Configurations
 
-The following APIs require an OpenAI API key to operate:
+Following APIs in this package utilize **OpenAI services** and require an **OpenAI API key** for operation.
 
 - `categorizeSemantic`
 - `extractFromText`
@@ -63,28 +63,32 @@ The following APIs require an OpenAI API key to operate:
 - `maskSensitiveData`
 - `standardizeData`
 
-If your Ballerina application uses any of these APIs, follow the steps below before calling them:
+> **Note**: Configuration is required only for the APIs listed above. It is not needed for the use of any other APIs in this package.
 
-1. Create an [OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
+#### Setting up the OpenAI API Key
 
-2. Values need to be provided for the `modelConfig` configurable value. Add the relevant configuration in the `Config.toml` file as follows.
+1. [Create an OpenAI account](https://platform.openai.com) and obtain an [API key](https://platform.openai.com/account/api-keys).
+2. Add the obtained [API key](https://platform.openai.com/account/api-keys) and a supported [GPT model](#supported-gpt-models) in the `Config.toml` file as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 ```
 
-- Replace `<OPEN_AI_KEY>` with the key you obtained, and `<GPT_MODEL>` with one of the supported GPT models listed below:
-  - `"gpt-4-turbo"`
-  - `"gpt-4o"`
-  - `"gpt-4o-mini"`
+##### Supported GPT Models
 
-3. **(Optional)** If you want to increase the client timeout (the default is 60 seconds), set the `timeout` field as shown below:
+- `"gpt-4-turbo"`
+- `"gpt-4o"`
+- `"gpt-4o-mini"`
+
+#### **(Optional)** Overriding Client Timeout
+
+The default client timeout is set to 60 seconds. This value can be adjusted by specifying the `timeout` field as shown below:
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 timeout = 120
 ```

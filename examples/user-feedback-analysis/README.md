@@ -32,7 +32,7 @@ Before running the example, ensure that your `Config.toml` file is set up in the
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 ```
 
