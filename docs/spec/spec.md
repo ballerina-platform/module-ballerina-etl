@@ -76,7 +76,7 @@ Following APIs in this package utilize **OpenAI services** and require an **Open
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 ```
 
@@ -92,7 +92,7 @@ The default client timeout is set to 60 seconds. This value can be adjusted by s
 
 ```toml
 [ballerina.etl.modelConfig]
-openAiToken = "<OPEN_AI_KEY>"
+openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
 timeout = 120
 ```
