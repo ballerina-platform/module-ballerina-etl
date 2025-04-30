@@ -16,21 +16,13 @@
 
 import ballerina/http;
 
-enum Model {
-    GPT_4_TURBO = "gpt-4-turbo",
-    GPT_4O = "gpt-4o",
-    GPT_4O_MINI = "gpt-4o-mini"
-}
-
-isolated client class OpenAIModel {
+isolated client class OpenAIClient {
     final http:Client clientEp;
-    final Model model;
 
-    isolated function init(string openAIToken, Model model, int timeout, string serviceUrl) returns error? {
+    isolated function init(string openAIToken, int timeout) returns error? {
         http:ClientConfiguration httpClientConfig = {auth: {token: openAIToken}, timeout: check timeout.ensureType(decimal)};
-        http:Client httpEp = check new (serviceUrl, httpClientConfig);
+        http:Client httpEp = check new ("https://api.openai.com/v1", httpClientConfig);
         self.clientEp = httpEp;
-        self.model = model;
         return;
     }
 
