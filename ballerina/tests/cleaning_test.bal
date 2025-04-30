@@ -54,7 +54,7 @@ function testGroupApproximateDuplicatess() returns error? {
         {name: "charlie", city: "los angeles - usa"}
     ];
     Person2[][] expected = [
-        [{name: "Bob", city: "Boston"},{name: "John", city: "Chicago"}],
+        [{name: "Bob", city: "Boston"}, {name: "John", city: "Chicago"}],
         [{name: "Charlie", city: "Los Angeles"}, {name: "charlie", city: "los angeles - usa"}]
     ];
     OpenAICreateChatCompletionResponse mockResponse = {
