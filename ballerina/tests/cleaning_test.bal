@@ -53,16 +53,22 @@ function testGroupApproximateDuplicatess() returns error? {
         {name: "John", city: "Chicago"},
         {name: "charlie", city: "los angeles - usa"}
     ];
-    Person2[] uniqueRecords = [
-        {name: "Bob", city: "Boston"},
-        {name: "John", city: "Chicago"}
-    ];
-    Person2[][] duplicateGroups = [
+    Person2[][] expected = [
+        [{name: "Bob", city: "Boston"},{name: "John", city: "Chicago"}],
         [{name: "Charlie", city: "Los Angeles"}, {name: "charlie", city: "los angeles - usa"}]
     ];
+    OpenAICreateChatCompletionResponse mockResponse = {
+        choices: [
+            {
+                message: {
+                    content: expected.toJsonString()
+                }
+            }
+        ]
+    };
+    test:prepare(openAIModel).when("chat").thenReturn(mockResponse);
     Person2[][] result = check groupApproximateDuplicates(dataset);
-    test:assertEquals(result[0], uniqueRecords);
-    test:assertEquals(result.slice(1), duplicateGroups);
+    test:assertEquals(result, expected);
 }
 
 @test:Config {
@@ -190,6 +196,16 @@ function testStandardizeData() returns error? {
         {name: "John", city: "New York"},
         {name: "Charlie", city: "Los Angeles"}
     ];
+    OpenAICreateChatCompletionResponse mockResponse = {
+        choices: [
+            {
+                message: {
+                    content: expected.toJsonString()
+                }
+            }
+        ]
+    };
+    test:prepare(openAIModel).when("chat").thenReturn(mockResponse);
     Person2[] result = check standardizeData(dataset, fieldName, searchValues);
     test:assertEquals(result, expected);
 }

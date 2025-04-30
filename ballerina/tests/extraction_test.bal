@@ -27,6 +27,21 @@ type ReviewSummary record {|
 }
 public function testExtractFromUnstructuredData() returns error? {
     string reviews = "The smartphone has an impressive camera and smooth performance, making it great for photography and gaming. However, the battery drains quickly, and the charging speed could be improved. The UI is intuitive, but some features feel outdated and need a refresh.";
+    ReviewSummary expected = {
+        goodPoints: "Impressive camera, smooth performance",
+        badPoints: "Battery drains quickly, charging speed could be improved",
+        improvements: "Refresh outdated features"
+    };
+    OpenAICreateChatCompletionResponse mockResponse = {
+        choices: [
+            {
+                message: {
+                    content: expected.toJsonString()
+                }
+            }
+        ]
+    };
+    test:prepare(openAIModel).when("chat").thenReturn(mockResponse);
     ReviewSummary extractedDetails = check extractFromText(reviews);
     test:assertNotEquals(extractedDetails["goodPoints"], null);
     test:assertNotEquals(extractedDetails["badPoints"], null);
