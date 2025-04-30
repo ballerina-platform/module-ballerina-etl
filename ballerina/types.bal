@@ -40,6 +40,16 @@ public enum SortDirection {
     DESCENDING = "descending"
 }
 
+# Represents the supported OpenAI GPT models
+# + GPT_4_TURBO - GPT-4 Turbo model
+# + GPT_4O - GPT-4o model
+# + GPT_4O_MINI - GPT-4o mini model
+public enum Model {
+    GPT_4_TURBO = "gpt-4-turbo",
+    GPT_4O = "gpt-4o",
+    GPT_4O_MINI = "gpt-4o-mini"
+}
+
 # Represents the category ranges in the `categorizeNumeric` API
 # - `float` - Represents the minimum value.
 # - `float[]` - Represents the intermediate breakpoints.
