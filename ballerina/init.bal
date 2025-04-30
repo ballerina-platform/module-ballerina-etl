@@ -24,9 +24,9 @@ type ModelConfig record {|
 |};
 
 configurable ModelConfig modelConfig = {
-    openAiToken: "test_token",
+    openAiToken: "",
     timeout: 60,
-    serviceUrl: "http://localhost:8080",
+    serviceUrl: "",
     model: "gpt-4-turbo"
 };
 
