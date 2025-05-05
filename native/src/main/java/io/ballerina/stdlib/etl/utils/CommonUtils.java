@@ -153,28 +153,27 @@ public class CommonUtils {
 
     public static boolean isStringType(Type type) {
         if (type.getTag() == TypeTags.UNION_TAG) {
-            List<Type> memberTypes = ((UnionType) type).getMemberTypes();
-            for (Type memberType : memberTypes) {
-                if (memberType.getTag() == TypeTags.STRING_TAG) {
-                    return true;
-                }
-            }
-            return false;
+            return checkMemberType(type, TypeTags.STRING_TAG);
         }
         return type.getTag() == TypeTags.STRING_TAG;
     }
 
     public static boolean isNumericType(Type type) {
         if (type.getTag() == TypeTags.UNION_TAG) {
-            List<Type> memberTypes = ((UnionType) type).getMemberTypes();
-            for (Type memberType : memberTypes) {
-                if (memberType.getTag() == TypeTags.INT_TAG || memberType.getTag() == TypeTags.FLOAT_TAG) {
-                    return true;
-                }
-            }
-            return false;
+            return checkMemberType(type, TypeTags.INT_TAG) || checkMemberType(type, TypeTags.FLOAT_TAG);
         }
         return type.getTag() == TypeTags.INT_TAG || type.getTag() == TypeTags.FLOAT_TAG;
+    }
+
+    public static boolean checkMemberType(Type type, int tag) {
+        List<Type> memberTypes = ((UnionType) type).getMemberTypes();
+        for (Type memberType : memberTypes) {
+            if (memberType.getTag() == tag) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     public static BMap<BString, Object> getReturnTypeSchema(BTypedesc type) {
