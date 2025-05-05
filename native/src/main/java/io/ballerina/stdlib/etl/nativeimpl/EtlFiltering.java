@@ -55,7 +55,8 @@ public class EtlFiltering {
 
     public static Object filterDataByRatio(BArray dataset, float ratio, BTypedesc returnType) {
         if (ratio < 0 || ratio > 1) {
-            return ErrorUtils.createInvalidRatioError(ratio);
+            return ErrorUtils
+                    .createETLError(String.format("Invalid ratio value: %f. Ratio should be between 0 and 1", ratio));
         }
         BArray filteredDataset = initializeBArray(returnType);
         ArrayList<Object> suffledDataset = new ArrayList<>();
@@ -76,11 +77,13 @@ public class EtlFiltering {
     public static Object filterDataByRegex(BArray dataset, BString fieldName, BRegexpValue regexPattern,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isStringType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, TypeConstants.STRING_TNAME, fieldType.toString()));
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
@@ -103,11 +106,13 @@ public class EtlFiltering {
     public static Object filterDataByRelativeExp(BArray dataset, BString fieldName, BString operation, double value,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isNumericType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, INT_OR_FLOAT, fieldType.toString()));
         }
         BArray filteredDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {

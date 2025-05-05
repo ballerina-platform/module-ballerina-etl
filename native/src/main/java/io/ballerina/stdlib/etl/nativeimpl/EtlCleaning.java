@@ -96,7 +96,7 @@ public class EtlCleaning {
         Object uniqueItems = env.getRuntime().callFunction(env.getCurrentModule(),
                 GET_UNIQUE_DATA, null, args);
         if (TypeUtils.getType(uniqueItems).getTag() != TypeTags.ARRAY_TAG) {
-            ErrorUtils.createDeduplicationError();
+            ErrorUtils.createETLError("Error occurred while deduplicating the data");
         }
         for (int i = 0; i < ((BArray) uniqueItems).size(); i++) {
             if (TypeUtils.getType(((BArray) uniqueItems).get(i)).getTag() != TypeTags.RECORD_TYPE_TAG) {
@@ -110,7 +110,7 @@ public class EtlCleaning {
 
     public static Object removeField(BArray dataset, BString fieldName, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
@@ -158,11 +158,13 @@ public class EtlCleaning {
     public static Object replaceText(BArray dataset, BString fieldName, BRegexpValue searchValue, BString replaceValue,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isStringType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, TypeConstants.STRING_TNAME, fieldType.toString()));
         }
         BArray newDataset = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i++) {
@@ -190,7 +192,7 @@ public class EtlCleaning {
 
     public static Object sortData(BArray dataset, BString fieldName, BString direction, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         BArray sortedDataset = initializeBArray(returnType);
         List<BMap<BString, Object>> dataToSort = new ArrayList<>();
@@ -220,7 +222,7 @@ public class EtlCleaning {
     public static Object standardizeData(Environment env, BArray dataset, BString fieldName, BArray standardValues,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         BArray mergedResult = initializeBArray(returnType);
         for (int i = 0; i < dataset.size(); i += 200) {

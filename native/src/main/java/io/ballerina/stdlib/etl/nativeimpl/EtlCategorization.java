@@ -54,15 +54,17 @@ public class EtlCategorization {
 
     public static Object categorizeNumeric(BArray dataset, BString fieldName, BArray rangeArray, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isNumericType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, INT_OR_FLOAT, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, TypeConstants.STRING_TNAME, fieldType.toString()));
         }
         double lowerBound = rangeArray.getFloat(0);
         if (TypeUtils.getType(rangeArray.get(1)).getTag() != TypeTags.ARRAY_TAG) {
-            ErrorUtils.createInvalidRangeArrayError();
+            ErrorUtils.createETLError("Invalid range array");
         }
         BArray midRanges = (BArray) rangeArray.get(1);
         double upperBound = rangeArray.getFloat(2);
@@ -87,7 +89,7 @@ public class EtlCategorization {
                 double nextBound = midRanges.getFloat(j);
                 if (fieldValue > prevBound && fieldValue <= nextBound) {
                     if (TypeUtils.getType(categorizedData.get(j)).getTag() != TypeTags.ARRAY_TAG) {
-                        ErrorUtils.createCategorizationError();
+                        ErrorUtils.createETLError("Error occurred while categorizing the data");
                     }
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
@@ -103,11 +105,13 @@ public class EtlCategorization {
 
     public static Object categorizeRegex(BArray dataset, BString fieldName, BArray regexArray, BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isStringType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, TypeConstants.STRING_TNAME, fieldType.toString()));
         }
         BArray categorizedData = initializeNestedBArray(returnType, regexArray.size());
         for (int i = 0; i < dataset.size(); i++) {
@@ -121,12 +125,12 @@ public class EtlCategorization {
             BString fieldValue = StringUtils.fromString(data.get(fieldName).toString());
             for (int j = 0; j < regexArray.size(); j++) {
                 if (TypeUtils.getType(regexArray.get(j)).getTag() != TypeTags.REG_EXP_TYPE_TAG) {
-                    ErrorUtils.createInvalidRegexError();
+                    ErrorUtils.createETLError("Invalid regex pattern found in the given regex array");
                 }
                 BRegexpValue regexPattern = (BRegexpValue) regexArray.get(j);
                 if (Matches.isFullMatch(regexPattern, fieldValue)) {
                     if (TypeUtils.getType(categorizedData.get(j)).getTag() != TypeTags.ARRAY_TAG) {
-                        ErrorUtils.createCategorizationError();
+                        ErrorUtils.createETLError("Error occurred while categorizing the data");
                     }
                     ((BArray) categorizedData.get(j)).append(data);
                     break;
@@ -139,11 +143,13 @@ public class EtlCategorization {
     public static Object categorizeSemantic(Environment env, BArray dataset, BString fieldName, BArray categories,
             BTypedesc returnType) {
         if (!isFieldExist(dataset, fieldName)) {
-            return ErrorUtils.createFieldNotFoundError(fieldName);
+            return ErrorUtils.createETLError(String.format("The dataset does not contain the field - '%s'", fieldName));
         }
         Type fieldType = getFieldType(returnType, fieldName);
         if (!isStringType(fieldType)) {
-            return ErrorUtils.createInvalidFieldTypeError(fieldName, TypeConstants.STRING_TNAME, fieldType);
+            return ErrorUtils
+                    .createETLError(String.format("The field '%s' is expected to be of type '%s' but found '%s'",
+                            fieldName, TypeConstants.STRING_TNAME, fieldType.toString()));
         }
         BArray mergedResult = initializeNestedBArray(returnType, categories.size());
         for (int i = 0; i < dataset.size(); i += 200) {

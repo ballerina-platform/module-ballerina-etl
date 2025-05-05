@@ -48,7 +48,6 @@ public class CommonUtils {
     public static final String CLIENT_CONNECTOR_ERROR = "ClientConnectorError";
     public static final String CLIENT_REQUEST_ERROR = "ClientRequestError";
     public static final String REMOTE_SERVER_ERROR = "RemoteServerError";
-    public static final String RESPONSE_ERROR = "error";
 
     public static boolean contains(BArray array, BString key) {
         BIterator<?> iterator = array.getIterator();
@@ -120,7 +119,7 @@ public class CommonUtils {
     public static BString[] getFields(BTypedesc type) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
         if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
-            ErrorUtils.createInvalidReturnTypeError();
+            ErrorUtils.createETLError("Invalid return type");
         }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
@@ -135,7 +134,7 @@ public class CommonUtils {
     public static boolean isFieldExist(BArray dataset, BString fieldName) {
         Type describingType = TypeUtils.getReferredType(dataset.getElementType());
         if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
-            ErrorUtils.createInvalidReturnTypeError();
+            ErrorUtils.createETLError("Invalid return type");
         }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
@@ -145,7 +144,7 @@ public class CommonUtils {
     public static Type getFieldType(BTypedesc type, BString fieldName) {
         Type describingType = TypeUtils.getReferredType(type.getDescribingType());
         if (!(describingType.getTag() == TypeTags.RECORD_TYPE_TAG)) {
-            ErrorUtils.createInvalidReturnTypeError();
+            ErrorUtils.createETLError("Invalid return type");
         }
         StructureType structType = (StructureType) describingType;
         Map<String, Field> fields = structType.getFields();
@@ -202,53 +201,40 @@ public class CommonUtils {
     }
 
     public static Object processResponseToBArray(Object clientResponse, BTypedesc returnType) {
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            case REMOTE_SERVER_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case RESPONSE_ERROR:
-                return ErrorUtils.createResponseError();
-            default:
-                return convertJSONToBArray(clientResponse, returnType);
+        if (TypeUtils.getType(clientResponse).getTag() != TypeTags.ARRAY_TAG) {
+            return handleClientErrorType(clientResponse);
         }
+        return convertJSONToBArray(clientResponse, returnType);
     }
 
     public static Object processResponseToNestedBArray(Object clientResponse, BTypedesc returnType) {
-        switch (TypeUtils.getType(clientResponse).getName()) {
-            case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
-            case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
-            case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
-            case REMOTE_SERVER_ERROR:
-                return ErrorUtils.createRemoteServerError();
-            case RESPONSE_ERROR:
-                return ErrorUtils.createResponseError();
-            default:
-                return convertJSONToNestedBArray(clientResponse, returnType);
+        if (TypeUtils.getType(clientResponse).getTag() != TypeTags.ARRAY_TAG) {
+            return handleClientErrorType(clientResponse);
         }
+        return convertJSONToNestedBArray(clientResponse, returnType);
     }
 
     public static Object processResponseToRecord(Object clientResponse, BTypedesc returnType) {
+        if (TypeUtils.getType(clientResponse).getTag() != TypeTags.MAP_TAG) {
+            return handleClientErrorType(clientResponse);
+        }
+        return convertJSONToRecord(clientResponse, returnType);
+    }
+
+    public static Object handleClientErrorType(Object clientResponse) {
         switch (TypeUtils.getType(clientResponse).getName()) {
             case CLIENT_CONNECTOR_ERROR:
-                return ErrorUtils.createClientConnectionError();
+                return ErrorUtils.createETLError("Operation failed due to client connector error");
             case IDLE_TIMEOUT_ERROR:
-                return ErrorUtils.createIdleTimeoutError();
+                return ErrorUtils.createETLError("Operation failed due to idle timeout error.");
             case CLIENT_REQUEST_ERROR:
-                return ErrorUtils.createClientRequestError();
+                return ErrorUtils.createETLError(
+                        "Operation failed due to client request error. Configuration values may be incorrect");
             case REMOTE_SERVER_ERROR:
-                return ErrorUtils.createRemoteServerError();
-            case RESPONSE_ERROR:
-                return ErrorUtils.createResponseError();
+                return ErrorUtils.createETLError("Operation failed due to remote server error.");
             default:
-                return convertJSONToRecord(clientResponse, returnType);
+                return ErrorUtils
+                        .createETLError("Operation failed due to an error occurred while getting the OpenAI response.");
         }
     }
 }

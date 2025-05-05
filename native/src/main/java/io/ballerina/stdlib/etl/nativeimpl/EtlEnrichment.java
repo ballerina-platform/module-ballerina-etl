@@ -43,10 +43,14 @@ public class EtlEnrichment {
 
     public static Object joinData(BArray dataset1, BArray dataset2, BString fieldName, BTypedesc returnType) {
         if (!isFieldExist(dataset1, fieldName)) {
-            return ErrorUtils.createCommonFieldNotFoundError(1);
+            return ErrorUtils
+                    .createETLError(String.format("The dataset %d does not contain the field - '%s'", 1, fieldName));
         }
         if (!isFieldExist(dataset2, fieldName)) {
-            return ErrorUtils.createCommonFieldNotFoundError(2);
+            return ErrorUtils
+                    .createETLError(
+                            String.format("The second %d dataset does not contain the field - '%s'", 2, fieldName));
+
         }
         BArray joinedDataset = initializeBArray(returnType);
         Set<String> seenData = new HashSet<>();
@@ -82,7 +86,7 @@ public class EtlEnrichment {
             }
         }
         if (joinedDataset.size() == 0) {
-            return ErrorUtils.createNoMatchesFoundError();
+            return ErrorUtils.createETLError("No matching records found");
         }
         return joinedDataset;
     }
@@ -91,7 +95,8 @@ public class EtlEnrichment {
         BArray mergedDataset = initializeBArray(returnType);
         for (int i = 0; i < datasets.size(); i++) {
             if (TypeUtils.getType(datasets.get(i)).getTag() != TypeTags.ARRAY_TAG) {
-                ErrorUtils.createInvalidDatasetError();
+                ErrorUtils.createETLError("Datasets to be merged must be of type 'record[]{}'");
+                ;
             }
             BArray dataset = (BArray) datasets.get(i);
             for (int j = 0; j < dataset.size(); j++) {

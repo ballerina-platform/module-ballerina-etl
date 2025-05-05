@@ -50,11 +50,13 @@ import static io.ballerina.stdlib.etl.utils.CommonUtils.processResponseToBArray;
 public class EtlSecurity {
 
     public static final String MASK_SENSITIVE_DATA = "maskSensitiveDataFunc";
+    public static final String PKCS5 = "PKCS5";
 
     public static Object encryptData(BArray dataset, BArray fieldNames, BArray key, BTypedesc returnType) {
         for (int i = 0; i < fieldNames.size(); i++) {
             if (!isFieldExist(dataset, fieldNames.getBString(i))) {
-                return ErrorUtils.createFieldNotFoundError(fieldNames.getBString(i));
+                return ErrorUtils.createETLError(
+                        String.format("The dataset does not contain the field - '%s'", fieldNames.getBString(i)));
             }
         }
         BArray encryptedDataset = initializeBArray(returnType);
@@ -69,9 +71,9 @@ public class EtlSecurity {
                 if (contains(fieldNames, keyField)) {
                     String value = data.get(keyField).toString();
                     Object encryptedValue = Encrypt.encryptAesEcb(
-                            ValueCreator.createArrayValue(value.getBytes(StandardCharsets.UTF_8)), key, "PKCS5");
+                            ValueCreator.createArrayValue(value.getBytes(StandardCharsets.UTF_8)), key, PKCS5);
                     if (TypeUtils.getType(encryptedValue).getTag() != TypeTags.ARRAY_TAG) {
-                        ErrorUtils.createEncryptionError();
+                        ErrorUtils.createETLError("Error occurred while encrypting the data");
                     }
                     encryptedData.put(keyField, ToBase64.toBase64((BArray) encryptedValue));
                 } else {
@@ -86,7 +88,8 @@ public class EtlSecurity {
     public static Object decryptData(BArray dataset, BArray fieldNames, BArray key, BTypedesc returnType) {
         for (int i = 0; i < fieldNames.size(); i++) {
             if (!isFieldExist(dataset, fieldNames.getBString(i))) {
-                return ErrorUtils.createFieldNotFoundError(fieldNames.getBString(i));
+                return ErrorUtils.createETLError(
+                        String.format("The dataset does not contain the field - '%s'", fieldNames.getBString(i)));
             }
         }
         BArray decryptedDataset = initializeBArray(returnType);
@@ -102,12 +105,12 @@ public class EtlSecurity {
                     Object decryptedBytes = FromBase64
                             .fromBase64(StringUtils.fromString(data.get(keyField).toString()));
                     if (TypeUtils.getType(decryptedBytes).getTag() != TypeTags.ARRAY_TAG) {
-                        ErrorUtils.createDecryptionError();
+                        ErrorUtils.createETLError("Error occurred while decrypting the data");
                     }
                     Object decryptedValue = Decrypt.decryptAesEcb((BArray) decryptedBytes, key,
-                            "PKCS5");
+                            PKCS5);
                     if (TypeUtils.getType(decryptedValue).getTag() != TypeTags.ARRAY_TAG) {
-                        ErrorUtils.createDecryptionError();
+                        ErrorUtils.createETLError("Error occurred while decrypting the data");
                     }
                     decryptedData.put(keyField, StringUtils
                             .fromString(new String((((BArray) decryptedValue).getBytes()), StandardCharsets.UTF_8)));
