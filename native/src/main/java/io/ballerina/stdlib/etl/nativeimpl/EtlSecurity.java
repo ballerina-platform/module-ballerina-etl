@@ -136,7 +136,6 @@ public class EtlSecurity {
             for (int j = 0; j < ((BArray) chunkResult).size(); j++) {
                 mergedResult.append(((BArray) chunkResult).get(j));
             }
-            ;
         }
         return mergedResult;
     }
