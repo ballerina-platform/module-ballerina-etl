@@ -18,7 +18,7 @@ import ballerina/jballerina.java;
 
 type ModelConfig record {|
     string openAiToken;
-    int timeout?;
+    decimal timeout?;
     Model model;
 |};
 
@@ -31,7 +31,7 @@ configurable ModelConfig modelConfig = {
 OpenAIClient openAIModel;
 
 function init() returns error? {
-    int timeout = modelConfig.timeout ?: 60;
+    decimal timeout = modelConfig.timeout ?: 60;
     openAIModel = check new OpenAIClient(modelConfig.openAiToken, timeout);
     setModule();
 }

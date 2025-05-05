@@ -19,8 +19,8 @@ import ballerina/http;
 isolated client class OpenAIClient {
     final http:Client clientEp;
 
-    isolated function init(string openAIToken, int timeout) returns error? {
-        http:ClientConfiguration httpClientConfig = {auth: {token: openAIToken}, timeout: check timeout.ensureType(decimal)};
+    isolated function init(string openAIToken, decimal timeout) returns error? {
+        http:ClientConfiguration httpClientConfig = {auth: {token: openAIToken}, timeout};
         http:Client httpEp = check new ("https://api.openai.com/v1", httpClientConfig);
         self.clientEp = httpEp;
         return;

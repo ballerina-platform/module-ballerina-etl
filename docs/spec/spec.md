@@ -94,7 +94,7 @@ The default client timeout is set to 60 seconds. This value can be adjusted by s
 [ballerina.etl.modelConfig]
 openAiToken = "<OPENAI_API_KEY>"
 model = "<GPT_MODEL>"
-timeout = 120
+timeout = 120.0
 ```
 
 ## 3. Data Categorization
