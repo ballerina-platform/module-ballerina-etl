@@ -76,7 +76,7 @@ function testMaskSensitiveData() returns error? {
         {id: 2, name: "XXXX XXXXX", email: "XXXXXXXXXXXXXXXX"},
         {id: 3, name: "XXXXX", email: "XXXXXXXXXXXXXXXXX"}
     ];
-    OpenAICreateChatCompletionResponse mockResponse = {
+    OpenAiCreateChatCompletionResponse mockResponse = {
         choices: [
             {
                 message: {

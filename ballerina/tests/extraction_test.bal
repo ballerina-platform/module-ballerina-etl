@@ -32,7 +32,7 @@ public function testExtractFromUnstructuredData() returns error? {
         badPoints: "Battery drains quickly, charging speed could be improved",
         improvements: "Refresh outdated features"
     };
-    OpenAICreateChatCompletionResponse mockResponse = {
+    OpenAiCreateChatCompletionResponse mockResponse = {
         choices: [
             {
                 message: {

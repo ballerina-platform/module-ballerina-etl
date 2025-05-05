@@ -14,14 +14,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-type OpenAIChatCompletionRequestUserMessage record {
+type OpenAiChatCompletionRequestUserMessage record {
     string content;
     "user" role;
     string name?;
 };
 
-type OpenAICreateChatCompletionRequest record {
-    OpenAIChatCompletionRequestUserMessage[1] messages;
+type OpenAiCreateChatCompletionRequest record {
+    OpenAiChatCompletionRequestUserMessage[1] messages;
     Model model;
     boolean? store = false;
     decimal? frequency_penalty = 0;
@@ -34,14 +34,14 @@ type OpenAICreateChatCompletionRequest record {
     decimal? top_p = 1;
 };
 
-type OpenAIChatCompletionResponseMessage record {
+type OpenAiChatCompletionResponseMessage record {
     string? content;
 };
 
-type OpenAICreateChatCompletionResponse_choices record {
-    OpenAIChatCompletionResponseMessage message;
+type OpenAiCreateChatCompletionResponse_choices record {
+    OpenAiChatCompletionResponseMessage message;
 };
 
-type OpenAICreateChatCompletionResponse record {
-    OpenAICreateChatCompletionResponse_choices[] choices;
+type OpenAiCreateChatCompletionResponse record {
+    OpenAiCreateChatCompletionResponse_choices[] choices;
 };

@@ -16,7 +16,7 @@
 
 import ballerina/http;
 
-isolated client class OpenAIClient {
+isolated client class OpenAiClient {
     final http:Client clientEp;
 
     isolated function init(string openAIToken, decimal timeout) returns error? {
@@ -26,8 +26,8 @@ isolated client class OpenAIClient {
         return;
     }
 
-    isolated function chat(OpenAICreateChatCompletionRequest chatBody)
-            returns OpenAICreateChatCompletionResponse|error {
+    isolated function chat(OpenAiCreateChatCompletionRequest chatBody)
+            returns OpenAiCreateChatCompletionResponse|error {
         return self.clientEp->/chat/completions.post(chatBody);
     }
 }

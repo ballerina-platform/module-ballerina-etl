@@ -28,11 +28,11 @@ configurable ModelConfig modelConfig = {
     model: GPT_4O_MINI
 };
 
-OpenAIClient openAIModel;
+OpenAiClient openAIModel;
 
 function init() returns error? {
     decimal timeout = modelConfig.timeout ?: 60;
-    openAIModel = check new OpenAIClient(modelConfig.openAiToken, timeout);
+    openAIModel = check new OpenAiClient(modelConfig.openAiToken, timeout);
     setModule();
 }
 

@@ -86,7 +86,7 @@ function testCategorizeSemantic() returns error? {
         [{id: 1, comment: "Great service!"}, {id: 2, comment: "Good service!"}],
         [{id: 3, comment: "Terrible experience"}]
     ];
-    OpenAICreateChatCompletionResponse mockResponse = {
+    OpenAiCreateChatCompletionResponse mockResponse = {
         choices: [
             {
                 message: {
@@ -95,7 +95,7 @@ function testCategorizeSemantic() returns error? {
             }
         ]
     };
-    openAIModel = test:mock(OpenAIClient);
+    openAIModel = test:mock(OpenAiClient);
     test:prepare(openAIModel).when("chat").thenReturn(mockResponse);
     Review[][] categorized = check categorizeSemantic(dataset, fieldName, categories);
     test:assertEquals(categorized, expected);

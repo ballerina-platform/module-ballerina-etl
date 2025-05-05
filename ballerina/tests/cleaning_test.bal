@@ -57,7 +57,7 @@ function testGroupApproximateDuplicatess() returns error? {
         [{name: "Bob", city: "Boston"}, {name: "John", city: "Chicago"}],
         [{name: "Charlie", city: "Los Angeles"}, {name: "charlie", city: "los angeles - usa"}]
     ];
-    OpenAICreateChatCompletionResponse mockResponse = {
+    OpenAiCreateChatCompletionResponse mockResponse = {
         choices: [
             {
                 message: {
@@ -196,7 +196,7 @@ function testStandardizeData() returns error? {
         {name: "John", city: "New York"},
         {name: "Charlie", city: "Los Angeles"}
     ];
-    OpenAICreateChatCompletionResponse mockResponse = {
+    OpenAiCreateChatCompletionResponse mockResponse = {
         choices: [
             {
                 message: {

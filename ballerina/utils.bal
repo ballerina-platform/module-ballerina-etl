@@ -168,7 +168,7 @@ function categorizeSemanticFunc(record {}[] dataset, string fieldName, string[] 
 }
 
 function getResponseFromClient(string prompt) returns json|error {
-    OpenAICreateChatCompletionRequest request = {
+    OpenAiCreateChatCompletionRequest request = {
         model: modelConfig.model,
         messages: [
             {
@@ -177,7 +177,7 @@ function getResponseFromClient(string prompt) returns json|error {
             }
         ]
     };
-    OpenAICreateChatCompletionResponse response = check openAIModel.chat(request);
+    OpenAiCreateChatCompletionResponse response = check openAIModel.chat(request);
     string content = check response.choices[0].message?.content.ensureType();
     return check content.fromJsonString();
 }
