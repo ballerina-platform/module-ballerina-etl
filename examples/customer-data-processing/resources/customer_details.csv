@@ -1,0 +1,41 @@
+id,name,age,city,contactNumber,email
+C001,Alice,23,Colombo,0111234567,alice@gmail.com
+C002,Bob,28,Kandy,0711234567,bob@gmail.com
+C003,,51,Galle,0711234567,charlie@gmail.com
+C004,David,37,Jaffna,,davi@gmail.com
+C005,Eve,42,Kurunegala,0711234567,eve@gmail.com
+C006,Frank,20,Matara,0111234567,frank@gmail.com
+C007,Grace,19,,0711234567,grace@gmail.com
+C008,Harry,24,Ratnapura,0451234567,harry-gmail.com
+C009,Ivy,30,Colombo,0719876543,ivy@gmail.com
+C010,Jack,35,,0771239876,jackgmail.com
+C011,Kelly,27,Galle,0719988776,kelly@gmail.com
+C012,Leo,29,Jaffna,0776655443,leo-gmail.com
+C013,Mona,31,Kurunegala,0712233445,monagmail.com
+C014,Nathan,33,Matara,0715566778,nathan@gmail.com
+C015,Olivia,26,Nuwara Eliya,,olivia@gmail.com
+C016,Paul,,Ratnapura,0713344556,paul@gmail.com
+C017,Quinn,22,Colombo,0772233445,quinn@gmail.com
+C018,Rachel,25,Kandy  ,0716677889,rachel@gmail.com
+C019,Steve,38,Galle,+94717788990,steve@gmail.com
+C020,Tina,29,Jaffna,0718899001,tina@gmail.com
+C021,   Umar,32,   Kurunegala,0719988776,umar@gmail.com
+C022,Vera  ,34,Matara,+94716655443,vera@gmail.com
+C023,Will,23,,0712233445,
+C024,Xena   ,36,Ratnapura,0715566778,xena@gmail.com
+C025,Yasir,29,Colombo,+94714455667,yasir@gmail.com
+C026,Zoe,27,Kandy,0713344556,zoe@gmail.com
+C027,Adam,39,Galle,0712233445,adam@gmail.com
+C028,Bella,24,Jaffna,0716677889,bella@gmail.com
+C029,Charlie   ,41,Kurunegala,0717788990,
+C030,Diana,28,Matara,0718899001,diana@gail.com
+C001,   Alice,23,Colombo,0111234567,alice@gmail.com
+C002,Bob,28,Kandy,0711234567,bob@gmail.com
+C005,Eve   ,42,   Kurunegala,0711234567,eve@gmailcom
+C008,Harry,24,Ratnapura,0451234567,harry@gmail.com
+C010,Jack,35,Kandy,0771239876,jack@gmail.com
+C012,Leo   ,29,Jaffna,0776655443,leo@gmail.com
+C015,,26,Nuwara Eliya,0714455667,olivia@gmail.Com
+C018,    Rachel,25,Kandy,+94716677889,rachel@gmail.com
+C022,   Vera,34,Matara,0716655443,vera@gmail.com
+C026,Zoe,27,Kandy,0713344556,zo/e@gmail.com

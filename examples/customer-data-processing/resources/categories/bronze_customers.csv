@@ -1,0 +1,4 @@
+id,name,city,contactNumber,email,preferredCategory,membershipTier,annualSpending,preferredContactMethod,maritalStatus,occupation
+C014,XXXXXX,Matara,XXXXXXXXXXXXXX,XXXXXXXXXXXXXXX,Clothing,Bronze,2800,SMS,Single,Teacher
+C020,XXXX,Jaffna,XXXXXXXXXXXXXX,XXXXXXXXXXXX,Clothing,Bronze,3400,SMS,Single,Teacher
+C027,XXXX,Galle,XXXXXXXXXXXXXX,XXXXXXXXXXXXXX,Groceries,Bronze,4100,Email,Married,Engineer

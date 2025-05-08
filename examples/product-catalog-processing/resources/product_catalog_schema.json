@@ -1,0 +1,21 @@
+{
+    "name": "Products",
+    "delimiters" : {"segment" : "~", "field" : "*", "component": ":", "repetition": "^"},
+    "segments" : [
+        {
+            "code": "ITM",
+            "tag" : "products",
+            "maxOccurances" : -1,
+            "fields": [
+                {"tag":"code"},
+                {"tag": "productId"},
+                {"tag": "name"},
+                {"tag": "price", "dataType": "float"},
+                {"tag": "stock", "dataType": "int"},
+                {"tag": "category"},
+                {"tag": "brand"},
+                {"tag": "supplier"}
+            ]
+        }
+    ]
+}

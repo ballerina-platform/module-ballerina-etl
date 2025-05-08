@@ -1,0 +1,11 @@
+productId,name,price,stock,category,brand,supplier
+31,4K Projector,1200.00,25,Home Entertainment,LG,Supplier_V
+32,Smart Thermostat,150.00,150,Smart Home,Nest,Supplier_W
+33,Wireless Earbuds,80.00,250,Audio,Apple,Supplier_X
+34,Electric Scooter,300.00,100,Transportation,Xiaomi,Supplier_Y
+35,Robot Vacuum,400.00,75,Home Appliances,Roomba,Supplier_Z
+36,Smart Lock,200.00,90,Smart Home,August,Supplier_A
+37,Portable Bluetooth Speaker,70.00,200,Audio,Ultimate Ears,Supplier_B
+38,Smartwatch Charger,25.00,300,Accessories,Apple,Supplier_C
+39,Digital Camera,500.00,40,Cameras,Canon,Supplier_D
+40,Smart Kitchen Scale,60.00,150,Home Appliances,Withings,Supplier_E
