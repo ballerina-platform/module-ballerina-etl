@@ -18,4 +18,4 @@ graalvmCompatible = true
 groupId = "io.ballerina.lib"
 artifactId = "etl-native"
 version = "0.8.0"
-path = "../native/build/libs/etl-native-0.8.0-SNAPSHOT.jar"
+path = "../native/build/libs/etl-native-0.8.0.jar"
