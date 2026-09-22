@@ -11,7 +11,14 @@ The APIs in this package are categorized into the following ETL process stages:
 - Data Security
 - Unstructured Data Extraction
 
-## Features
+### Key Features
+
+- Categorize data using numeric ranges, regular expressions, or semantic classification.
+- Clean datasets by removing duplicates, empty values, and extra whitespace, or by standardizing and replacing field values.
+- Enrich datasets by joining or merging multiple data sources.
+- Filter datasets by ratio, regex pattern, or relative numeric expressions.
+- Secure sensitive data through encryption, decryption, and PII masking.
+- Extract structured data from unstructured text.
 
 ### Data Categorization
 
