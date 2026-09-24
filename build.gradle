@@ -25,6 +25,10 @@ allprojects {
     group = project.group
     version = project.version
 
+    apply plugin: 'jacoco'
+    jacoco {
+        toolVersion = jacocoVersion
+    }
     apply plugin: 'maven-publish'
 
     repositories {
@@ -106,7 +110,7 @@ release {
     }
 }
 
-build {
+tasks.named('build') {
     dependsOn(':etl-ballerina:build')
     dependsOn(':etl-native:build')
 }
